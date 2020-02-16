@@ -13,6 +13,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of ="id")
 /*
     Nie generujemy metody equals i hashCode z poziomu adnotacji lomboka,
     aby było wyraźnie widać, że mają zostać oparte tylko na polu id
