@@ -4,10 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
+import pl.barksville.barksville.spring.model.entities.user.UserEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -15,15 +14,17 @@ import java.util.List;
 @Table(name = "Shop")
 @Getter
 @Setter
-@ToString(exclude = "owner")
+@ToString
 public class ShopRaport extends ParentEntity {
 
     @OneToMany
     private List<Item> soldProducts;
 
+    @Column(name="transactions_number")
     private Integer transactionsNumber;
 
     private Double earnings;
 
 
+    private String opr;
 }

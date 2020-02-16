@@ -22,12 +22,12 @@ public class Product extends ParentEntity {
     private String name;
     @Column(nullable = false)
     private Boolean state;
-    @Column(nullable = false)
+    @Column(nullable = false, name="buy_price")
     private Double buyPrice;
-    @Column(nullable = false)
+    @Column(nullable = false, name="sell_price")
     private Double sellPrice;
     @Column(nullable = false)
-    private Double amount;
+    private Double quantity;
 
     private Double raiting;
 
