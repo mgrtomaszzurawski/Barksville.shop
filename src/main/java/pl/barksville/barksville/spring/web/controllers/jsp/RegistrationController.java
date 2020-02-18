@@ -59,7 +59,7 @@ public class RegistrationController {
         userToRegister.setEmail(email);
         userToRegister.setPassword(passwordEncoder.encode(password));
         userToRegister.setEnabled(true);
-        userToRegister.getRoles().add(new UserRole("ROLE_USER"));
+        //userToRegister.getRoles().add(new UserRole("ROLE_USER"));
 
         userRepository.save(userToRegister);
     }
@@ -79,7 +79,7 @@ public class RegistrationController {
             errors.add("Niezgodne hasła");
         }
         try {
-            if (userRepository.countByUsername(username) > 0) {
+            if (userRepository.existsByUsername(username)) {
                 errors.add("Nazwa użytkownika jest już zajęta");
             }
         } catch (Exception ex) {

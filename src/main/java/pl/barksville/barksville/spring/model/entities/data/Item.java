@@ -16,6 +16,7 @@ import javax.persistence.Table;
 @Setter
 @ToString(exclude = "product")
 public class Item extends ParentEntity {
+
     @ManyToOne
     private Product product;
 
