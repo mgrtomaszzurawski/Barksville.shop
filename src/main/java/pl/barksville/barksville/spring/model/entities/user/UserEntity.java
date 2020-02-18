@@ -3,6 +3,8 @@ package pl.barksville.barksville.spring.model.entities.user;
 import lombok.Getter;
 import lombok.Setter;
 import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
+import pl.barksville.barksville.spring.model.entities.data.Invoice;
+import pl.barksville.barksville.spring.model.entities.data.Order;
 
 
 import javax.persistence.*;
@@ -15,7 +17,7 @@ import java.util.Set;
     Dodany indeks do szybkiego wyszukiwania po nazwie użytkownika
     Dodany indeks do szybkiego wyszukiwania po email'u użytkownika
  */
-@Table(name = "example_users", indexes = {
+@Table(name = "users", indexes = {
         @Index(columnList = "username"),
         @Index(columnList = "email")
 })
@@ -50,6 +52,11 @@ public class UserEntity extends ParentEntity {
         joinColumns = @JoinColumn(name = "username", referencedColumnName = "username")
     )
     private Set<UserRole> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "userEntity")
+    private Set<Order> orderSet;
+
+
 
     @Override
     public boolean equals(Object o) {
