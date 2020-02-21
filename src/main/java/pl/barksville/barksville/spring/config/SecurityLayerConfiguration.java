@@ -37,8 +37,8 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder())
-                .usersByUsernameQuery("SELECT username, password, enabled FROM example_users WHERE username = ?")
-                .authoritiesByUsernameQuery("SELECT username, role_name FROM example_users_roles WHERE username = ?");
+                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?")
+                .authoritiesByUsernameQuery("SELECT username, role_name FROM users_roles WHERE username = ?");
     }
 
 
