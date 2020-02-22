@@ -48,7 +48,7 @@ public class UserEntity extends ParentEntity {
         admin, ROLE_ADMIN
      */
     @ElementCollection
-    @CollectionTable(name = "example_users_roles",
+    @CollectionTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "username", referencedColumnName = "username")
     )
     private Set<UserRole> roles = new HashSet<>();

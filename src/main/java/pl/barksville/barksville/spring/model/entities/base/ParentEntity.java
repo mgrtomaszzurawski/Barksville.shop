@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@MappedSuperclass
 @Getter
+@MappedSuperclass
 @Setter
 @ToString
 @NoArgsConstructor
@@ -41,5 +41,6 @@ public abstract class ParentEntity implements Serializable {
 
         return Objects.hash(id);
     }
+
 
 }
