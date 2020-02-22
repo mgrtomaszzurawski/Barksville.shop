@@ -85,8 +85,7 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>5.1.6.RELEASE</version>
 		</dependency>
-
-		<!--webjars-->
+		<!-- webjars-->
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator</artifactId>

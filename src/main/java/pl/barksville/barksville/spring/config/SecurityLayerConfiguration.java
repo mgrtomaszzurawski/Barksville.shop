@@ -2,9 +2,11 @@ package pl.barksville.barksville.spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,7 @@ import javax.sql.DataSource;
     Nie dodajemy adnotacji @EnableWebSecurity, bo to zostało już zrobione
     przez Spring Boot
  */
+@EnableWebSecurity
 public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
     /*
         Wstrzykiwane jest podstawowe źródło danych, skonfigurowane w pliku application.properties
@@ -35,20 +38,37 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder())
-                .usersByUsernameQuery("SELECT username, password, enabled FROM example_users WHERE username = ?")
-                .authoritiesByUsernameQuery("SELECT username, role_name FROM example_users_roles WHERE username = ?");
+                .usersByUsernameQuery("SELECT username, password, enabled FROM users WHERE username = ?")
+                .authoritiesByUsernameQuery("SELECT username, role_name FROM users_roles WHERE username = ?");
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .anyRequest().permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/login").anonymous()
+                .antMatchers("/logout").authenticated()
                 .and()
-            .formLogin()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/user")
                 .and()
-            .httpBasic();
+                .logout()
+                .logoutSuccessUrl("/")
+                .and()
+                .csrf().disable();
     }
+    /*@Bean
+    DataSource dataSource() {
+        DriverManagerDataSource dm = new DriverManagerDataSource();
+        dm.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dm.setUrl("jdbc:mysql://localhost:3306/barksville?serverTimezone=UTC");
+        dm.setUsername("root");
+        dm.setPassword("root");
+        return dm;
+    }*/
 
     @Override
     public void configure(WebSecurity web) throws Exception {
