@@ -3,22 +3,17 @@ package pl.barksville.barksville.spring.model.entities.user;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
-import pl.barksville.barksville.spring.model.entities.data.Invoice;
-import pl.barksville.barksville.spring.model.entities.data.Order;
-import pl.barksville.barksville.spring.model.entities.data.ShopRaport;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Table(name = "user_details")
 @Getter
 @Setter
 @ToString(exclude = "owner")
-public class UserDetailsEntity extends ParentEntity {
+public class UserDetailsEntity extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "owner_id")

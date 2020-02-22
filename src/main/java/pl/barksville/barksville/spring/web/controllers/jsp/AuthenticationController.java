@@ -24,21 +24,4 @@ public class AuthenticationController {
     public String prepareRegistrationPage() {
         return "/elements/login";
     }
-    @PostMapping
-    public void login(String username, String password, HttpServletResponse response, HttpSession session) throws IOException {
-        boolean validCredentials = userEntityService.checkCredentials(username,password);
-        if(!validCredentials){
-            response.sendError(401, "Błędne logowanie");
-            return;
-        }
-        LoggedUserEntityDTO userEntity = userEntityService.getUserEntity(username);
-        session.setAttribute("user",userEntity);
-        response.sendRedirect("/");
-
-    }
-    @GetMapping("/logout")
-    public String logout(HttpSession session){
-        session.invalidate();
-        return "redirect:/";
-    }
 }

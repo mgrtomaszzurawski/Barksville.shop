@@ -2,8 +2,7 @@ package pl.barksville.barksville.spring.model.entities.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
-import pl.barksville.barksville.spring.model.entities.data.Invoice;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import pl.barksville.barksville.spring.model.entities.data.Order;
 
 
@@ -21,8 +20,9 @@ import java.util.Set;
         @Index(columnList = "username"),
         @Index(columnList = "email")
 })
-
-public class UserEntity extends ParentEntity {
+@Getter
+@Setter
+public class UserEntity extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -85,35 +85,5 @@ public class UserEntity extends ParentEntity {
                 "} " + super.toString();
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }

@@ -3,8 +3,7 @@ package pl.barksville.barksville.spring.model.entities.data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
-import pl.barksville.barksville.spring.model.entities.user.UserEntity;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ShopRaport extends ParentEntity {
+public class ShopRaport extends BaseEntity {
 
     @OneToMany
     private List<Item> soldProducts;

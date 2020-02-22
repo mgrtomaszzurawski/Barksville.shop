@@ -21,6 +21,8 @@ public class RegistrationController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+
     public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -59,7 +61,7 @@ public class RegistrationController {
         userToRegister.setEmail(email);
         userToRegister.setPassword(passwordEncoder.encode(password));
         userToRegister.setEnabled(true);
-        //userToRegister.getRoles().add(new UserRole("ROLE_USER"));
+        userToRegister.getRoles().add(new UserRole("ROLE_USER"));
 
         userRepository.save(userToRegister);
     }
