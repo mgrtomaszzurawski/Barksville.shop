@@ -63,15 +63,7 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable();
     }
-    /*@Bean
-    DataSource dataSource() {
-        DriverManagerDataSource dm = new DriverManagerDataSource();
-        dm.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dm.setUrl("jdbc:mysql://localhost:3306/barksville?serverTimezone=UTC");
-        dm.setUsername("root");
-        dm.setPassword("root");
-        return dm;
-    }*/
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {

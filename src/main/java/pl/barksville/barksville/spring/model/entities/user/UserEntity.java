@@ -40,7 +40,7 @@ public class UserEntity extends BaseEntity {
         kolumna wynikająca z klasy UserRole ale również kolumna klucza głównego.
 
         Relacja między tabelami oparta jest nie na polu id, a na polu username.
-        Dzięki temu tabela example_users_roles będzie składała się z pary kolumn
+        Dzięki temu tabela users_roles będzie składała się z pary kolumn
         username i role_name i przykładowych wartości:
 
         akowalski, ROLE_USER
@@ -84,6 +84,4 @@ public class UserEntity extends BaseEntity {
                 ", enabled=" + enabled +
                 "} " + super.toString();
     }
-
-
 }
