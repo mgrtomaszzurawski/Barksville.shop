@@ -22,11 +22,7 @@ import java.util.Set;
 })
 @Getter
 @Setter
-<<<<<<< HEAD
-public class UserEntity extends ParentEntity {
-=======
 public class UserEntity extends BaseEntity {
->>>>>>> 49191d53b3e87beb9dc9b63fb1e48a588a61a9e3
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -88,9 +84,4 @@ public class UserEntity extends BaseEntity {
                 ", enabled=" + enabled +
                 "} " + super.toString();
     }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 49191d53b3e87beb9dc9b63fb1e48a588a61a9e3
 }

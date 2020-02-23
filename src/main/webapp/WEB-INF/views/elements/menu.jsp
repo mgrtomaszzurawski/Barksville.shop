@@ -9,7 +9,7 @@
         <ul class="right">
             <li><a href="/">Strona główna</a></li>
             <li><a href="/user/skills">Twoje zamówienia</a></li>
-            <li><a href="/user/sources">Źrodła wiedzy</a></li>
+            <li><a href="/user/sources">Twoje konto</a></li>
         </ul>
         <ul class="right">
             <li><a href="/login">Zaloguj</a></li>

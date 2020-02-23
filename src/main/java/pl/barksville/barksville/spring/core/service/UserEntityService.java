@@ -16,21 +16,5 @@ public class UserEntityService {
         this.userRepository = userRepository;
     }
 
-    /*
-    public boolean checkCredentials(String username, String password) {
-        // TODO Uzupełnij implementację z wykorzystaniem Spring Data
 
-        return false;
-    }
-    public LoggedUserEntityDTO getUserEntity(String username) {
-        LoggedUserEntityDTO loggedUserEntityDTO = null;
-        UserEntity userEntity = userRepository.getUserEntitiesByUsername(username);
-        if(userEntity !=null){
-            loggedUserEntityDTO=new LoggedUserEntityDTO();
-            loggedUserEntityDTO.setId(userEntity.getId());
-            loggedUserEntityDTO.setUsername(userEntity.getUsername());
-        }
-        return loggedUserEntityDTO;
-    }
-     */
 }
