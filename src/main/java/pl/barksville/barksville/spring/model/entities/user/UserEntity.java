@@ -21,7 +21,8 @@ import java.util.Set;
         @Index(columnList = "username"),
         @Index(columnList = "email")
 })
-
+@Getter
+@Setter
 public class UserEntity extends ParentEntity {
 
     @Column(unique = true, nullable = false)
@@ -40,7 +41,7 @@ public class UserEntity extends ParentEntity {
         kolumna wynikająca z klasy UserRole ale również kolumna klucza głównego.
 
         Relacja między tabelami oparta jest nie na polu id, a na polu username.
-        Dzięki temu tabela example_users_roles będzie składała się z pary kolumn
+        Dzięki temu tabela users_roles będzie składała się z pary kolumn
         username i role_name i przykładowych wartości:
 
         akowalski, ROLE_USER
@@ -85,35 +86,4 @@ public class UserEntity extends ParentEntity {
                 "} " + super.toString();
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
