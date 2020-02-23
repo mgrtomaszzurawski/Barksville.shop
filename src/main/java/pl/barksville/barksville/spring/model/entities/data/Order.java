@@ -3,7 +3,7 @@ package pl.barksville.barksville.spring.model.entities.data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.base.ParentEntity;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import pl.barksville.barksville.spring.model.entities.user.UserEntity;
 
 import javax.persistence.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Order extends ParentEntity {
+public class Order extends BaseEntity {
 
     @OneToMany
     private List<Item> soldProducts;

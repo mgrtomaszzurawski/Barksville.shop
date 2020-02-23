@@ -1,5 +1,6 @@
 package pl.barksville.barksville.spring.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -25,6 +26,7 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
      */
     private final DataSource dataSource;
 
+    @Autowired
     public SecurityLayerConfiguration(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -50,6 +52,7 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/login").anonymous()
                 .antMatchers("/logout").authenticated()
+               // .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login")

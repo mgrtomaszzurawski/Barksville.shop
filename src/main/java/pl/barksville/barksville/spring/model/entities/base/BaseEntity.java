@@ -18,7 +18,7 @@ import java.util.Objects;
     Nie generujemy metody equals i hashCode z poziomu adnotacji lomboka,
     aby było wyraźnie widać, że mają zostać oparte tylko na polu id
  */
-public abstract class ParentEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +28,21 @@ public abstract class ParentEntity implements Serializable {
     @Column(name = "updated_on")
     private LocalDateTime updatedOn;
 
+    @PrePersist
+    public void prePersist () {
+        createdOn = LocalDateTime.now();
+        updatedOn = null;
+    }
+    @PreUpdate
+    public void preUpdate () {
+        updatedOn = LocalDateTime.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParentEntity that = (ParentEntity) o;
+        BaseEntity that = (BaseEntity) o;
         return Objects.equals(id, that.id);
     }
 
