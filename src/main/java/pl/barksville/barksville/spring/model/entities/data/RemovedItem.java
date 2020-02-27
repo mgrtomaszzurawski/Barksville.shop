@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class RemovedItems extends BaseEntity {
+public class RemovedItem extends BaseEntity {
 
 
     @OneToMany

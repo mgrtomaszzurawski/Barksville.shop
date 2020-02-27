@@ -22,7 +22,7 @@ public class OrdersController {
     }
 
     @PostMapping("/add-product")
-    public String addrProduct(Long productId, @RequestParam(defaultValue = "1") Integer quantity) {
+    public String addrProduct(Long productId, @RequestParam(defaultValue = "1") Double quantity) {
         Product product = productRepository.getOne(productId);
         //TODO: Przerobić aby aktualizować ilość produktu jeżeli jest już w zamówieniu
         Item item = new Item();

@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Setter
 @Getter
 @MappedSuperclass
-@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor

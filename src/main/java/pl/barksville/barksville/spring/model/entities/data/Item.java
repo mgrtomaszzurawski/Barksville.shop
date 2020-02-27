@@ -20,6 +20,9 @@ public class Item extends BaseEntity {
     @ManyToOne
     private Product product;
 
-    private Integer quantity;
+    private Double quantity;
+
+    //cena moze sie roznic od ceny w Product np. przez promocje
+    private Double price;
 
 }

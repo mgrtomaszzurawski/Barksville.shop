@@ -16,10 +16,10 @@ import javax.persistence.Table;
 @ToString
 public class ProductInvoicePrice extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
+    @Column( nullable = false)
     private Double invoicePrice;
     @Column(nullable = false)
-    private Integer quantity;
+    private Double quantity;
 
 
 }

@@ -15,11 +15,6 @@ import java.io.IOException;
 @RequestMapping("/login")
 public class AuthenticationController {
 
-    private UserEntityService userEntityService;
-    @Autowired
-    public AuthenticationController(UserEntityService userEntityService) {
-        this.userEntityService = userEntityService;
-    }
     @GetMapping
     public String prepareRegistrationPage() {
         return "/elements/login";
