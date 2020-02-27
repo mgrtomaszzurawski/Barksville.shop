@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class ShopRaport extends BaseEntity {
+public class ShopReport extends BaseEntity {
 
     @OneToMany
     private List<Item> soldProducts;
@@ -24,6 +24,8 @@ public class ShopRaport extends BaseEntity {
 
     private Double earnings;
 
+    @OneToMany
+    private List<ShopReportScanFile> shopReportScanFiles;
 
     private String opr;
 }

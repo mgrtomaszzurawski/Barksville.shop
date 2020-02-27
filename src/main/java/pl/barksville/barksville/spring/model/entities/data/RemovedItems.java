@@ -1,33 +1,29 @@
 package pl.barksville.barksville.spring.model.entities.data;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
-
 @Entity
-@Table(name = "Invoices")
+@Table(name = "removed_items")
 @Getter
 @Setter
 @ToString
-public class Invoice extends BaseEntity {
-
+public class RemovedItems extends BaseEntity {
 
 
     @OneToMany
-    private List<Item> boughtProducts;
+    private List<Item> removedProducts;
 
-    private Double cost;
-
-    @Column(name="invoice_number")
-    private String invoiceNumber;
-
-    @OneToMany
-    private List<InvoiceScanFile> invoiceScanFile;
+    private Double losses;
 
     private String opr;
 }

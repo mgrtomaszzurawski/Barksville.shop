@@ -6,9 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -21,8 +20,13 @@ public class Product extends BaseEntity {
     private String name;
     @Column(nullable = false)
     private Boolean state;
+    /*
     @Column(nullable = false, name="buy_price")
     private Double buyPrice;
+*/
+    @OneToMany
+    private List<ProductInvoicePrice> invoicePriceList;
+
     @Column(nullable = false, name="sell_price")
     private Double sellPrice;
     @Column(nullable = false)

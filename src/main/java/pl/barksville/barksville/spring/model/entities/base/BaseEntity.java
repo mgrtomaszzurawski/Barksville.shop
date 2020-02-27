@@ -31,7 +31,7 @@ public abstract class BaseEntity implements Serializable {
     @PrePersist
     public void prePersist () {
         createdOn = LocalDateTime.now();
-        updatedOn = null;
+        updatedOn = LocalDateTime.now();
     }
     @PreUpdate
     public void preUpdate () {
