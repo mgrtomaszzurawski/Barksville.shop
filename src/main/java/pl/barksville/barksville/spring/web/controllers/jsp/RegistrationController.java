@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.barksville.barksville.spring.core.service.UserRegistrationService;
 import pl.barksville.barksville.spring.model.dal.repositories.UserRepository;
 import pl.barksville.barksville.spring.model.entities.user.UserEntity;
 import pl.barksville.barksville.spring.model.entities.user.UserRole;
@@ -18,14 +19,10 @@ import java.util.List;
 @RequestMapping("/register")
 public class RegistrationController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+private final UserRegistrationService userRegistrationService;
 
-
-
-    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public RegistrationController(UserRegistrationService userRegistrationService) {
+        this.userRegistrationService = userRegistrationService;
     }
 
     @GetMapping
@@ -59,11 +56,11 @@ public class RegistrationController {
         UserEntity userToRegister = new UserEntity();
         userToRegister.setUsername(username);
         userToRegister.setEmail(email);
-        userToRegister.setPassword(passwordEncoder.encode(password));
+        userToRegister.setPassword(userRegistrationService.passwordEncode(password));
         userToRegister.setEnabled(true);
         userToRegister.getRoles().add(new UserRole("ROLE_USER"));
 
-        userRepository.save(userToRegister);
+        userRegistrationService.registerUser(userToRegister);
     }
 
     private List<String> validateRegistrationData(String username, String email, String password, String rePassword) {
@@ -81,7 +78,7 @@ public class RegistrationController {
             errors.add("Niezgodne hasła");
         }
         try {
-            if (userRepository.existsByUsername(username)) {
+            if (userRegistrationService.checkIfUserExistByName(username)) {
                 errors.add("Nazwa użytkownika jest już zajęta");
             }
         } catch (Exception ex) {

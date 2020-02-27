@@ -34,7 +34,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Double quantity;
 
-    private Double raiting;
+    private Double rating;
 
     @Column(columnDefinition = "TEXT")
     private String description;

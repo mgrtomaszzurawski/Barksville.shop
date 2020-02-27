@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.barksville.barksville.spring.core.service.OrderService;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
 import pl.barksville.barksville.spring.model.entities.data.Item;
 import pl.barksville.barksville.spring.model.entities.data.Product;
@@ -13,22 +14,20 @@ import pl.barksville.barksville.spring.session.OrderComponent;
 @RequestMapping("/orders")
 public class OrdersController {
 
-    private final OrderComponent orderComponent;
-    private final ProductRepository productRepository;
+ private final OrderService orderService;
 
-    public OrdersController(OrderComponent orderComponent, ProductRepository productRepository) {
-        this.orderComponent = orderComponent;
-        this.productRepository = productRepository;
+    public OrdersController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @PostMapping("/add-product")
     public String addrProduct(Long productId, @RequestParam(defaultValue = "1") Double quantity) {
-        Product product = productRepository.getOne(productId);
+        Product product = orderService.getProductById(productId);
         //TODO: Przerobić aby aktualizować ilość produktu jeżeli jest już w zamówieniu
         Item item = new Item();
         item.setQuantity(quantity);
         item.setProduct(product);
-        orderComponent.getOrder().getSoldProducts().add(item);
+        orderService.addItemToOrder(item);
         return "redirect:/products";
     }
 }

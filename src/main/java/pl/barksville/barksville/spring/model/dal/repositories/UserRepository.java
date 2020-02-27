@@ -12,7 +12,7 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(nativeQuery = true,value = "SELECT CASE WHEN count (*)>=1 ELSE 'false'END "+"FROM users WHERE username =?1")
-    Boolean checkIfUserEntityExist(String username);
+    Boolean checkIfUserEntityExistByName(String username);
     UserEntity getUserEntitiesByUsername(String username);
-    boolean existsByUsername(String username);
+   // boolean existsByUsername(String username);
 }

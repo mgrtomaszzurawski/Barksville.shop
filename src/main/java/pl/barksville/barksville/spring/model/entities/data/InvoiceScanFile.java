@@ -1,11 +1,11 @@
 package pl.barksville.barksville.spring.model.entities.data;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
+        import lombok.Getter;
+        import lombok.Setter;
+        import lombok.ToString;
+        import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
-import javax.persistence.*;
+        import javax.persistence.*;
 
 @Entity
 @Table(name = "invoice_scan_file")
