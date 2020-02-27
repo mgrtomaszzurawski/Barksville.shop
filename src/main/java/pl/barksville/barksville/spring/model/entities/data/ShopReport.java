@@ -8,7 +8,6 @@ import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import javax.persistence.*;
 import java.util.List;
 
-
 @Entity
 @Table(name = "Shop")
 @Getter
@@ -19,7 +18,7 @@ public class ShopReport extends BaseEntity {
     @OneToMany
     private List<Item> soldProducts;
 
-    @Column(name="transactions_number")
+    @Column(name = "transactions_number")
     private Integer transactionsNumber;
 
     private Double earnings;

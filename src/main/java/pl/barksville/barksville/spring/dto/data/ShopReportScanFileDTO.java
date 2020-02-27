@@ -6,11 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-
 @Getter
 @Setter
 @EqualsAndHashCode

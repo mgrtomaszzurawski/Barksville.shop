@@ -30,6 +30,7 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityLayerConfiguration(DataSource dataSource) {
         this.dataSource = dataSource;
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -67,6 +68,6 @@ public class SecurityLayerConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/webjars/","webjars/**").antMatchers("/media/","/media/**").antMatchers("/h2-console", "/h2-console/**");
+        web.ignoring().antMatchers("/webjars/", "webjars/**").antMatchers("/media/", "/media/**").antMatchers("/h2-console", "/h2-console/**");
     }
 }

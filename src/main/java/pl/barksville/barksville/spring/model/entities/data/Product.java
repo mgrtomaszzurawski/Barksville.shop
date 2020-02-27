@@ -18,6 +18,7 @@ public class Product extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
+
     @Column(nullable = false)
     private Boolean state;
     /*
@@ -27,10 +28,10 @@ public class Product extends BaseEntity {
     @OneToMany
     private List<ProductInvoicePrice> invoicePriceList;
 
-
     //sell price jest uzywana tylko jako cena bazowa do wyświetlania w sklepie internetowym
-    @Column(nullable = false, name="sell_price")
+    @Column(nullable = false, name = "sell_price")
     private Double sellPrice;
+
     @Column(nullable = false)
     private Double quantity;
 

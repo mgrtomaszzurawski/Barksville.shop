@@ -13,7 +13,7 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of ="id")
+@EqualsAndHashCode(of = "id")
 /*
     Nie generujemy metody equals i hashCode z poziomu adnotacji lomboka,
     aby było wyraźnie widać, że mają zostać oparte tylko na polu id
@@ -29,12 +29,13 @@ public abstract class BaseEntity implements Serializable {
     private LocalDateTime updatedOn;
 
     @PrePersist
-    public void prePersist () {
+    public void prePersist() {
         createdOn = LocalDateTime.now();
         updatedOn = LocalDateTime.now();
     }
+
     @PreUpdate
-    public void preUpdate () {
+    public void preUpdate() {
         updatedOn = LocalDateTime.now();
     }
 

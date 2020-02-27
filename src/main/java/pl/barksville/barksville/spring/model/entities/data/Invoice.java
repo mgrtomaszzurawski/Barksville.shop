@@ -8,7 +8,6 @@ import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import javax.persistence.*;
 import java.util.List;
 
-
 @Entity
 @Table(name = "Invoices")
 @Getter
@@ -16,14 +15,12 @@ import java.util.List;
 @ToString
 public class Invoice extends BaseEntity {
 
-
-
     @OneToMany
     private List<Item> boughtProducts;
 
     private Double cost;
 
-    @Column(name="invoice_number")
+    @Column(name = "invoice_number")
     private String invoiceNumber;
 
     @OneToMany

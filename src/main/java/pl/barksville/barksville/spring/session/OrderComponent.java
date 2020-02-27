@@ -9,7 +9,8 @@ import pl.barksville.barksville.spring.model.entities.data.Order;
 
 @Component
 @Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-@Getter @Setter
+@Getter
+@Setter
 public class OrderComponent {
 
     private Order order = new Order();

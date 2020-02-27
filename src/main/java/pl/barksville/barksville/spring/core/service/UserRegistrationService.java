@@ -11,21 +11,20 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserRegistrationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String passwordEncode (String pass){
+    public String passwordEncode(String pass) {
         return passwordEncoder.encode(pass);
     }
 
-    public void registerUser(UserEntity userEntity){
+    public void registerUser(UserEntity userEntity) {
         userRepository.save(userEntity);
     }
 
-    public boolean checkIfUserExistByName (String name){
+    public boolean checkIfUserExistByName(String name) {
         return userRepository.checkIfUserEntityExistByName(name);
     }
 }

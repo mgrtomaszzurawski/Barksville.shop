@@ -35,10 +35,10 @@ import java.util.List;
 @RequestMapping("/admin/account")
 public class AccountController {
 
-   private final ShopReportRepository shopReportRepository;
-   private final ProductRepository productRepository;
-   private final ItemRepository itemRepository;
-   private final ProductIvoicePriceRepository productIvoicePriceRepository;
+    private final ShopReportRepository shopReportRepository;
+    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
+    private final ProductIvoicePriceRepository productIvoicePriceRepository;
 
     public AccountController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository) {
         this.shopReportRepository = shopReportRepository;
@@ -53,26 +53,27 @@ public class AccountController {
 
         return "elements/account";
     }
-/*
-    @PostMapping(params = {"edit"})
-    public String beginEditUserData(Model model, Principal principal) {
 
-    }
+    /*
+        @PostMapping(params = {"edit"})
+        public String beginEditUserData(Model model, Principal principal) {
 
-    @PostMapping(params = {"save"})
-    public String saveEditUserData(String firstName, String lastName, String pesel, String dateOfBirth, Principal principal) {
+        }
 
-    }
-*/
+        @PostMapping(params = {"save"})
+        public String saveEditUserData(String firstName, String lastName, String pesel, String dateOfBirth, Principal principal) {
+
+        }
+    */
     @PostMapping(params = {"cancel"})
     public String cancelEditUserData() {
         return "redirect:elements/account";
     }
 
     @PostMapping(params = {"upload"})
-    public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal,Model model) throws IOException {
+    public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal, Model model) throws IOException {
 
-       // log.debug("Dodawanie zdjęcia profilowego dla użytkownika: {}", loggedUser);
+        // log.debug("Dodawanie zdjęcia profilowego dla użytkownika: {}", loggedUser);
 
         ShopReport newReport = new ShopReport();
         List<Item> itemList = new ArrayList<>();
@@ -87,7 +88,7 @@ public class AccountController {
 
         if (isValidProfileFile(shopReportScanFile)) {
             newReport.setShopReportScanFile(shopReportScanFile);
-            parsePDF(newReport,file);
+            parsePDF(newReport, file);
             newReport.setOpr(principal.getName());
 
             shopReportRepository.save(newReport);
@@ -144,7 +145,7 @@ public class AccountController {
     }
 
 
-    private void parsePDF(ShopReport shopReport,MultipartFile file) throws IOException {
+    private void parsePDF(ShopReport shopReport, MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getBytes())) {
 
             document.getClass();
@@ -164,12 +165,12 @@ public class AccountController {
                 String lines[] = pdfFileInText.split("\\r?\\n");
                 for (String line : lines) {
                     String[] words = line.split(" ");
-                    if(words[0].matches("\\d+")){
+                    if (words[0].matches("\\d+")) {
                         StringBuilder name = new StringBuilder();
-                        for(int i = 1;i<words.length-2;i++){
-                            name.append(words[i]+" ");
+                        for (int i = 1; i < words.length - 2; i++) {
+                            name.append(words[i] + " ");
                         }
-                        name.deleteCharAt(name.length()-1);
+                        name.deleteCharAt(name.length() - 1);
 
                         Item item = new Item();
 
@@ -177,45 +178,44 @@ public class AccountController {
                         Product product = new Product();
 
                         ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
-                        productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length-1]));
-                        productInvoicePrice.setQuantity(Double.parseDouble(words[words.length-2]));
+                        productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
+                        productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
                         productIvoicePriceRepository.save(productInvoicePrice);
                         List<ProductInvoicePrice> productInvoicePriceList = new ArrayList<>();
                         productInvoicePriceList.add(productInvoicePrice);
                         product.setInvoicePriceList(productInvoicePriceList);
 
                         product.setName(name.toString());
-                        product.setQuantity(Double.parseDouble(words[words.length-2]));
+                        product.setQuantity(Double.parseDouble(words[words.length - 2]));
                         product.setState(Boolean.TRUE);
-                        product.setSellPrice(Double.parseDouble(words[words.length-1]));
+                        product.setSellPrice(Double.parseDouble(words[words.length - 1]));
 
                         productRepository.save(product);
                         //koniec tworzenia prodkutku
 
                         item.setProduct(productRepository.findByName(name.toString()));
-                        item.setQuantity(Double.parseDouble(words[words.length-2]));
-                        item.setPrice(Double.parseDouble(words[words.length-1]));
+                        item.setQuantity(Double.parseDouble(words[words.length - 2]));
+                        item.setPrice(Double.parseDouble(words[words.length - 1]));
                         itemRepository.save(item);
 
 
                         shopReport.getSoldProducts().add(item);
 
-                    }else if(words[0].matches("Za")){
+                    } else if (words[0].matches("Za")) {
                         // System.out.println( words[words.length-1]);
-                      //  String[] date = words[words.length-1].split("\\.");
+                        //  String[] date = words[words.length-1].split("\\.");
 
-                     //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
+                        //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
 
-                      //  shopReport.setCreatedOn(reportDate);
-                    }else if(words[0].matches("Pozycji:")){
+                        //  shopReport.setCreatedOn(reportDate);
+                    } else if (words[0].matches("Pozycji:")) {
                         shopReport.setTransactionsNumber(Integer.parseInt(words[1]));
-                        shopReport.setEarnings(Double.parseDouble(words[words.length-1]));
+                        shopReport.setEarnings(Double.parseDouble(words[words.length - 1]));
 
                     }
                 }
 
             }
-
 
 
         }

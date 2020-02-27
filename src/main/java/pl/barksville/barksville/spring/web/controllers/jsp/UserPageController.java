@@ -14,6 +14,7 @@ public class UserPageController {
 
         return "/elements/user";
     }
+
     @PostMapping
     public String postUserPage() {
         return "redirect:/";

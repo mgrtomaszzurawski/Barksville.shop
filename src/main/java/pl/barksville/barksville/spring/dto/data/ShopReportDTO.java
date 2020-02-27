@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.data.Item;
 import pl.barksville.barksville.spring.model.entities.data.ShopReportScanFile;
+
 import java.util.List;
 
 @Getter

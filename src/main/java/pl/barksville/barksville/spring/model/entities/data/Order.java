@@ -22,9 +22,8 @@ public class Order extends BaseEntity {
     private List<Item> soldProducts = new ArrayList<>();
 
     private Double price;
-    @Column(name="alternative_adress")
+    @Column(name = "alternative_adress")
     private String altAddress;
-
 
     @ManyToOne
     private UserEntity userEntity;

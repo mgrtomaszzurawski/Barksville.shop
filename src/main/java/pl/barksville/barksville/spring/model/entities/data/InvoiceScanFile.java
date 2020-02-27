@@ -1,11 +1,11 @@
 package pl.barksville.barksville.spring.model.entities.data;
 
-        import lombok.Getter;
-        import lombok.Setter;
-        import lombok.ToString;
-        import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
-        import javax.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "invoice_scan_file")
@@ -14,10 +14,13 @@ package pl.barksville.barksville.spring.model.entities.data;
 @Setter
 @ToString(exclude = {"data"})
 public class InvoiceScanFile extends BaseEntity {
+
     @Column(name = "file_name", nullable = false)
     private String fileName;
+
     @Column(name = "content_type", nullable = false)
     private String contentType;
+
     @Lob
     @Basic(fetch = FetchType.LAZY, optional = false)
     @Column(name = "data", nullable = false, columnDefinition = "MEDIUMBLOB")

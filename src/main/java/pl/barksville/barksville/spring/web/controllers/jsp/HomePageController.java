@@ -1,7 +1,6 @@
 package pl.barksville.barksville.spring.web.controllers.jsp;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +14,10 @@ public class HomePageController {
    /*private UserService userService;
     private SkillService skillService;*/
 
-   /* @Autowired
-    public HomePageController(UserService userService, SkillService skillService) {
-        this.userService = userService;
-        this.skillService = skillService;*//*
+    /* @Autowired
+     public HomePageController(UserService userService, SkillService skillService) {
+         this.userService = userService;
+         this.skillService = skillService;*//*
     }
 */
     @GetMapping
@@ -26,6 +25,7 @@ public class HomePageController {
 
         return "home";
     }
+
     @PostMapping
     public String postHomePage() {
         return "redirect:/";

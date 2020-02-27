@@ -1,6 +1,6 @@
 package pl.barksville.barksville.spring.core.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.stereotype.Service;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
 import pl.barksville.barksville.spring.model.entities.data.Item;
@@ -17,11 +17,11 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
-    public Product getProductById(Long id){
+    public Product getProductById(Long id) {
         return productRepository.getOne(id);
     }
 
-    public void addItemToOrder(Item item){
+    public void addItemToOrder(Item item) {
         orderComponent.getOrder().getSoldProducts().add(item);
     }
 }

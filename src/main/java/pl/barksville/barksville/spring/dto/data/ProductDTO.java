@@ -7,8 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.data.ProductInvoicePrice;
 
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
+
 import java.util.List;
 
 @Getter
