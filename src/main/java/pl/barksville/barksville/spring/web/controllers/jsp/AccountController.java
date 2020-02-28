@@ -71,7 +71,7 @@ public class AccountController {
     }
 
     @PostMapping(params = {"upload"})
-    public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal, Model model) throws IOException {
+    public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal) throws IOException {
 
         // log.debug("Dodawanie zdjęcia profilowego dla użytkownika: {}", loggedUser);
 
@@ -216,7 +216,6 @@ public class AccountController {
                 }
 
             }
-
 
         }
     }

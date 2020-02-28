@@ -13,7 +13,7 @@ import pl.barksville.barksville.spring.model.entities.data.Product;
 @EqualsAndHashCode
 public class ItemDTO {
 
-    private Product product;
+    private ProductDTO product;
 
     private Double quantity;
 

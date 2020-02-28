@@ -24,7 +24,7 @@ public class ShopReport extends BaseEntity {
     private Double earnings;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "shop_report__scan_file_id")
+    @JoinColumn(name = "shop_report_scan_file_id")
     private ShopReportScanFile shopReportScanFile;
 
     private String opr;

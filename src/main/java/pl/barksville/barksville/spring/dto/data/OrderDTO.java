@@ -17,7 +17,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class OrderDTO {
 
-    private List<Item> soldProducts = new ArrayList<>();
+    private List<ItemDTO> soldProducts = new ArrayList<>();
 
     private Double price;
 

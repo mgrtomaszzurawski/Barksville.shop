@@ -15,7 +15,7 @@
 
 
 
-            </div>
+
             <div class="column">
                 <div class="content">
                     <form enctype="multipart/form-data" method="post">
@@ -62,9 +62,7 @@
 
             </div>
             <div class="column"></div>
-        </div>
-    </div>
-</section>
+
 <footer class="footer">
     <jsp:include page="footer.jsp"/>
 </footer>

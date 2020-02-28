@@ -20,7 +20,7 @@ public class ProductDTO {
 
     private Boolean state;
 
-    private List<ProductInvoicePrice> invoicePriceList;
+    private List<ProductInvoicePriceDTO> invoicePriceList;
 
     private Double sellPrice;
 

@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class RemovedItemDTO {
 
-    private List<Item> removedProducts;
+    private List<ItemDTO> removedProducts;
 
     private Double losses;
 

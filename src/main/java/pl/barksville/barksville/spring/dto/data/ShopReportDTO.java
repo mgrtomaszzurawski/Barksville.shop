@@ -16,13 +16,13 @@ import java.util.List;
 @EqualsAndHashCode
 public class ShopReportDTO {
 
-    private List<Item> soldProducts;
+    private List<ItemDTO> soldProducts;
 
     private Integer transactionsNumber;
 
     private Double earnings;
 
-    private ShopReportScanFile shopReportScanFile;
+    private ShopReportScanFileDTO shopReportScanFile;
 
     private String opr;
 }

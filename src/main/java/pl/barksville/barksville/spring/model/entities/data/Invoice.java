@@ -24,6 +24,7 @@ public class Invoice extends BaseEntity {
     private String invoiceNumber;
 
     @OneToMany
+    @JoinColumn(name = "invoice_scan_file_id")
     private List<InvoiceScanFile> invoiceScanFile;
 
     private String opr;

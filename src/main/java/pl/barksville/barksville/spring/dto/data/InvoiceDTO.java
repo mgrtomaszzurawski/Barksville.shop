@@ -15,13 +15,13 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class InvoiceDTO {
-    private List<Item> boughtProducts;
+    private List<ItemDTO> boughtProducts;
 
     private Double cost;
 
     private String invoiceNumber;
 
-    private List<InvoiceScanFile> invoiceScanFile;
+    private List<InvoiceScanFileDTO> invoiceScanFile;
 
     private String opr;
 }
