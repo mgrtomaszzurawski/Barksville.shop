@@ -6,12 +6,25 @@
     <title>Rejestracja</title>
 </head>
 <body>
-<header>
-    <h1>Rejestracja</h1>
-</header>
-<section>
+<c:forEach items="${products}" var="product" varStatus="stat">
+    <tr>
+        <td>${stat.count}</td>
+        <td><b>${product.product.name}</b></td>
+        <td>${product.quantity}</td>
+        <td>${product.price}</td>
+        <td>
+            <form method="post" action="${pageContext.request.contextPath}">
+                <input type="hidden" name="name" value="${product.product.name}"/>
+                <button type="submit" name="delete">>usun</button>
+            </form>
+        </td>
+    </tr>
+</c:forEach>
+
+
     <h1>Wypełnij dane rejestracyjne</h1>
     <div>
+
         <form method="post">
             <c:if test="${not empty errors}">
                 <fieldset>
@@ -40,14 +53,7 @@
                     <label for="quantity">Ilość: </label><input id="quantity" type="text"
                                                                 name="quantity"/>
                 </p>
-                <p>
-                    <label for="cost">Suma na fakturze: </label><input id="cost" type="text"
-                                                                name="cost"/>
-                </p>
-                <p>
-                    <label for="invoiceNumber">Nr faktury: </label><input id="invoiceNumber" type="text"
-                                                                       name="invoiceNumber"/>
-                </p>
+
                 <div class="column">
                     <div class="content">
                         <div class="field is-grouped">
@@ -62,20 +68,7 @@
                     </div>
 
                 </div>
-                <div class="column">
-                    <div class="content">
-                        <div class="field is-grouped">
-                            <div class="control">
-                                <button class="button is-success is-link" type="submit"
-                                        name="delete">
-                                    usun produkt trzeba wsadzic go do listy z przesylaniem jaki to obiekt
-                                </button>
-                            </div>
-                        </div>
 
-                    </div>
-
-                </div>
                 <div class="column">
                     <div class="content">
                         <div class="field is-grouped">

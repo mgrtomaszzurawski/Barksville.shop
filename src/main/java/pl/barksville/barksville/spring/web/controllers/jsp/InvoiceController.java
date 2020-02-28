@@ -2,15 +2,18 @@ package pl.barksville.barksville.spring.web.controllers.jsp;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
 import pl.barksville.barksville.spring.core.service.ProductService;
+import pl.barksville.barksville.spring.dto.data.ItemDTO;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -20,7 +23,7 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-    public InvoiceController(InvoiceService invoiceService, ProductService productService) {
+    public InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
 
     }
@@ -31,7 +34,7 @@ public class InvoiceController {
     }
 
     @PostMapping(params = {"upload"})
-    public String createInvoice(Principal principal, String cost, String invoiceNumber  ) throws IOException {
+    public String createInvoice(Principal principal, String cost, String invoiceNumber  )  {
 
         invoiceService.createInvoiceDTOWithEmptyLists(cost,invoiceNumber,principal.getName());
 
@@ -40,19 +43,23 @@ public class InvoiceController {
 
 
     @GetMapping("/addProduct")
-    public String addProductToInvoice(InvoiceComponent invoiceComponent){
+    public String addProductToInvoice(Model model){
+
+        model.addAttribute("products",invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts());
+
+
        return "invoice/invoiceAddProduct";
     }
 
     @PostMapping(value = "/addProduct",params = {"upload"})
     public String addProductToInvoice(String name, String price, String quantity){
         invoiceService.addProduct(name,price,quantity);
-        return "invoice/invoiceAddProduct";
+        return "redirect:/admin/invoice/addProduct";
     }
     @PostMapping(value = "/addProduct",params = {"delate"})
     public String deleteProductToInvoice(String name){
         invoiceService.deleteProduct(name);
-        return "invoice/invoiceAddProduct";
+        return "redirect:/admin/invoice/addProduct";
     }
     @PostMapping(value = "/addProduct",params = {"save"})
     public String saveProductsToInvoice(){

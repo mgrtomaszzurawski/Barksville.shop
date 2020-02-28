@@ -23,6 +23,7 @@ public class InvoiceService {
     public InvoiceService(InvoiceRepository invoiceRepository, InvoiceScanFileRepository invoiceScanFileRepository, InvoiceComponent invoiceComponent, ProductService productService) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceScanFileRepository = invoiceScanFileRepository;
+
         this.invoiceComponent = invoiceComponent;
         this.productService = productService;
     }
@@ -31,6 +32,7 @@ public class InvoiceService {
 
 
         //InvoiceDTO invoiceDTO = new InvoiceDTO();
+        //invoiceComponent.setInvoiceDTO(invoiceDTO);
         invoiceComponent.getInvoiceDTO().setCost(Double.parseDouble(cost));
         invoiceComponent.getInvoiceDTO().setInvoiceNumber(invoiceNumber);
         invoiceComponent.getInvoiceDTO().setOpr(opr);
@@ -69,5 +71,9 @@ public class InvoiceService {
 
     public void deleteProduct(String name) {
         invoiceComponent.getInvoiceDTO().getBoughtProducts().removeIf(itemDTO -> itemDTO.getProduct().getName().equals(name));
+    }
+
+    public InvoiceComponent getInvoiceComponent(){
+        return invoiceComponent;
     }
 }

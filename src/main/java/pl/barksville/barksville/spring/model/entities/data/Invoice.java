@@ -1,6 +1,7 @@
 package pl.barksville.barksville.spring.model.entities.data;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Invoice extends BaseEntity {
 
     @OneToMany

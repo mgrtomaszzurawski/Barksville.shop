@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import pl.barksville.barksville.spring.dto.data.InvoiceDTO;
 
 @Component
-@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+//@Scope(scopeName = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 @Setter
 public class InvoiceComponent {
