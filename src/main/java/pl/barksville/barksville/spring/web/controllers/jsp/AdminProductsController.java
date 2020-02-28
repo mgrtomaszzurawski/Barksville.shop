@@ -5,26 +5,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.ProductService;
-import pl.barksville.barksville.spring.model.entities.data.Product;
-
-import java.util.List;
 
 @Controller
-@RequestMapping("/products")
-public class ProductsController {
+@RequestMapping("/admin/products")
+public class AdminProductsController {
 
     private final ProductService productService;
 
-    public ProductsController(ProductService productService) {
+    public AdminProductsController(ProductService productService) {
         this.productService = productService;
     }
 
-    @GetMapping
-    public String showProducts(Model model) {
-        List<Product> allProducts = productService.allActiveProducts();
-        model.addAttribute("allProducts", allProducts);
-        return "products";
+    @GetMapping()
+    public String addProductToInvoice(Model model){
+
+        model.addAttribute("products",productService.allProducts());
+
+        return "products/showAllProducts";
     }
-
-
 }

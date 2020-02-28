@@ -12,6 +12,7 @@ import pl.barksville.barksville.spring.core.service.InvoiceService;
 import pl.barksville.barksville.spring.core.service.ProductService;
 import pl.barksville.barksville.spring.dto.data.ItemDTO;
 import pl.barksville.barksville.spring.dto.data.ProductDTO;
+import pl.barksville.barksville.spring.dto.data.ProductInvoicePriceDTO;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -103,6 +106,7 @@ public class InvoiceController {
         List<ProductDTO> nonExisting= invoiceService.getListOfNonExistingProducts(existing);
 
 
+
         model.addAttribute("existing",existing);
         model.addAttribute("nonExisting",nonExisting);
 
@@ -110,9 +114,9 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/checkProducts",params = {"upload"})
-    public String updateProducts(List<ProductDTO> nonExisting,List<Double> prices) throws IOException {
-        invoiceService.createProductsBaseOnInvoice(nonExisting);
-
+    public String updateProducts(String name,String price) throws IOException {
+      //  invoiceService.createProductsBaseOnInvoice(nonExisting);
+        invoiceService.createProductBaseOnInvoice(name,price);
         return "redirect:/admin/invoice/checkProducts";
     }
 

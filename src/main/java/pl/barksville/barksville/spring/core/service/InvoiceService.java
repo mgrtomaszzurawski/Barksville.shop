@@ -2,17 +2,11 @@ package pl.barksville.barksville.spring.core.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import pl.barksville.barksville.spring.dto.data.InvoiceDTO;
-import pl.barksville.barksville.spring.dto.data.InvoiceScanFileDTO;
-import pl.barksville.barksville.spring.dto.data.ItemDTO;
-import pl.barksville.barksville.spring.dto.data.ProductDTO;
+import pl.barksville.barksville.spring.dto.data.*;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceScanFileRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
-import pl.barksville.barksville.spring.model.entities.data.Invoice;
-import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
-import pl.barksville.barksville.spring.model.entities.data.Item;
-import pl.barksville.barksville.spring.model.entities.data.ShopReportScanFile;
+import pl.barksville.barksville.spring.model.entities.data.*;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
@@ -174,5 +168,30 @@ public class InvoiceService {
             boughtProducts.add(item);
         }
         return boughtProducts;
+    }
+
+    public void createProductBaseOnInvoice(String name, String price) {
+        ProductDTO productDTO= new ProductDTO();
+        List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
+
+       for(ItemDTO item: invoiceComponent.getInvoiceDTO().getBoughtProducts()){
+           if(item.getProduct().getName().equals(name)){
+               productDTO=item.getProduct();
+               ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
+               productInvoicePriceDTO.setQuantity(item.getQuantity());
+               productInvoicePriceDTO.setInvoicePrice(item.getPrice());
+               productInvoicePriceDTOList.add(productInvoicePriceDTO);
+               break;
+           }
+       }
+
+
+
+        //TODO check if loop find productDTO
+            productService.createProduct(productDTO.getName(),
+                    Boolean.TRUE,
+                   productInvoicePriceDTOList,
+                    Double.parseDouble(price),
+                    productDTO.getQuantity());
     }
 }
