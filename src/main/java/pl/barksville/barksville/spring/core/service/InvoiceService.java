@@ -1,14 +1,21 @@
 package pl.barksville.barksville.spring.core.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.dto.data.InvoiceDTO;
 import pl.barksville.barksville.spring.dto.data.InvoiceScanFileDTO;
 import pl.barksville.barksville.spring.dto.data.ItemDTO;
+import pl.barksville.barksville.spring.dto.data.ProductDTO;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceScanFileRepository;
+import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
+import pl.barksville.barksville.spring.model.entities.data.Invoice;
+import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
+import pl.barksville.barksville.spring.model.entities.data.Item;
 import pl.barksville.barksville.spring.model.entities.data.ShopReportScanFile;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +26,17 @@ public class InvoiceService {
     private final InvoiceScanFileRepository invoiceScanFileRepository;
     private final InvoiceComponent invoiceComponent;
     private final ProductService productService;
+    private final ItemRepository itemRepository;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, InvoiceScanFileRepository invoiceScanFileRepository, InvoiceComponent invoiceComponent, ProductService productService) {
+    public InvoiceService(InvoiceRepository invoiceRepository, InvoiceScanFileRepository invoiceScanFileRepository, InvoiceComponent invoiceComponent, ProductService productService, ItemRepository itemRepository) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceScanFileRepository = invoiceScanFileRepository;
-
         this.invoiceComponent = invoiceComponent;
         this.productService = productService;
+        this.itemRepository = itemRepository;
     }
 
-    public void createInvoiceDTOWithEmptyLists(String cost, String invoiceNumber, String opr){
+    public void createInvoiceDTOWithEmptyLists(String cost, String invoiceNumber, String opr) {
 
 
         //InvoiceDTO invoiceDTO = new InvoiceDTO();
@@ -47,15 +55,15 @@ public class InvoiceService {
     }
 
     public void addProduct(String name, String price, String quantity) {
-            ItemDTO itemDTO = new ItemDTO();
+        ItemDTO itemDTO = new ItemDTO();
 
-            itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, price, quantity));
+        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, price, quantity));
 
-            itemDTO.setQuantity(Double.parseDouble(quantity));
+        itemDTO.setQuantity(Double.parseDouble(quantity));
 
-            itemDTO.setPrice(Double.parseDouble(price));
+        itemDTO.setPrice(Double.parseDouble(price));
 
-            invoiceComponent.getInvoiceDTO().getBoughtProducts().add(itemDTO);
+        invoiceComponent.getInvoiceDTO().getBoughtProducts().add(itemDTO);
     }
 
     private boolean isValidProfileFile(ShopReportScanFile shopReportScanFile) {
@@ -73,7 +81,98 @@ public class InvoiceService {
         invoiceComponent.getInvoiceDTO().getBoughtProducts().removeIf(itemDTO -> itemDTO.getProduct().getName().equals(name));
     }
 
-    public InvoiceComponent getInvoiceComponent(){
+    public InvoiceComponent getInvoiceComponent() {
         return invoiceComponent;
+    }
+
+    public void addScan(MultipartFile file) throws IOException {
+        InvoiceScanFileDTO invoiceScanFileDTO = new InvoiceScanFileDTO();
+        invoiceScanFileDTO.setFileName(file.getOriginalFilename());
+        invoiceScanFileDTO.setContentType(file.getContentType());
+        invoiceScanFileDTO.setData(file.getBytes());
+
+        invoiceComponent.getInvoiceDTO().getInvoiceScanFile().add(invoiceScanFileDTO);
+    }
+
+    public void deleteScan(String name) {
+        invoiceComponent.getInvoiceDTO().getInvoiceScanFile().removeIf(scan -> scan.getFileName().equals(name));
+    }
+
+    public List<ProductDTO> getListOfExistingProducts() {
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (ItemDTO item : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
+            if (productService.isExistByName(item.getProduct().getName())) {
+                productDTOList.add(item.getProduct());
+            }
+        }
+        return productDTOList;
+
+    }
+
+
+    public List<ProductDTO> getListOfNonExistingProducts(List<ProductDTO> existing) {
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (ItemDTO item : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
+            if (!existing.contains(item)) {
+                productDTOList.add(item.getProduct());
+            }
+        }
+        return productDTOList;
+    }
+
+    public void createProductsBaseOnInvoice(List<ProductDTO> nonExisting) {
+
+        for (ProductDTO productDTO : nonExisting) {
+            productService.createProduct(productDTO.getName(),
+                    productDTO.getState(),
+                    productDTO.getInvoicePriceList(),
+                    productDTO.getSellPrice(),
+                    productDTO.getQuantity());
+        }
+    }
+
+    public void save() {
+        Invoice invoice = new Invoice();
+
+        invoice.setBoughtProducts(toItemList());
+
+        invoice.setCost(invoiceComponent.getInvoiceDTO().getCost());
+
+        invoice.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
+
+        invoice.setInvoiceScanFile(toScanFileList());
+
+        invoice.setOpr(invoiceComponent.getInvoiceDTO().getOpr());
+
+        invoiceRepository.save(invoice);
+
+    }
+
+    private List<InvoiceScanFile> toScanFileList() {
+
+        List<InvoiceScanFile> invoiceScanFileList = new ArrayList<>();
+
+        for(InvoiceScanFileDTO scanFileDTO:invoiceComponent.getInvoiceDTO().getInvoiceScanFile()){
+            InvoiceScanFile invoiceScanFile = new InvoiceScanFile();
+            invoiceScanFile.setFileName(scanFileDTO.getFileName());
+            invoiceScanFile.setContentType(scanFileDTO.getContentType());
+            invoiceScanFile.setData(scanFileDTO.getData());
+            invoiceScanFileRepository.save(invoiceScanFile);
+            invoiceScanFileList.add(invoiceScanFile);
+        }
+        return invoiceScanFileList;
+    }
+
+    private List<Item> toItemList() {
+        List<Item> boughtProducts = new ArrayList<>();
+        for(ItemDTO itemDTO: invoiceComponent.getInvoiceDTO().getBoughtProducts()){
+            Item item = new Item();
+            item.setPrice(itemDTO.getPrice());
+            item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+            item.setQuantity(itemDTO.getQuantity());
+            itemRepository.save(item);
+            boughtProducts.add(item);
+        }
+        return boughtProducts;
     }
 }

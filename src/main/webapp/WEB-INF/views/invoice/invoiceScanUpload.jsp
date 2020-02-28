@@ -6,13 +6,26 @@
     <title>Rejestracja</title>
 </head>
 <body>
+
+<c:forEach items="${scans}" var="scan" varStatus="stat">
+    <tr>
+        <td>${stat.count}</td>
+        <td><b>${scan.fileName}.${scan.contentType}</b></td>
+        <td>
+            <form method="post" action="${pageContext.request.contextPath}">
+                <input type="hidden" name="name" value="${scan.fileName}"/>
+                <button type="submit" name="delete">>usun</button>
+            </form>
+        </td>
+    </tr>
+</c:forEach>
 <header>
     <h1>Rejestracja</h1>
 </header>
 <section>
     <h1>Wypełnij dane rejestracyjne</h1>
     <div>
-        <form method="post">
+
             <c:if test="${not empty errors}">
                 <fieldset>
                     <legend>Błędy</legend>
@@ -61,8 +74,7 @@
 
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <button class="button is-success is-link" type="submit"
-                                            name="upload">
+                                    <button  type="submit" name="upload">
                                         Zapisz
                                     </button>
                                 </div>
@@ -73,29 +85,12 @@
                 </div>
                 <div class="column"></div>
 
-
+                <form method="post">
             <div class="column">
                 <div class="content">
                     <div class="field is-grouped">
                         <div class="control">
-                            <button class="button is-success is-link" type="submit"
-                                    name="delete">
-                                usun trzeba zrobic liste i tam je cyklicznie umiescic
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="column">
-                <div class="content">
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-success is-link" type="submit"
-                                    name="save">
+                            <button  type="submit" name="next">
                                 zapisz i przejdz dalej
                             </button>
                         </div>
@@ -104,17 +99,7 @@
                 </div>
 
             </div>
-
-
-
-
-
-
-
-
-
-        </form>
-    </div>
+                    </form>
 </section>
 <footer></footer>
 </body>

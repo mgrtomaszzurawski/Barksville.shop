@@ -6,14 +6,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
 import pl.barksville.barksville.spring.core.service.ProductService;
 import pl.barksville.barksville.spring.dto.data.ItemDTO;
+import pl.barksville.barksville.spring.dto.data.ProductDTO;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -56,7 +62,7 @@ public class InvoiceController {
         invoiceService.addProduct(name,price,quantity);
         return "redirect:/admin/invoice/addProduct";
     }
-    @PostMapping(value = "/addProduct",params = {"delate"})
+    @PostMapping(value = "/addProduct",params = {"delete"})
     public String deleteProductToInvoice(String name){
         invoiceService.deleteProduct(name);
         return "redirect:/admin/invoice/addProduct";
@@ -64,31 +70,61 @@ public class InvoiceController {
     @PostMapping(value = "/addProduct",params = {"save"})
     public String saveProductsToInvoice(){
 
-        return "invoice/invoiceScanUpload";
+        return "redirect:/admin/invoice/scanUpload";
     }
 
     @GetMapping("/scanUpload")
-    public String ScanToInvoice(){
-        //TODO
+    public String ScanToInvoice(Model model){
+        model.addAttribute("scans",invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
         return "invoice/invoiceScanUpload";
     }
 
     @PostMapping(value = "/scanUpload",params = {"upload"})
-    public String addScanToInvoice(){
-      //TODO
-        return "invoice/invoiceAddProduct";
+    public String addScanToInvoice(@RequestParam MultipartFile file) throws IOException {
+        invoiceService.addScan(file);
+        return "redirect:/admin/invoice/scanUpload";
     }
 
-    @PostMapping(value = "/scanUpload",params = {"delate"})
-    public String deleteScanToInvoice(String name){
-        //TODO
-        return "invoice/invoiceAddProduct";
+    @PostMapping(value = "/scanUpload",params = {"delete"})
+    public String deleteInvoiceScan(String name){
+        invoiceService.deleteScan(name);
+        return "redirect:/admin/invoice/scanUpload";
     }
 
-    @PostMapping(value = "/scanUpload",params = {"save"})
-    public String addProductToInvoice(){
-//TODO
+    @PostMapping(value = "/scanUpload",params = {"next"})
+    public String checkInvoice(){
+
+        return "redirect:/admin/invoice/checkProducts";
+    }
+
+    @GetMapping("/checkProducts")
+    public String checkProductInInvoice(Model model){
+        List<ProductDTO> existing = invoiceService.getListOfExistingProducts();
+        List<ProductDTO> nonExisting= invoiceService.getListOfNonExistingProducts(existing);
+
+
+        model.addAttribute("existing",existing);
+        model.addAttribute("nonExisting",nonExisting);
+
         return "invoice/invoiceCheckProduct";
     }
+
+    @PostMapping(value = "/checkProducts",params = {"upload"})
+    public String updateProducts(List<ProductDTO> nonExisting,List<Double> prices) throws IOException {
+        invoiceService.createProductsBaseOnInvoice(nonExisting);
+
+        return "redirect:/admin/invoice/checkProducts";
+    }
+
+
+    @PostMapping(value = "/checkProducts",params = {"save"})
+    public String saveInvoice(){
+        invoiceService.save();
+
+        return "invoice/invoiceSaved";
+    }
+
+
+
 
 }
