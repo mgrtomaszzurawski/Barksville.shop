@@ -24,16 +24,24 @@
             <td>${product.name}</td>
             <td>${product.description}</td>
             <td>${product.sellPrice}</td>
-            <td>${product.raiting}</td>
+            <td>${product.rating}</td>
             <td>
                 <form method="post" action="/orders/add-product">
-                    <input type="number" min="1" step="1" name="quantity" value="1"/>
+                    <label>
+                        <input type="number" min="1" step="1" name="quantity" value="1"/>
+                    </label>
                     <input type="hidden" name="productId" value="${product.id}"/>
                     <button type="submit">Dodaj</button>
                 </form>
             </td>
         </tr>
     </c:forEach>
+
+    <form method="post">
+        <button  type="submit" name="save">
+            Zapisz
+        </button>
+    </form>
 </table>
 </body>
 </html>
