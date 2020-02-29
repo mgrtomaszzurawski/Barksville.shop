@@ -4,10 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +18,14 @@ import pl.barksville.barksville.spring.model.dal.repositories.ShopReportReposito
 import pl.barksville.barksville.spring.model.entities.data.*;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/account")
+@RequestMapping("/admin/shop-raport")
 public class AccountController {
 
     private final ShopReportRepository shopReportRepository;

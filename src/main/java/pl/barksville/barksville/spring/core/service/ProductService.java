@@ -80,4 +80,13 @@ public class ProductService {
     public List<Product> allProducts() {
      return productRepository.findAll();
     }
+
+    public void addQuantityToProduct(String name, Double quantity) {
+        Double sum =productRepository.findByName(name).getQuantity();
+        sum+=quantity;
+        Product product = productRepository.findByName(name);
+        product.setQuantity(quantity);
+        productRepository.save(product);
+      //  productRepository.updateQuantity(name,sum);
+    }
 }

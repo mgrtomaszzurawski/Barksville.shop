@@ -9,20 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
-import pl.barksville.barksville.spring.core.service.ProductService;
-import pl.barksville.barksville.spring.dto.data.ItemDTO;
 import pl.barksville.barksville.spring.dto.data.ProductDTO;
-import pl.barksville.barksville.spring.dto.data.ProductInvoicePriceDTO;
-import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -97,6 +88,7 @@ public class InvoiceController {
     @PostMapping(value = "/scanUpload",params = {"next"})
     public String checkInvoice(){
 
+
         return "redirect:/admin/invoice/checkProducts";
     }
 
@@ -104,6 +96,7 @@ public class InvoiceController {
     public String checkProductInInvoice(Model model){
         List<ProductDTO> existing = invoiceService.getListOfExistingProducts();
         List<ProductDTO> nonExisting= invoiceService.getListOfNonExistingProducts(existing);
+        existing.removeIf(product->product.getSellPrice()!=null);
 
 
 
@@ -116,7 +109,7 @@ public class InvoiceController {
     @PostMapping(value = "/checkProducts",params = {"upload"})
     public String updateProducts(String name,String price) throws IOException {
       //  invoiceService.createProductsBaseOnInvoice(nonExisting);
-        invoiceService.createProductBaseOnInvoice(name,price);
+        invoiceService.addPriceToProductDTO(name,price);
         return "redirect:/admin/invoice/checkProducts";
     }
 

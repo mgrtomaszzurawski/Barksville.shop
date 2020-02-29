@@ -85,7 +85,7 @@
                 </div>
                 <div class="column"></div>
 
-                <form method="post">
+                <form method="post" action="${pageContext.request.contextPath}">
             <div class="column">
                 <div class="content">
                     <div class="field is-grouped">

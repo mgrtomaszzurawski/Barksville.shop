@@ -9,23 +9,16 @@
 <c:forEach items="${soldProducts}" var="product" varStatus="stat">
     <tr>
         <td>${stat.count}</td>
-      <%--  <<td><b>${product.product.name}</b></td>--%>
+        <%--<td><b>${product.product.name}</b></td>--%>
         <td>${product.quantity}</td>
         <td>${product.price}</td>
-        <%--<td>
-            <form method="post" action="${pageContext.request.contextPath}">
-                <input type="hidden" name="name" value="${product.product.name}"/>
-                <button type="submit" name="delete">>usun</button>
-            </form>
-        </td>--%>
     </tr>
 </c:forEach>
 
 
-
     <div>
 
-        <form method="post">
+
             <c:if test="${not empty errors}">
                 <fieldset>
                     <legend>Błędy</legend>
@@ -42,10 +35,11 @@
                     <div class="content">
                         <div class="field is-grouped">
                             <div class="control">
-                                <button type="submit"
-                                        name="save">
-                                   złóż zamowienie
+                                <form method="get" action="/orders" >
+                                <button type="submit">
+                                   Wroć do zamowień
                                 </button>
+                                </form>
                             </div>
                         </div>
 
@@ -55,7 +49,7 @@
                 <div class="column"></div>
 
 
-        </form>
+
     </div>
 
 <footer></footer>

@@ -107,7 +107,7 @@ public class InvoiceService {
     public List<ProductDTO> getListOfNonExistingProducts(List<ProductDTO> existing) {
         List<ProductDTO> productDTOList = new ArrayList<>();
         for (ItemDTO item : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
-            if (!existing.contains(item)) {
+            if (!existing.contains(item.getProduct())) {
                 productDTOList.add(item.getProduct());
             }
         }
@@ -146,7 +146,7 @@ public class InvoiceService {
 
         List<InvoiceScanFile> invoiceScanFileList = new ArrayList<>();
 
-        for(InvoiceScanFileDTO scanFileDTO:invoiceComponent.getInvoiceDTO().getInvoiceScanFile()){
+        for (InvoiceScanFileDTO scanFileDTO : invoiceComponent.getInvoiceDTO().getInvoiceScanFile()) {
             InvoiceScanFile invoiceScanFile = new InvoiceScanFile();
             invoiceScanFile.setFileName(scanFileDTO.getFileName());
             invoiceScanFile.setContentType(scanFileDTO.getContentType());
@@ -159,39 +159,38 @@ public class InvoiceService {
 
     private List<Item> toItemList() {
         List<Item> boughtProducts = new ArrayList<>();
-        for(ItemDTO itemDTO: invoiceComponent.getInvoiceDTO().getBoughtProducts()){
+        for (ItemDTO itemDTO : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
             Item item = new Item();
             item.setPrice(itemDTO.getPrice());
-            item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-            item.setQuantity(itemDTO.getQuantity());
+            if (productService.isExistByName(itemDTO.getProduct().getName())) {
+                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+                item.setQuantity(itemDTO.getQuantity());
+
+                productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
+            } else {
+                List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
+                ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
+                productInvoicePriceDTO.setInvoicePrice(item.getPrice());
+                productInvoicePriceDTO.setQuantity(item.getQuantity());
+                productInvoicePriceDTOList.add(productInvoicePriceDTO);
+
+                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, item.getProduct().getSellPrice(), item.getQuantity());
+
+                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+                item.setQuantity(itemDTO.getQuantity());
+            }
             itemRepository.save(item);
             boughtProducts.add(item);
         }
         return boughtProducts;
     }
 
-    public void createProductBaseOnInvoice(String name, String price) {
-        ProductDTO productDTO= new ProductDTO();
-        List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
 
-       for(ItemDTO item: invoiceComponent.getInvoiceDTO().getBoughtProducts()){
-           if(item.getProduct().getName().equals(name)){
-               productDTO=item.getProduct();
-               ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-               productInvoicePriceDTO.setQuantity(item.getQuantity());
-               productInvoicePriceDTO.setInvoicePrice(item.getPrice());
-               productInvoicePriceDTOList.add(productInvoicePriceDTO);
-               break;
-           }
-       }
-
-
-
-        //TODO check if loop find productDTO
-            productService.createProduct(productDTO.getName(),
-                    Boolean.TRUE,
-                   productInvoicePriceDTOList,
-                    Double.parseDouble(price),
-                    productDTO.getQuantity());
+    public void addPriceToProductDTO(String name, String price) {
+        for (ItemDTO item : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
+            if (item.getProduct().getName().equals(name)) {
+                item.getProduct().setSellPrice(Double.parseDouble(price));
+            }
+        }
     }
 }

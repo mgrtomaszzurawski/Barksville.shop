@@ -21,6 +21,6 @@ public class AdminProductsController {
 
         model.addAttribute("products",productService.allProducts());
 
-        return "products/showAllProducts";
+        return "productsAdmin/showAllProducts";
     }
 }

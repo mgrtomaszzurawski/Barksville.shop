@@ -37,9 +37,9 @@
         </tr>
     </c:forEach>
 
-    <form method="post">
-        <button  type="submit" name="save">
-            Zapisz
+    <form method="post" action="/orders/active-order">
+        <button  type="submit" name="open">
+            Przejdz do zamówienia
         </button>
     </form>
 </table>
