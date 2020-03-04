@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import pl.barksville.barksville.spring.core.service.ProductService;
 import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductIvoicePriceRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
@@ -32,12 +33,14 @@ public class AccountController {
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
     private final ProductIvoicePriceRepository productIvoicePriceRepository;
+    private final ProductService productService;
 
-    public AccountController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository) {
+    public AccountController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService) {
         this.shopReportRepository = shopReportRepository;
         this.productRepository = productRepository;
         this.itemRepository = itemRepository;
         this.productIvoicePriceRepository = productIvoicePriceRepository;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -168,24 +171,25 @@ public class AccountController {
                         Item item = new Item();
 
                         //tworzenie produktu
-                        Product product = new Product();
+                        if(!productService.isExistByName(name.toString())) {
+                            Product product = new Product();
 
-                        ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
-                        productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
-                        productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        productIvoicePriceRepository.save(productInvoicePrice);
-                        List<ProductInvoicePrice> productInvoicePriceList = new ArrayList<>();
-                        productInvoicePriceList.add(productInvoicePrice);
-                        product.setInvoicePriceList(productInvoicePriceList);
+                            ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
+                            productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
+                            productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
+                            productIvoicePriceRepository.save(productInvoicePrice);
+                            List<ProductInvoicePrice> productInvoicePriceList = new ArrayList<>();
+                            productInvoicePriceList.add(productInvoicePrice);
+                            product.setInvoicePriceList(productInvoicePriceList);
 
-                        product.setName(name.toString());
-                        product.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        product.setState(Boolean.TRUE);
-                        product.setSellPrice(Double.parseDouble(words[words.length - 1]));
+                            product.setName(name.toString());
+                            product.setQuantity(Double.parseDouble(words[words.length - 2]));
+                            product.setState(Boolean.TRUE);
+                            product.setSellPrice(Double.parseDouble(words[words.length - 1]));
 
-                        productRepository.save(product);
-                        //koniec tworzenia prodkutku
-
+                            productRepository.save(product);
+                            //koniec tworzenia prodkutku
+                        }
                         item.setProduct(productRepository.findByName(name.toString()));
                         item.setQuantity(Double.parseDouble(words[words.length - 2]));
                         item.setPrice(Double.parseDouble(words[words.length - 1]));
@@ -196,7 +200,8 @@ public class AccountController {
 
                     } else if (words[0].matches("Za")) {
                         // System.out.println( words[words.length-1]);
-                        //  String[] date = words[words.length-1].split("\\.");
+                          String[] date = words[words.length-1].split("\\.");
+                          shopReport.setName(date[0]+"-"+date[1]+"-"+date[2]);
 
                         //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
 

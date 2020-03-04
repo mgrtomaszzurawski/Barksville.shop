@@ -15,6 +15,9 @@ import java.util.List;
 @ToString
 public class ShopReport extends BaseEntity {
 
+    @Column(unique = true, nullable = false)
+    private String name;
+
     @OneToMany
     private List<Item> soldProducts;
 
@@ -28,4 +31,6 @@ public class ShopReport extends BaseEntity {
     private ShopReportScanFile shopReportScanFile;
 
     private String opr;
+
+
 }
