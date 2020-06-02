@@ -1,13 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags/form" %>
 <%@ page isELIgnored="false" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <title>Rejestracja</title>
+    <title>Show all invoice</title>
+    <jsp:include page="invoice_header.jsp"/>
+
 </head>
 <body>
-
+<jsp:include page="invoice_menu.jsp"/>
 <c:forEach items="${nonExisting}" var="nonExist" varStatus="stat">
 <tr>
     <td>nr</td>

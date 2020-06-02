@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <title>Rejestracja</title>
+    <title>Invoice scan upload</title>
+    <jsp:include page="invoice_header.jsp"/>
 </head>
 <body>
-
+<jsp:include page="invoice_menu.jsp"/>
 <c:forEach items="${scans}" var="scan" varStatus="stat">
     <tr>
         <td>${stat.count}</td>
@@ -19,11 +20,9 @@
         </td>
     </tr>
 </c:forEach>
-<header>
-    <h1>Rejestracja</h1>
-</header>
+
 <section>
-    <h1>Wypełnij dane rejestracyjne</h1>
+    <h2>Wypełnij dane rejestracyjne</h2>
     <div>
 
             <c:if test="${not empty errors}">
@@ -37,13 +36,13 @@
                 </fieldset>
             </c:if>
 
-                <legend>Dane użytkownika</legend>
+                <legend>Dodaj skan faktury</legend>
 
                 <div class="column">
                     <div class="content">
                         <form enctype="multipart/form-data" method="post">
                             <div class="field">
-                                <div class="label" for="file">report</div>
+                                <div class="label" for="file">Faktura</div>
                                 <div class="file has-name">
                                     <label class="file-label">
                                         <input class="file-input" type="file" name="file" id="file" accept=".pdf">
@@ -75,7 +74,7 @@
                             <div class="field is-grouped">
                                 <div class="control">
                                     <button  type="submit" name="upload">
-                                        Zapisz
+                                        Prześlij wskazany plik
                                     </button>
                                 </div>
                             </div>

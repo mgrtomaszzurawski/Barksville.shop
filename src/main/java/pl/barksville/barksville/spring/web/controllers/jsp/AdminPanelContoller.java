@@ -12,6 +12,6 @@ public class AdminPanelContoller {
     @GetMapping("/panel")
     public String getAdminPanelPage() {
 
-        return "elements/admin";
+        return "adminPanel/adminPanel";
     }
 }

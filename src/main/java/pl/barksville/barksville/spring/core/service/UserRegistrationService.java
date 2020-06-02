@@ -23,8 +23,10 @@ public class UserRegistrationService {
     public void registerUser(UserEntity userEntity) {
         userRepository.save(userEntity);
     }
-
+/*
     public boolean checkIfUserExistByName(String name) {
         return userRepository.checkIfUserEntityExistByName(name);
     }
+
+ */
 }

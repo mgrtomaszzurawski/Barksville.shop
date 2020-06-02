@@ -37,13 +37,13 @@
                 </p>
 
                 <p>
-                    <label for="password">Hasło: </label><input id="password" type="text"
+                    <label for="password">Hasło: </label><input id="password" type="password"
                                                                 name="password"/>
                 </p>
 
                 <p>
                     <label for="rePassword">Powtórz hasło: </label><input id="rePassword"
-                                                                          type="text"
+                                                                          type="password"
                                                                           name="rePassword"/>
                 </p>
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

@@ -29,7 +29,7 @@ public class Product extends BaseEntity {
     private List<ProductInvoicePrice> invoicePriceList;
 
     //sell price jest uzywana tylko jako cena bazowa do wyświetlania w sklepie internetowym
-    @Column(nullable = false, name = "sell_price")
+    @Column(name = "sell_price")
     private Double sellPrice;
 
     @Column(nullable = false)

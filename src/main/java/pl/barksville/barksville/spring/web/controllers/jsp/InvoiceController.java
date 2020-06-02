@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
+import pl.barksville.barksville.spring.core.service.ProductService;
 import pl.barksville.barksville.spring.dto.data.ProductDTO;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -21,107 +23,116 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final ProductService productService;
 
-
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceController(InvoiceService invoiceService, ProductService productService) {
         this.invoiceService = invoiceService;
-
+        this.productService = productService;
     }
+
 
     @GetMapping
     public String prepareInvoiceForm() {
-        return "invoice/invoiceForm";
+        return "adminPanel/invoiceForm";
     }
 
     @PostMapping(params = {"upload"})
-    public String createInvoice(Principal principal, String cost, String invoiceNumber  )  {
+    public String createInvoice(Principal principal, String invoiceNumber, String company, String invoiceDate, String cost) {
 
-        invoiceService.createInvoiceDTOWithEmptyLists(cost,invoiceNumber,principal.getName());
+        invoiceService.createInvoiceDTOWithEmptyLists(invoiceNumber, principal.getName(), company, LocalDate.parse(invoiceDate), cost);
 
         return "redirect:/admin/invoice/addProduct";
     }
 
 
     @GetMapping("/addProduct")
-    public String addProductToInvoice(Model model){
+    public String addProductToInvoice(Model model) {
 
-        model.addAttribute("products",invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts());
+        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()).mapToDouble(p -> p).sum();
 
-
-       return "invoice/invoiceAddProduct";
+        model.addAttribute("products", invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts());
+        model.addAttribute("products2", productService.allProductsNames());
+        model.addAttribute("sum", sum);
+        return "adminPanel/invoiceAddProduct";
     }
 
-    @PostMapping(value = "/addProduct",params = {"upload"})
-    public String addProductToInvoice(String name, String price, String quantity){
-        invoiceService.addProduct(name,price,quantity);
+    @PostMapping(value = "/addProduct", params = {"upload"})
+    public String addProductToInvoice(String name, String price, String quantity) {
+        invoiceService.addProduct(name, price, quantity);
         return "redirect:/admin/invoice/addProduct";
     }
-    @PostMapping(value = "/addProduct",params = {"delete"})
-    public String deleteProductToInvoice(String name){
+
+    @PostMapping(value = "/addProduct", params = {"delete"})
+    public String deleteProductToInvoice(String name) {
         invoiceService.deleteProduct(name);
         return "redirect:/admin/invoice/addProduct";
     }
-    @PostMapping(value = "/addProduct",params = {"save"})
-    public String saveProductsToInvoice(){
 
-        return "redirect:/admin/invoice/scanUpload";
+    @PostMapping(value = "/addProduct", params = {"save"})
+    public String saveProductsToInvoice() {
+        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()).mapToDouble(p -> p).sum();
+        if (invoiceService.getInvoiceComponent().getInvoiceDTO().getCost().equals(sum)) {
+            return "redirect:/admin/invoice/scanUpload";
+        } else {
+            return "redirect:/admin/invoice/addProduct";
+        }
+
     }
 
     @GetMapping("/scanUpload")
-    public String ScanToInvoice(Model model){
-        model.addAttribute("scans",invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
-        return "invoice/invoiceScanUpload";
+    public String ScanToInvoice(Model model) {
+        model.addAttribute("scans", invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
+        return "adminPanel/invoiceScanUpload";
     }
 
-    @PostMapping(value = "/scanUpload",params = {"upload"})
+    @PostMapping(value = "/scanUpload", params = {"upload"})
     public String addScanToInvoice(@RequestParam MultipartFile file) throws IOException {
         invoiceService.addScan(file);
         return "redirect:/admin/invoice/scanUpload";
     }
 
-    @PostMapping(value = "/scanUpload",params = {"delete"})
-    public String deleteInvoiceScan(String name){
+    @PostMapping(value = "/scanUpload", params = {"delete"})
+    public String deleteInvoiceScan(String name) {
         invoiceService.deleteScan(name);
         return "redirect:/admin/invoice/scanUpload";
     }
 
-    @PostMapping(value = "/scanUpload",params = {"next"})
-    public String checkInvoice(){
+    @PostMapping(value = "/scanUpload", params = {"next"})
+    public String checkInvoice() {
+        invoiceService.save();
 
+        return "adminPanel/invoiceSaved";
 
-        return "redirect:/admin/invoice/checkProducts";
+        // return "redirect:/admin/invoice/checkProducts";
     }
 
     @GetMapping("/checkProducts")
-    public String checkProductInInvoice(Model model){
+    public String checkProductInInvoice(Model model) {
         List<ProductDTO> existing = invoiceService.getListOfExistingProducts();
-        List<ProductDTO> nonExisting= invoiceService.getListOfNonExistingProducts(existing);
-        existing.removeIf(product->product.getSellPrice()!=null);
+        List<ProductDTO> nonExisting = invoiceService.getListOfNonExistingProducts(existing);
+        existing.removeIf(product -> product.getSellPrice() != null);
 
 
+        model.addAttribute("existing", existing);
+        model.addAttribute("nonExisting", nonExisting);
 
-        model.addAttribute("existing",existing);
-        model.addAttribute("nonExisting",nonExisting);
-
-        return "invoice/invoiceCheckProduct";
+        return "adminPanel/invoiceCheckProduct";
     }
 
-    @PostMapping(value = "/checkProducts",params = {"upload"})
-    public String updateProducts(String name,String price) throws IOException {
-      //  invoiceService.createProductsBaseOnInvoice(nonExisting);
-        invoiceService.addPriceToProductDTO(name,price);
+    @PostMapping(value = "/checkProducts", params = {"upload"})
+    public String updateProducts(String name, String price) throws IOException {
+        //  invoiceService.createProductsBaseOnInvoice(nonExisting);
+        invoiceService.addPriceToProductDTO(name, price);
         return "redirect:/admin/invoice/checkProducts";
     }
 
 
-    @PostMapping(value = "/checkProducts",params = {"save"})
-    public String saveInvoice(){
+    @PostMapping(value = "/checkProducts", params = {"save"})
+    public String saveInvoice() {
         invoiceService.save();
 
-        return "invoice/invoiceSaved";
+        return "adminPanel/invoiceSaved";
     }
-
-
 
 
 }

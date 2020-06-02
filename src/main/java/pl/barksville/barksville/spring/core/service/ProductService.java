@@ -10,6 +10,7 @@ import pl.barksville.barksville.spring.model.entities.data.ProductInvoicePrice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -81,11 +82,15 @@ public class ProductService {
      return productRepository.findAll();
     }
 
+    public List<String> allProductsNames(){
+        return productRepository.findAll().stream().map(Product::getName).collect(Collectors.toList());
+    }
+
     public void addQuantityToProduct(String name, Double quantity) {
         Double sum =productRepository.findByName(name).getQuantity();
         sum+=quantity;
         Product product = productRepository.findByName(name);
-        product.setQuantity(quantity);
+        product.setQuantity(sum);
         productRepository.save(product);
       //  productRepository.updateQuantity(name,sum);
     }

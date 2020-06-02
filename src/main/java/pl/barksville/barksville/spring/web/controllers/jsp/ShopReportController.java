@@ -26,8 +26,8 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/shop-raport")
-public class AccountController {
+@RequestMapping("/admin/shop-report")
+public class ShopReportController {
 
     private final ShopReportRepository shopReportRepository;
     private final ProductRepository productRepository;
@@ -35,7 +35,7 @@ public class AccountController {
     private final ProductIvoicePriceRepository productIvoicePriceRepository;
     private final ProductService productService;
 
-    public AccountController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService) {
+    public ShopReportController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService) {
         this.shopReportRepository = shopReportRepository;
         this.productRepository = productRepository;
         this.itemRepository = itemRepository;
@@ -47,7 +47,7 @@ public class AccountController {
     public String prepareUserAccountPage(Model model, Principal principal) {
 
 
-        return "elements/account";
+        return "adminPanel/shopReport";
     }
 
     /*
@@ -63,7 +63,7 @@ public class AccountController {
     */
     @PostMapping(params = {"cancel"})
     public String cancelEditUserData() {
-        return "redirect:elements/account";
+        return "adminPanel/shopReport";
     }
 
     @PostMapping(params = {"upload"})
@@ -135,7 +135,7 @@ public class AccountController {
 */
     private boolean isValidProfileFile(ShopReportScanFile shopReportScanFile) {
         if (shopReportScanFile.getContentType() == null) return false;
-        if (shopReportScanFile.getFileName() == null || shopReportScanFile.getFileName().isBlank()) return false;
+        if (shopReportScanFile.getFileName() == null || shopReportScanFile.getFileName().isEmpty()) return false;
         if (shopReportScanFile.getData() == null) return false;
         return true;
     }
@@ -174,18 +174,18 @@ public class AccountController {
                         if(!productService.isExistByName(name.toString())) {
                             Product product = new Product();
 
-                            ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
-                            productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
-                            productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
-                            productIvoicePriceRepository.save(productInvoicePrice);
+                         //   ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
+                        //    productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
+                        //    productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
+                        //    productIvoicePriceRepository.save(productInvoicePrice);
                             List<ProductInvoicePrice> productInvoicePriceList = new ArrayList<>();
-                            productInvoicePriceList.add(productInvoicePrice);
+                         //   productInvoicePriceList.add(productInvoicePrice);
                             product.setInvoicePriceList(productInvoicePriceList);
 
                             product.setName(name.toString());
-                            product.setQuantity(Double.parseDouble(words[words.length - 2]));
+                            product.setQuantity(-Double.parseDouble(words[words.length - 2]));
                             product.setState(Boolean.TRUE);
-                            product.setSellPrice(Double.parseDouble(words[words.length - 1]));
+                            product.setSellPrice(0.);
 
                             productRepository.save(product);
                             //koniec tworzenia prodkutku

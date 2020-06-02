@@ -10,6 +10,7 @@ import pl.barksville.barksville.spring.model.entities.data.*;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,17 @@ public class InvoiceService {
         this.itemRepository = itemRepository;
     }
 
-    public void createInvoiceDTOWithEmptyLists(String cost, String invoiceNumber, String opr) {
+    public void createInvoiceDTOWithEmptyLists( String invoiceNumber, String opr,String company, LocalDate invoiceDate,String cost) {
 
 
         //InvoiceDTO invoiceDTO = new InvoiceDTO();
         //invoiceComponent.setInvoiceDTO(invoiceDTO);
-        invoiceComponent.getInvoiceDTO().setCost(Double.parseDouble(cost));
+
         invoiceComponent.getInvoiceDTO().setInvoiceNumber(invoiceNumber);
         invoiceComponent.getInvoiceDTO().setOpr(opr);
+        invoiceComponent.getInvoiceDTO().setCompany(company);
+        invoiceComponent.getInvoiceDTO().setDate(invoiceDate);
+        invoiceComponent.getInvoiceDTO().setCost(Double.parseDouble(cost));
 
         List<InvoiceScanFileDTO> invoiceScanFileDTOList = new ArrayList<>();
         invoiceComponent.getInvoiceDTO().setInvoiceScanFile(invoiceScanFileDTOList);
@@ -65,7 +69,7 @@ public class InvoiceService {
         //TODO
 
         if (shopReportScanFile.getContentType() == null) return false;
-        if (shopReportScanFile.getFileName() == null || shopReportScanFile.getFileName().isBlank()) return false;
+        if (shopReportScanFile.getFileName() == null || shopReportScanFile.getFileName().isEmpty()) return false;
         if (shopReportScanFile.getData() == null) return false;
         return true;
     }
@@ -130,6 +134,10 @@ public class InvoiceService {
 
         invoice.setBoughtProducts(toItemList());
 
+        invoice.setCompany(invoiceComponent.getInvoiceDTO().getCompany());
+
+        invoice.setDate(invoiceComponent.getInvoiceDTO().getDate());
+
         invoice.setCost(invoiceComponent.getInvoiceDTO().getCost());
 
         invoice.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
@@ -170,11 +178,12 @@ public class InvoiceService {
             } else {
                 List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
                 ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-                productInvoicePriceDTO.setInvoicePrice(item.getPrice());
-                productInvoicePriceDTO.setQuantity(item.getQuantity());
+                productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
+                productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
                 productInvoicePriceDTOList.add(productInvoicePriceDTO);
 
-                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, item.getProduct().getSellPrice(), item.getQuantity());
+                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
+
 
                 item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
                 item.setQuantity(itemDTO.getQuantity());

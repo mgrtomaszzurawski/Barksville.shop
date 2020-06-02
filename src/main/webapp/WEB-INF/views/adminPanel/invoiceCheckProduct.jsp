@@ -1,19 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags/form" %>
 <%@ page isELIgnored="false" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <title>Rejestracja</title>
+    <title>Check Product</title>
+    <jsp:include page="invoice_header.jsp"/>
 </head>
 <body>
-
+<jsp:include page="invoice_menu.jsp"/>
 <c:forEach items="${nonExisting}" var="nonExist" varStatus="stat">
 <tr>
     <td>nr</td>
     <td>nazwa</td>
     <td>cena na fakturze</td>
-    <td>Podaj cene sprzedarzy</td>
+    <td>Podaj cene sprzedarzy na sklepu online</td>
     <td></td>
 </tr>
 <form method="post" action="${pageContext.request.contextPath}">
@@ -23,7 +24,7 @@
         <td>${nonExist.invoicePriceList.get(0).invoicePrice.toString()}</td>
         <td>
             <form method="post" action="${pageContext.request.contextPath}">
-                <input id="price" type="number" placeholder="0.00" name="price"/>
+                <input id="price" type="number" placeholder="0.00" step="0.01" name="price"/>
                 <input type="hidden" name="name" value="${nonExist.name}"/>
                 <button type="submit" name="upload">Dodaj</button>
             </form>
@@ -61,16 +62,7 @@
     <h1>Wypełnij dane rejestracyjne</h1>
     <div>
 
-            <c:if test="${not empty errors}">
-                <fieldset>
-                    <legend>Błędy</legend>
-                    <c:forEach items="${errors}" var="error" varStatus="stat">
-                        <p>
-                                ${stat.count}. ${error}
-                        </p>
-                    </c:forEach>
-                </fieldset>
-            </c:if>
+
                 <div class="column">
                     <div class="content">
                         <div class="field is-grouped">

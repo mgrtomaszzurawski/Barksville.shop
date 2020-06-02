@@ -75,13 +75,15 @@ public class RegistrationController {
         if (!password.equals(rePassword)) {
             errors.add("Niezgodne hasła");
         }
-        try {
+       /* try {
             if (userRegistrationService.checkIfUserExistByName(username)) {
                 errors.add("Nazwa użytkownika jest już zajęta");
             }
         } catch (Exception ex) {
             errors.add("Nie udało się sprawdzić nazwy użytkownika");
         }
+
+        */
         return errors;
     }
 }
