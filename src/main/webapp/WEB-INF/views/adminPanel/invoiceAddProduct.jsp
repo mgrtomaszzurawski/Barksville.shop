@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <jsp:include page="invoice_header.jsp"/>
+
 
     <title>Rejestracja</title>
     <style>
@@ -20,7 +20,6 @@
             text-align:center;
             padding: 10px;
         }
-
 
         #myUL {
             list-style-type: none;
@@ -90,10 +89,35 @@
                                                             name="quantity"/>
             </p>
             <p>
-                <label for="price">Cena na fakturze: </label><input id="price" type="number" placeholder="0.00" step="0.01"
+                <label for="price">Jednostkowa Cenna netto: </label><input id="price" type="number" placeholder="0.00" step="0.01"
                                                                     name="price"/>
             </p>
+            <p>Stawka VAT:</p>
 
+
+                <input type="radio" id="23" name="VAT" value="23"
+                       checked>
+                <label for="23">23%</label>
+
+                <input type="radio" id="8" name="VAT" value="8">
+                <label for="8">8%</label>
+
+            <p>Czy dzielisz produkt na części:</p>
+
+
+                <input type="radio" id="false" name="divide" value="false"
+                       checked>
+                <label for="false">Nie</label>
+
+                <input type="radio" id="true" name="divide" value="true">
+                <label for="true">Tak</label>
+
+
+            <p>
+                <label for="parts">Ile części: </label>
+                <input id="parts" type="number" placeholder="0" step="1"
+                                                            name="parts"/>
+            </p>
 
             <div class="column">
                 <div class="content">

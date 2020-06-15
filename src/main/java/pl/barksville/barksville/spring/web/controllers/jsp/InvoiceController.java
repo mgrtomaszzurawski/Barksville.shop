@@ -57,8 +57,8 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/addProduct", params = {"upload"})
-    public String addProductToInvoice(String name, String price, String quantity) {
-        invoiceService.addProduct(name, price, quantity);
+    public String addProductToInvoice(String name, String price, String quantity, Integer vat,Boolean isDivided,Integer parts) {
+        invoiceService.addProduct(name, price, quantity, vat, isDivided, parts); //TODO
         return "redirect:/admin/invoice/addProduct";
     }
 
