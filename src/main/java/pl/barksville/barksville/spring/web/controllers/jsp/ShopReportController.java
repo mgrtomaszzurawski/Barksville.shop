@@ -18,7 +18,6 @@ import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ShopReportRepository;
 import pl.barksville.barksville.spring.model.entities.data.*;
 
-
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public class ShopReportController {
                             product.setInvoicePriceList(productInvoicePriceList);
 
                             product.setName(name.toString());
-                            product.setQuantity(-Double.parseDouble(words[words.length - 2]));
+                            product.setQuantity(0.);
                             product.setState(Boolean.TRUE);
                             product.setSellPrice(0.);
 
@@ -191,7 +190,11 @@ public class ShopReportController {
                             //koniec tworzenia prodkutku
                         }
                         item.setProduct(productRepository.findByName(name.toString()));
+
                         item.setQuantity(Double.parseDouble(words[words.length - 2]));
+                        Double productQuantity=productRepository.findByName(name.toString()).getQuantity()-item.getQuantity();
+                        productRepository.findByName(name.toString()).setQuantity(productQuantity);
+
                         item.setPrice(Double.parseDouble(words[words.length - 1]));
                         itemRepository.save(item);
 

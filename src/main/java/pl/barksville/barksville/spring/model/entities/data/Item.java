@@ -24,4 +24,8 @@ public class Item extends BaseEntity {
     //cena moze sie roznic od ceny w Product np. przez promocje
     private Double price;
 
+    private Double nettoPrice;
+    private Double vat;
+    private Boolean isDivided;
+    private Integer parts;
 }

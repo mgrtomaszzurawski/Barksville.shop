@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.data.Product;
 
 @Getter
 @Setter
@@ -18,4 +17,10 @@ public class ItemDTO {
     private Double quantity;
 
     private Double price;
+
+
+    private Double nettoPrice;
+    private Double vat;
+    private Boolean isDivided;
+    private Integer parts;
 }

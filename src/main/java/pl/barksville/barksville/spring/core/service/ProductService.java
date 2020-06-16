@@ -27,7 +27,7 @@ public class ProductService {
       return  productRepository.findAllByStateIsTrue();
     }
 
-    public ProductDTO createProductDTOBaseOnInvoice (String name, String price, String quantity ){
+    public ProductDTO createProductDTOBaseOnInvoice (String name, Double price, Double quantity ){
         ProductDTO productDTO = new ProductDTO();
 
         productDTO.setName(name);
@@ -36,11 +36,11 @@ public class ProductService {
 
         List<ProductInvoicePriceDTO> invoicePriceDTOList = new ArrayList<>();
         ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-        productInvoicePriceDTO.setInvoicePrice(Double.parseDouble(price));
-        productInvoicePriceDTO.setQuantity(Double.parseDouble(quantity));
+        productInvoicePriceDTO.setInvoicePrice(price);
+        productInvoicePriceDTO.setQuantity(quantity);
         invoicePriceDTOList.add(productInvoicePriceDTO);
 
-        productDTO.setQuantity(Double.parseDouble(quantity));
+        productDTO.setQuantity(quantity);
 
 
         return  productDTO;

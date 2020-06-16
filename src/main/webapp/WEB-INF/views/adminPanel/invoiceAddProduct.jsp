@@ -47,9 +47,13 @@
 <jsp:include page="invoice_menu.jsp"/>
 <table>
 <tr>
-    <th>nr</th>
-    <th>nazwa</th>
-    <th>ilosc</th>
+    <th>Nr</th>
+    <th>Nazwa</th>
+    <th>Ilosc</th>
+    <th>Cena netto</th>
+    <th>vat</th>
+    <th>Podzielona</th>
+    <th>Cześci</th>
     <th>Cena sprzedarzy</th>
     <th>Usuń</th>
 </tr>
@@ -58,6 +62,10 @@
         <td>${stat.count}</td>
         <td><b>${product.product.name}</b></td>
         <td>${product.quantity}</td>
+        <td>${product.nettoPrice}</td>
+        <td>${product.vat}</td>
+        <td><b>${product.isDivided}</b></td>
+        <td>${product.parts}</td>
         <td>${product.price}</td>
         <td>
             <form method="post" action="${pageContext.request.contextPath}">
@@ -95,21 +103,21 @@
             <p>Stawka VAT:</p>
 
 
-                <input type="radio" id="23" name="VAT" value="23"
+                <input type="radio" id="23" name="vat" value="0.23"
                        checked>
                 <label for="23">23%</label>
 
-                <input type="radio" id="8" name="VAT" value="8">
+                <input type="radio" id="8" name="vat" value="0.08">
                 <label for="8">8%</label>
 
             <p>Czy dzielisz produkt na części:</p>
 
 
-                <input type="radio" id="false" name="divide" value="false"
+                <input type="radio" id="false" name="isDivided" value="false"
                        checked>
                 <label for="false">Nie</label>
 
-                <input type="radio" id="true" name="divide" value="true">
+                <input type="radio" id="true" name="isDivided" value="true">
                 <label for="true">Tak</label>
 
 

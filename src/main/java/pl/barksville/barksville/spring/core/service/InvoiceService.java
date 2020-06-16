@@ -52,14 +52,35 @@ public class InvoiceService {
 
     }
 
-    public void addProduct(String name, String price, String quantity) {
+    public void addProduct(String name, Double nettoPrice, Double quantity,Double vat,Boolean isDivided,Integer parts) {
         ItemDTO itemDTO = new ItemDTO();
 
-        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, price, quantity));
 
-        itemDTO.setQuantity(Double.parseDouble(quantity));
 
-        itemDTO.setPrice(Double.parseDouble(price));
+        Double productQuantity=quantity;
+        Double price = nettoPrice +nettoPrice*vat;
+
+        if(isDivided){
+            price=price/parts;
+            productQuantity=quantity*parts;
+        }
+
+        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, nettoPrice, productQuantity));
+
+        itemDTO.setQuantity(quantity);
+
+        itemDTO.setNettoPrice(nettoPrice);
+
+
+
+
+        itemDTO.setPrice(price);
+
+        itemDTO.setVat(vat);
+
+        itemDTO.setIsDivided(isDivided);
+
+        itemDTO.setParts(parts);
 
         invoiceComponent.getInvoiceDTO().getBoughtProducts().add(itemDTO);
     }
@@ -84,8 +105,10 @@ public class InvoiceService {
     }
 
     public void addScan(MultipartFile file) throws IOException {
+        String fileName = invoiceComponent.getInvoiceDTO().getCompany()+"-"+invoiceComponent.getInvoiceDTO().getInvoiceNumber();
+
         InvoiceScanFileDTO invoiceScanFileDTO = new InvoiceScanFileDTO();
-        invoiceScanFileDTO.setFileName(file.getOriginalFilename());
+        invoiceScanFileDTO.setFileName(fileName);
         invoiceScanFileDTO.setContentType(file.getContentType());
         invoiceScanFileDTO.setData(file.getBytes());
 

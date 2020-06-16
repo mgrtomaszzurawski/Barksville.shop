@@ -22,9 +22,9 @@ public class Invoice extends BaseEntity {
     private List<Item> boughtProducts;
 
     @Column(nullable = false)
-    private String Company;//todo controller i jsp
+    private String Company;
     @Column(nullable = false)
-    private LocalDate date; //todo controller i jsp
+    private LocalDate date;
     @Column(nullable = false)
     private Double cost;
 

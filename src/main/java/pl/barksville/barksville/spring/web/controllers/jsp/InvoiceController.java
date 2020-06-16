@@ -48,7 +48,12 @@ public class InvoiceController {
     @GetMapping("/addProduct")
     public String addProductToInvoice(Model model) {
 
-        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()).mapToDouble(p -> p).sum();
+        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> {
+            Double price = p.getPrice() * p.getQuantity();
+            if(p.getIsDivided()){
+                price=price*p.getParts();
+            }
+            return price;}).mapToDouble(p -> p).sum();
 
         model.addAttribute("products", invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts());
         model.addAttribute("products2", productService.allProductsNames());
@@ -57,8 +62,8 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/addProduct", params = {"upload"})
-    public String addProductToInvoice(String name, String price, String quantity, Integer vat,Boolean isDivided,Integer parts) {
-        invoiceService.addProduct(name, price, quantity, vat, isDivided, parts); //TODO
+    public String addProductToInvoice(String name, Double price, Double quantity, Double vat,Boolean isDivided,Integer parts) {
+        invoiceService.addProduct(name, price, quantity, vat, isDivided, parts);
         return "redirect:/admin/invoice/addProduct";
     }
 
