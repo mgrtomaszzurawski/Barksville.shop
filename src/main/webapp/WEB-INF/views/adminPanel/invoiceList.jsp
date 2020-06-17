@@ -7,17 +7,18 @@
     <jsp:include page="invoice_header.jsp"/>
     <title>Rejestracja</title>
     <style>
-        #ramka{
+        #ramka {
             border: 1px solid black;
-            margin:10px;
+            margin: 10px;
             padding: 10px;
             user-select: all;
         }
+
         table, td, th, tr {
             border: 1px solid black;
             width: max-content;
             border-collapse: collapse;
-            text-align:center;
+            text-align: center;
             padding: 10px;
         }
 
@@ -46,32 +47,32 @@
 <body>
 <jsp:include page="invoice_menu.jsp"/>
 <table>
-<tr>
-    <th>Nr</th>
-    <th>Firma</th>
-    <th>Data wystawienia</th>
-    <th>Nr faktury</th>
-    <th>Skan</th>
-    <th>Dodał</th>
-    <th>Podgląd</th>
-
-</tr>
-<c:forEach items="${invoices}" var="invoice" varStatus="stat">
     <tr>
-        <td>${stat.count}</td>
-        <td><b>${invoice.company}</b></td>
-        <td>${invoice.date}</td>
-        <td>${invoice.invoiceNumber}</td>
-        <td></td>
-        <td><b>${invoice.opr}</b></td>
-        <td>
-            <form method="post" action="/admin/invoice-list/invoice/">
-                <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
-                <button type="submit" name="view">>Podgląd</button>
-            </form>
-        </td>
+        <th>Nr</th>
+        <th>Firma</th>
+        <th>Data wystawienia</th>
+        <th>Nr faktury</th>
+        <th>Skan</th>
+        <th>Dodał</th>
+        <th>Podgląd</th>
+
     </tr>
-</c:forEach>
+    <c:forEach items="${invoices}" var="invoice" varStatus="stat">
+        <tr>
+            <td>${stat.count}</td>
+            <td><b>${invoice.company}</b></td>
+            <td>${invoice.date}</td>
+            <td>${invoice.invoiceNumber}</td>
+            <td></td>
+            <td><b>${invoice.opr}</b></td>
+            <td>
+                <form method="post" action="/admin/invoice-list/invoice/">
+                    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+                    <button type="submit" name="view">>Podgląd</button>
+                </form>
+            </td>
+        </tr>
+    </c:forEach>
 </table>
 
 <footer></footer>

@@ -7,17 +7,18 @@
     <jsp:include page="invoice_header.jsp"/>
     <title>Rejestracja</title>
     <style>
-        #ramka{
+        #ramka {
             border: 1px solid black;
-            margin:10px;
+            margin: 10px;
             padding: 10px;
             user-select: all;
         }
+
         table, td, th, tr {
             border: 1px solid black;
             width: max-content;
             border-collapse: collapse;
-            text-align:center;
+            text-align: center;
             padding: 10px;
         }
 
@@ -59,38 +60,38 @@
 
 
 <table>
-<tr>
-    <th>Nr</th>
-    <th>Nazwa</th>
-    <th>Ilosc</th>
-    <th>Cena netto</th>
-    <th>vat</th>
-    <th>Podzielona</th>
-    <th>Cześci</th>
-    <th>Jednostkowa cena brutto</th>
-    <th>Edytuj</th>
-</tr>
-<c:forEach items="${invoice.boughtProducts}" var="product" varStatus="stat">
     <tr>
-        <td>${stat.count}</td>
-        <td>${product.product.name}</td>
-        <td>${product.quantity}</td>
-        <td>${product.nettoPrice}</td>
-        <td>${product.vat}</td>
-        <td>${product.isDivided}</td>
-        <td>${product.parts}</td>
-        <td>${product.price}</td>
-
-
-        <td>
-            <form method="post" action="/admin/invoice-list/invoice/row">
-                <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
-                <input type="hidden" name="id" value="${product.id}"/>
-                <button type="submit" name="edit">Edytuj</button>
-            </form>
-        </td>
+        <th>Nr</th>
+        <th>Nazwa</th>
+        <th>Ilosc</th>
+        <th>Cena netto</th>
+        <th>vat</th>
+        <th>Podzielona</th>
+        <th>Cześci</th>
+        <th>Jednostkowa cena brutto</th>
+        <th>Edytuj</th>
     </tr>
-</c:forEach>
+    <c:forEach items="${invoice.boughtProducts}" var="product" varStatus="stat">
+        <tr>
+            <td>${stat.count}</td>
+            <td>${product.product.name}</td>
+            <td>${product.quantity}</td>
+            <td>${product.nettoPrice}</td>
+            <td>${product.vat}</td>
+            <td>${product.isDivided}</td>
+            <td>${product.parts}</td>
+            <td>${product.price}</td>
+
+
+            <td>
+                <form method="post" action="/admin/invoice-list/invoice/row">
+                    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+                    <input type="hidden" name="id" value="${product.id}"/>
+                    <button type="submit" name="edit">Edytuj</button>
+                </form>
+            </td>
+        </tr>
+    </c:forEach>
 </table>
 
 <footer></footer>

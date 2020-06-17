@@ -41,7 +41,7 @@
                     <form method="post" action="/admin/invoice-list/invoice/row">
                         <input type="hidden" name="invoiceNumber" value="${invoiceNumber}"/>
                         <input type="hidden" name="id" value="${row.id}"/>
-                        <button type="submit" name="delete">usuń/TODO</button>
+                        <button type="submit" name="delete">usuń</button>
                     </form>
                 </td>
             </tr>
@@ -75,7 +75,7 @@
                 <td>
 
 
-                    <button type="submit" name="update">zmień/TODO</button>
+                    <button type="submit" name="update">zmień</button>
 
                 </td>
             </tr>
@@ -86,7 +86,7 @@
 
 <form method="post" action="/admin/invoice-list/invoice">
     <input type="hidden" name="invoiceNumber" value="${invoiceNumber}"/>
-    <button type="submit" name="back">wróć/TODO</button>
+    <button type="submit" name="back">wróć</button>
 </form>
 
 <footer></footer>

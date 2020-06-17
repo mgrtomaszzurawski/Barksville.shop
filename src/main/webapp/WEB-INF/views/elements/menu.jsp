@@ -23,7 +23,7 @@
             <sec:authorize access="isAuthenticated()">
                 <li><a href="/logout">Wyloguj</a></li>
             </sec:authorize>
-            <sec:authorize access="isAnonymous()">
+            <sec:authorize access="hasRole('ROLE_RRGISTRY')">
                 <li><a href="/register">Rejestracja</a></li>
             </sec:authorize>
 
