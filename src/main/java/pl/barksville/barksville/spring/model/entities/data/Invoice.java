@@ -28,7 +28,7 @@ public class Invoice extends BaseEntity {
     @Column(nullable = false)
     private Double cost;
 
-    @Column(name = "invoice_number",nullable = false)
+    @Column(name = "invoice_number",nullable = false, unique = true)
     private String invoiceNumber;
 
     @OneToMany

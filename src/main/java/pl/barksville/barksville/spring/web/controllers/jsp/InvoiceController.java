@@ -75,12 +75,12 @@ public class InvoiceController {
 
     @PostMapping(value = "/addProduct", params = {"save"})
     public String saveProductsToInvoice() {
-        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()).mapToDouble(p -> p).sum();
-        if (invoiceService.getInvoiceComponent().getInvoiceDTO().getCost().equals(sum)) {
+      //  double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()).mapToDouble(p -> p).sum();
+      //  if (invoiceService.getInvoiceComponent().getInvoiceDTO().getCost().equals(sum)) {
             return "redirect:/admin/invoice/scanUpload";
-        } else {
-            return "redirect:/admin/invoice/addProduct";
-        }
+      //  } else {
+      //      return "redirect:/admin/invoice/addProduct";
+        // }
 
     }
 

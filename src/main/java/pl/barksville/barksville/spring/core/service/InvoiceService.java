@@ -1,6 +1,7 @@
 package pl.barksville.barksville.spring.core.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.dto.data.*;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceRepository;
@@ -31,7 +32,7 @@ public class InvoiceService {
         this.itemRepository = itemRepository;
     }
 
-    public void createInvoiceDTOWithEmptyLists( String invoiceNumber, String opr,String company, LocalDate invoiceDate,String cost) {
+    public void createInvoiceDTOWithEmptyLists(String invoiceNumber, String opr, String company, LocalDate invoiceDate, String cost) {
 
 
         //InvoiceDTO invoiceDTO = new InvoiceDTO();
@@ -52,17 +53,17 @@ public class InvoiceService {
 
     }
 
-    public void addProduct(String name, Double nettoPrice, Double quantity,Double vat,Boolean isDivided,Integer parts) {
+    public void addProduct(String name, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
         ItemDTO itemDTO = new ItemDTO();
 
 
+        Double productQuantity = quantity;
+        Double price = Math.round((nettoPrice + nettoPrice * vat) * 100) / 100.;
 
-        Double productQuantity=quantity;
-        Double price = nettoPrice +nettoPrice*vat;
 
-        if(isDivided){
-            price=price/parts;
-            productQuantity=quantity*parts;
+        if (isDivided) {
+            price = price / parts;
+            productQuantity = quantity * parts;
         }
 
         itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, nettoPrice, productQuantity));
@@ -70,8 +71,6 @@ public class InvoiceService {
         itemDTO.setQuantity(quantity);
 
         itemDTO.setNettoPrice(nettoPrice);
-
-
 
 
         itemDTO.setPrice(price);
@@ -105,7 +104,7 @@ public class InvoiceService {
     }
 
     public void addScan(MultipartFile file) throws IOException {
-        String fileName = invoiceComponent.getInvoiceDTO().getCompany()+"-"+invoiceComponent.getInvoiceDTO().getInvoiceNumber();
+        String fileName = invoiceComponent.getInvoiceDTO().getCompany() + "-" + invoiceComponent.getInvoiceDTO().getInvoiceNumber();
 
         InvoiceScanFileDTO invoiceScanFileDTO = new InvoiceScanFileDTO();
         invoiceScanFileDTO.setFileName(fileName);
@@ -196,6 +195,15 @@ public class InvoiceService {
             if (productService.isExistByName(itemDTO.getProduct().getName())) {
                 item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
                 item.setQuantity(itemDTO.getQuantity());
+                item.setNettoPrice(itemDTO.getNettoPrice());
+                item.setVat(itemDTO.getVat());
+                item.setIsDivided(itemDTO.getIsDivided());
+                if (item.getIsDivided()) {
+                    item.setParts(itemDTO.getParts());
+                } else {
+                    item.setParts(1);
+                }
+
 
                 productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
             } else {
@@ -210,6 +218,14 @@ public class InvoiceService {
 
                 item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
                 item.setQuantity(itemDTO.getQuantity());
+                item.setNettoPrice(itemDTO.getNettoPrice());
+                item.setVat(itemDTO.getVat());
+                item.setIsDivided(itemDTO.getIsDivided());
+                if (item.getIsDivided()) {
+                    item.setParts(itemDTO.getParts());
+                } else {
+                    item.setParts(1);
+                }
             }
             itemRepository.save(item);
             boughtProducts.add(item);
@@ -224,5 +240,33 @@ public class InvoiceService {
                 item.getProduct().setSellPrice(Double.parseDouble(price));
             }
         }
+    }
+
+    public List<Invoice> getInvoices() {
+        return invoiceRepository.findAll();
+    }
+
+    public Invoice getInvoiceByInvoiceNumber(String invoiceNumber) {
+        return invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber);
+    }
+
+    public void deleteInvoiceById(Long id) {
+        invoiceRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id) {
+        invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().removeIf(row -> id.equals(row.getId()));
+        itemRepository.deleteById(id);
+    }
+
+    public void updateIvoiceRowByInvoiceNymberAndRowID(String invoiceNumber, Long id, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+        Item item = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findFirst().get();
+        item.setNettoPrice(nettoPrice);
+        item.setQuantity(quantity);
+        item.setVat(vat);
+        item.setIsDivided(isDivided);
+        item.setParts(parts);
+        item.setPrice(price);
     }
 }

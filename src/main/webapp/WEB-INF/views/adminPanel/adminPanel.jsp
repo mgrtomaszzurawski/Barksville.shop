@@ -16,6 +16,11 @@
                wprowadz fakture
             </button>
         </form>
+        <form method="get" action="/admin/invoice-list">
+            <button  type="submit" >
+                lista faktur
+            </button>
+        </form>
         <form method="get" action="/admin/products">
             <button  type="submit" >
                 sprawdz produkty

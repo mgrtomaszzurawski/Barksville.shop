@@ -54,7 +54,8 @@
     <th>vat</th>
     <th>Podzielona</th>
     <th>Cześci</th>
-    <th>Cena sprzedarzy</th>
+    <th>Jednostkowa cena brutto</th>
+
     <th>Usuń</th>
 </tr>
 <c:forEach items="${products}" var="product" varStatus="stat">
@@ -67,6 +68,7 @@
         <td><b>${product.isDivided}</b></td>
         <td>${product.parts}</td>
         <td>${product.price}</td>
+
         <td>
             <form method="post" action="${pageContext.request.contextPath}">
                 <input type="hidden" name="name" value="${product.product.name}"/>
