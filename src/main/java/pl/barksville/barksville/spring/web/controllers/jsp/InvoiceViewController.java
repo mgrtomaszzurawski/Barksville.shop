@@ -31,6 +31,13 @@ public class InvoiceViewController {
         return "adminPanel/invoiceView";
     }
 
+    @PostMapping(value = "invoice", params = {"delete"})
+    public String deleteInvoiceRow(Long id, String invoiceNumber, Model model) {
+        invoiceService.deleteInvoiceRowByInvoiceNumberAndRowID(invoiceNumber, id);
+        model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
+        return "adminPanel/invoiceView";
+    }
+
     @PostMapping(value = "invoice/row", params = {"edit"})
     public String editInvoiceRow(Long id, String invoiceNumber, Model model) {
         model.addAttribute("row", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findAny().get());
@@ -39,7 +46,7 @@ public class InvoiceViewController {
     }
 
     @PostMapping(value = "invoice/row", params = {"delete"})
-    public String deleteInvoiceRow(Long id, String invoiceNumber, Model model) {
+    public String deleteInvoiceRowOnEdit(Long id, String invoiceNumber, Model model) {
         invoiceService.deleteInvoiceRowByInvoiceNumberAndRowID(invoiceNumber, id);
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceView";
