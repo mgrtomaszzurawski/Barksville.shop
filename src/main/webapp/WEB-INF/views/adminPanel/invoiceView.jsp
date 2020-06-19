@@ -54,7 +54,11 @@
 <p>
 <form method="post" action="/admin/invoice-list/invoice/data">
     <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
-    <button type="submit" name="edit">Edytuj/TODO</button>
+    <button type="submit" name="edit">Edytuj fakturę/TODO</button>
+</form>
+<form method="post" action="/admin/invoice-list/invoice/data">
+    <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
+    <button type="submit" name="edit">Usuń fakture/TODO</button>
 </form>
 </p>
 
@@ -69,6 +73,7 @@
         <th>Podzielona</th>
         <th>Cześci</th>
         <th>Jednostkowa cena brutto</th>
+        <th>Edytuj</th>
         <th>Edytuj</th>
     </tr>
     <c:forEach items="${invoice.boughtProducts}" var="product" varStatus="stat">
@@ -90,9 +95,21 @@
                     <button type="submit" name="edit">Edytuj</button>
                 </form>
             </td>
+            <td>
+                <form method="post" action="/admin/invoice-list/invoice/row">
+                    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+                    <input type="hidden" name="id" value="${product.id}"/>
+                    <button type="submit" name="delete">Usuń/TODO</button>
+                </form>
+            </td>
         </tr>
     </c:forEach>
 </table>
+
+<form method="post" action="/admin/invoice-list/invoice/row">
+    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+    <button type="submit" name="add">Dodaj/TODO</button>
+</form>
 
 <footer></footer>
 </body>
