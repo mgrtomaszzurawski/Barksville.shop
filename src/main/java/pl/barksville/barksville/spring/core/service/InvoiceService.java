@@ -234,7 +234,7 @@ public class InvoiceService {
     }
 
 
-    public Long addRowToIvoice(String invoiceNumber, String name, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+    public void addRowToIvoice(String invoiceNumber, String name, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
         ItemDTO itemDTO = new ItemDTO();
 
         itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, nettoPrice, quantity));
@@ -255,7 +255,7 @@ public class InvoiceService {
 
         invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().add(item);
 
-        return item.getId();
+
 
     }
 

@@ -13,7 +13,7 @@
 
 <h1 style="color: red">Trzeba wypelnic wszystkie pola!!!</h1>
 <form method="post" action="/admin/invoice-list/invoice/row">
-
+    <input type="hidden" name="invoiceNumber" value="${invoiceNumber}"/>
     <fieldset>
         <table>
             <tr>
@@ -28,23 +28,6 @@
                 <th>Edytuj</th>
             </tr>
 
-            <tr>
-
-                <td>${row.product.name}</td>
-                <td>${row.quantity}</td>
-                <td>${row.nettoPrice}</td>
-                <td>${row.vat}</td>
-                <td>${row.isDivided}</td>
-                <td>${row.parts}</td>
-                <td>${row.price}</td>
-                <td>
-                    <form method="post" action="/admin/invoice-list/invoice/row">
-                        <input type="hidden" name="invoiceNumber" value="${invoiceNumber}"/>
-
-                        <button type="submit" name="delete">usuń</button>
-                    </form>
-                </td>
-            </tr>
 
 
             <tr>
@@ -79,7 +62,7 @@
                 <td>
 
 
-                    <button type="submit" name="update">zmień</button>
+                    <button type="submit" name="create">Utwórz</button>
 
                 </td>
             </tr>
@@ -90,7 +73,7 @@
 
 <form method="post" action="/admin/invoice-list/invoice">
     <input type="hidden" name="invoiceNumber" value="${invoiceNumber}"/>
-    <button type="submit" name="back">wróć</button>
+    <button type="submit" name="back">Wróć</button>
 </form>
 
 <footer></footer>
