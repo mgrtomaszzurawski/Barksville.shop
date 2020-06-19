@@ -190,44 +190,7 @@ public class InvoiceService {
     private List<Item> toItemList() {
         List<Item> boughtProducts = new ArrayList<>();
         for (ItemDTO itemDTO : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
-            Item item = new Item();
-            item.setPrice(itemDTO.getPrice());
-            if (productService.isExistByName(itemDTO.getProduct().getName())) {
-                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-                item.setQuantity(itemDTO.getQuantity());
-                item.setNettoPrice(itemDTO.getNettoPrice());
-                item.setVat(itemDTO.getVat());
-                item.setIsDivided(itemDTO.getIsDivided());
-                if (item.getIsDivided()) {
-                    item.setParts(itemDTO.getParts());
-                } else {
-                    item.setParts(1);
-                }
-
-
-                productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
-            } else {
-                List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
-                ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-                productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
-                productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
-                productInvoicePriceDTOList.add(productInvoicePriceDTO);
-
-                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
-
-
-                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-                item.setQuantity(itemDTO.getQuantity());
-                item.setNettoPrice(itemDTO.getNettoPrice());
-                item.setVat(itemDTO.getVat());
-                item.setIsDivided(itemDTO.getIsDivided());
-                if (item.getIsDivided()) {
-                    item.setParts(itemDTO.getParts());
-                } else {
-                    item.setParts(1);
-                }
-            }
-            itemRepository.save(item);
+            Item item = createItem(itemDTO);
             boughtProducts.add(item);
         }
         return boughtProducts;
@@ -268,5 +231,75 @@ public class InvoiceService {
         item.setIsDivided(isDivided);
         item.setParts(parts);
         item.setPrice(price);
+    }
+
+
+    public Long addRowToIvoice(String invoiceNumber, String name, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+        ItemDTO itemDTO = new ItemDTO();
+
+        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, nettoPrice, quantity));
+
+        itemDTO.setQuantity(quantity);
+
+        itemDTO.setNettoPrice(nettoPrice);
+
+        itemDTO.setPrice(price);
+
+        itemDTO.setVat(vat);
+
+        itemDTO.setIsDivided(isDivided);
+
+        itemDTO.setParts(parts);
+
+        Item item = createItem(itemDTO);
+
+        invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().add(item);
+
+        return item.getId();
+
+    }
+
+    public Item createItem(ItemDTO itemDTO){
+
+            Item item = new Item();
+            item.setPrice(itemDTO.getPrice());
+            if (productService.isExistByName(itemDTO.getProduct().getName())) {
+                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+                item.setQuantity(itemDTO.getQuantity());
+                item.setNettoPrice(itemDTO.getNettoPrice());
+                item.setVat(itemDTO.getVat());
+                item.setIsDivided(itemDTO.getIsDivided());
+                if (item.getIsDivided()) {
+                    item.setParts(itemDTO.getParts());
+                } else {
+                    item.setParts(1);
+                }
+
+
+                productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
+            } else {
+                List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
+                ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
+                productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
+                productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
+                productInvoicePriceDTOList.add(productInvoicePriceDTO);
+
+                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
+
+
+                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+                item.setQuantity(itemDTO.getQuantity());
+                item.setNettoPrice(itemDTO.getNettoPrice());
+                item.setVat(itemDTO.getVat());
+                item.setIsDivided(itemDTO.getIsDivided());
+                if (item.getIsDivided()) {
+                    item.setParts(itemDTO.getParts());
+                } else {
+                    item.setParts(1);
+                }
+            }
+            itemRepository.save(item);
+            return item;
+
     }
 }
