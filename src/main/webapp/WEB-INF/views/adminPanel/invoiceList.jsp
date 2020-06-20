@@ -63,7 +63,8 @@
             <td><b>${invoice.company}</b></td>
             <td>${invoice.date}</td>
             <td>${invoice.invoiceNumber}</td>
-            <td></td>
+
+            <td><c:if test="${invoice.invoiceScanFile.size()>0}" >${invoice.invoiceScanFile.get(0).data.}</c:if></td>
             <td><b>${invoice.opr}</b></td>
             <td>
                 <form method="post" action="/admin/invoice-list/invoice/">
