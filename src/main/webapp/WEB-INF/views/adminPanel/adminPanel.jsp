@@ -11,32 +11,45 @@
 <div class="container">
     <div class="row center">
         <h2>Jesteś w panelu administratora</h2>
-        <form method="get" action="/admin/invoice">
-            <button  type="submit" >
-               wprowadz fakture
-            </button>
-        </form>
-        <form method="get" action="/admin/invoice-list">
-            <button  type="submit" >
-                lista faktur
-            </button>
-        </form>
-        <form method="get" action="/admin/products">
-            <button  type="submit" >
-                sprawdz produkty
-            </button>
-        </form>
-        <form method="get" action="/admin/shop-report">
-            <button  type="submit" >
-                wprowadz raport sklepowy
-            </button>
-        </form>
-    </div>
-    <div class="divider"></div>
-    <div class="row center">
+        <table>
+        <tr>
+            <th>Wprowadz</th>
+            <th>Podgląd</th>
+        </tr>
+
+        <tr>
+            <th>  <form method="get" action="/admin/invoice">
+                <button  type="submit" >
+                    wprowadz fakture
+                </button>
+            </form></th>
+            <th><form method="get" action="/admin/invoice-list">
+                <button  type="submit" >
+                    lista faktur
+                </button>
+            </form></th>
+        </tr>
+
+        <tr>
+            <th> <form method="get" action="/admin/shop-report">
+                <button  type="submit" >
+                    wprowadz raport sklepowy
+                </button>
+            </form></th>
+            <th> <form method="get" action="/admin/products">
+                <button  type="submit" >
+                    sprawdz produkty
+                </button>
+            </form></th>
+        </tr>
+
+        </table>
+
+
+
 
     </div>
-    <div class="divider"></div>
+
 </div>
 </body>
 </html>

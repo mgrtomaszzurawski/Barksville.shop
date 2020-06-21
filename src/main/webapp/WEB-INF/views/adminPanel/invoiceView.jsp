@@ -110,7 +110,7 @@
     <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
     <button type="submit" name="add">Dodaj/TODO</button>
 </form>
-<form method="post" action="/admin/invoice-list/invoice">
+<form method="get" action="/admin/invoice-list">
     <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
     <button type="submit" name="back">wróć</button>
 </form>

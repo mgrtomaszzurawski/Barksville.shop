@@ -8,18 +8,17 @@
 </head>
 <body>
 <jsp:include page="invoice_menu.jsp"/>
-<c:forEach items="${scans}" var="scan" varStatus="stat">
+
     <tr>
-        <td>${stat.count}</td>
-        <td><b>${scan.fileName}.${scan.contentType}</b></td>
+        <td>1</td>
+        <td><b>${scan.fileName}</b></td>
         <td>
             <form method="post" action="${pageContext.request.contextPath}">
-                <input type="hidden" name="name" value="${scan.fileName}"/>
                 <button type="submit" name="delete">>usun</button>
             </form>
         </td>
     </tr>
-</c:forEach>
+
 
 <section>
     <h2>Wypełnij dane rejestracyjne</h2>

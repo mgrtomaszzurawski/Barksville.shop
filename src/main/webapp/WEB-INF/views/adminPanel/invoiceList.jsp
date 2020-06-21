@@ -64,7 +64,7 @@
             <td>${invoice.date}</td>
             <td>${invoice.invoiceNumber}</td>
 
-            <td><c:if test="${invoice.invoiceScanFile.size()>0}" ><form method="post" action="/admin/invoice-list/download" target="_blank">
+            <td><c:if test="${not empty invoice.invoiceScanFile}"><form method="post" action="/admin/invoice-list/download" target="_blank">
                 <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
                 <button type="submit" name="download" >Pobierz</button>
             </form></c:if></td>

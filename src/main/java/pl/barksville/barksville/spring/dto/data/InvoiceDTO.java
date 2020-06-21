@@ -4,8 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
-import pl.barksville.barksville.spring.model.entities.data.Item;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +22,7 @@ public class InvoiceDTO {
 
     private String invoiceNumber;
 
-    private List<InvoiceScanFileDTO> invoiceScanFile;
+    private InvoiceScanFileDTO invoiceScanFile;
 
     private String opr;
 }

@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
 import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
 
-import java.util.List;
-
 @Slf4j
 @Controller
 @RequestMapping("/admin/invoice-list")
@@ -42,19 +40,22 @@ public class InvoiceViewController {
     @PostMapping(value = "download", params = {"download"})
     public ResponseEntity<Resource> downloadFile(String invoiceNumber) {
 
-        List<InvoiceScanFile> scanFileList = invoiceService.getInvoiceByInvoiceNumber(invoiceNumber).getInvoiceScanFile();
+        InvoiceScanFile scanFile = invoiceService.getInvoiceByInvoiceNumber(invoiceNumber).getInvoiceScanFile();
         // Load file as Resource
-        Resource resource = new ByteArrayResource(scanFileList.get(0).getData());
+
+        Resource resource = new ByteArrayResource(scanFile.getData());
 
         //Determine file's content type
-        String contentType = scanFileList.get(0).getContentType();
+        String contentType = scanFile.getContentType();
 
 
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + scanFileList.get(0).getFileName()+".pdf" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + scanFile.getFileName() + "\"")
                 .body(resource);
+
+
     }
 
     @PostMapping(value = "invoice", params = {"delete"})

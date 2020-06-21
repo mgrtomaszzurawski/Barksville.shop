@@ -32,7 +32,7 @@ public class InvoiceService {
         this.itemRepository = itemRepository;
     }
 
-    public void createInvoiceDTOWithEmptyLists(String invoiceNumber, String opr, String company, LocalDate invoiceDate, String cost) {
+    public void createInvoiceDTOWithoutScanAndItems(String invoiceNumber, String opr, String company, LocalDate invoiceDate, String cost) {
 
 
         //InvoiceDTO invoiceDTO = new InvoiceDTO();
@@ -44,12 +44,12 @@ public class InvoiceService {
         invoiceComponent.getInvoiceDTO().setDate(invoiceDate);
         invoiceComponent.getInvoiceDTO().setCost(Double.parseDouble(cost));
 
-        List<InvoiceScanFileDTO> invoiceScanFileDTOList = new ArrayList<>();
-        invoiceComponent.getInvoiceDTO().setInvoiceScanFile(invoiceScanFileDTOList);
+
+        invoiceComponent.getInvoiceDTO().setInvoiceScanFile(new InvoiceScanFileDTO());
+        invoiceComponent.getInvoiceDTO().getInvoiceScanFile().setFileName("");
 
         List<ItemDTO> itemDTOList = new ArrayList<>();
         invoiceComponent.getInvoiceDTO().setBoughtProducts(itemDTOList);
-
 
     }
 
@@ -107,15 +107,15 @@ public class InvoiceService {
         String fileName = invoiceComponent.getInvoiceDTO().getCompany() + "-" + invoiceComponent.getInvoiceDTO().getInvoiceNumber();
 
         InvoiceScanFileDTO invoiceScanFileDTO = new InvoiceScanFileDTO();
-        invoiceScanFileDTO.setFileName(fileName);
+        invoiceScanFileDTO.setFileName(fileName+".pdf");
         invoiceScanFileDTO.setContentType(file.getContentType());
         invoiceScanFileDTO.setData(file.getBytes());
 
-        invoiceComponent.getInvoiceDTO().getInvoiceScanFile().add(invoiceScanFileDTO);
+        invoiceComponent.getInvoiceDTO().setInvoiceScanFile(invoiceScanFileDTO);
     }
 
-    public void deleteScan(String name) {
-        invoiceComponent.getInvoiceDTO().getInvoiceScanFile().removeIf(scan -> scan.getFileName().equals(name));
+    public void deleteScan() {
+        invoiceComponent.getInvoiceDTO().setInvoiceScanFile(null);
     }
 
     public List<ProductDTO> getListOfExistingProducts() {
@@ -164,7 +164,8 @@ public class InvoiceService {
 
         invoice.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
 
-        invoice.setInvoiceScanFile(toScanFileList());
+        if(!invoiceComponent.getInvoiceDTO().getInvoiceScanFile().getFileName().isEmpty())
+        invoice.setInvoiceScanFile(toScanFile());
 
         invoice.setOpr(invoiceComponent.getInvoiceDTO().getOpr());
 
@@ -172,19 +173,19 @@ public class InvoiceService {
 
     }
 
-    private List<InvoiceScanFile> toScanFileList() {
+    private InvoiceScanFile toScanFile() {
 
-        List<InvoiceScanFile> invoiceScanFileList = new ArrayList<>();
 
-        for (InvoiceScanFileDTO scanFileDTO : invoiceComponent.getInvoiceDTO().getInvoiceScanFile()) {
-            InvoiceScanFile invoiceScanFile = new InvoiceScanFile();
+            InvoiceScanFileDTO scanFileDTO = invoiceComponent.getInvoiceDTO().getInvoiceScanFile();
+        InvoiceScanFile invoiceScanFile = new InvoiceScanFile();
+
+
             invoiceScanFile.setFileName(scanFileDTO.getFileName());
             invoiceScanFile.setContentType(scanFileDTO.getContentType());
             invoiceScanFile.setData(scanFileDTO.getData());
             invoiceScanFileRepository.save(invoiceScanFile);
-            invoiceScanFileList.add(invoiceScanFile);
-        }
-        return invoiceScanFileList;
+
+        return invoiceScanFile;
     }
 
     private List<Item> toItemList() {

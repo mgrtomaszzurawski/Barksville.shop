@@ -31,9 +31,9 @@ public class Invoice extends BaseEntity {
     @Column(name = "invoice_number",nullable = false, unique = true)
     private String invoiceNumber;
 
-    @OneToMany
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "invoice_scan_file_id")
-    private List<InvoiceScanFile> invoiceScanFile;
+    private InvoiceScanFile invoiceScanFile;
     @Column(nullable = false)
     private String opr;
 }

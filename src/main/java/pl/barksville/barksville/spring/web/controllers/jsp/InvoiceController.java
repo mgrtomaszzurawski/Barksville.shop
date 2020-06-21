@@ -39,7 +39,7 @@ public class InvoiceController {
     @PostMapping(params = {"upload"})
     public String createInvoice(Principal principal, String invoiceNumber, String company, String invoiceDate, String cost) {
 
-        invoiceService.createInvoiceDTOWithEmptyLists(invoiceNumber, principal.getName(), company, LocalDate.parse(invoiceDate), cost);
+        invoiceService.createInvoiceDTOWithoutScanAndItems(invoiceNumber, principal.getName(), company, LocalDate.parse(invoiceDate), cost);
 
         return "redirect:/admin/invoice/addProduct";
     }
@@ -86,7 +86,7 @@ public class InvoiceController {
 
     @GetMapping("/scanUpload")
     public String ScanToInvoice(Model model) {
-        model.addAttribute("scans", invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
+        model.addAttribute("scan", invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
         return "adminPanel/invoiceScanUpload";
     }
 
@@ -97,8 +97,8 @@ public class InvoiceController {
     }
 
     @PostMapping(value = "/scanUpload", params = {"delete"})
-    public String deleteInvoiceScan(String name) {
-        invoiceService.deleteScan(name);
+    public String deleteInvoiceScan() {
+        invoiceService.deleteScan();
         return "redirect:/admin/invoice/scanUpload";
     }
 
