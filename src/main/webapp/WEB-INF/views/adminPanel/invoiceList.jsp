@@ -64,10 +64,13 @@
             <td>${invoice.date}</td>
             <td>${invoice.invoiceNumber}</td>
 
-            <td><c:if test="${invoice.invoiceScanFile.size()>0}" >${invoice.invoiceScanFile.get(0).data.}</c:if></td>
+            <td><c:if test="${invoice.invoiceScanFile.size()>0}" ><form method="post" action="/admin/invoice-list/download" target="_blank">
+                <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+                <button type="submit" name="download" >Pobierz</button>
+            </form></c:if></td>
             <td><b>${invoice.opr}</b></td>
             <td>
-                <form method="post" action="/admin/invoice-list/invoice/">
+                <form method="post" action="/admin/invoice-list/invoice/" >
                     <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
