@@ -27,6 +27,8 @@ public class ProductService {
       return  productRepository.findAllByStateIsTrue();
     }
 
+
+
     public ProductDTO createProductDTOBaseOnInvoice (String name, Double price, Double quantity ){
         ProductDTO productDTO = new ProductDTO();
 

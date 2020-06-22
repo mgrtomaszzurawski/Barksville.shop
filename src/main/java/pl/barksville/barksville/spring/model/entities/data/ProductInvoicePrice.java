@@ -7,6 +7,7 @@ import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,5 +22,9 @@ public class ProductInvoicePrice extends BaseEntity {
 
     @Column(nullable = false)
     private Double quantity;
+
+    @OneToOne
+    @Column(nullable = false)
+    private Invoice invoice_id;
 
 }
