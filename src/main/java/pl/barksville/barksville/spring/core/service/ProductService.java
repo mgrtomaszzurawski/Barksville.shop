@@ -18,6 +18,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductIvoicePriceRepository productIvoicePriceRepository;
 
+
     public ProductService(ProductRepository productRepository, ProductIvoicePriceRepository productIvoicePriceRepository) {
         this.productRepository = productRepository;
         this.productIvoicePriceRepository = productIvoicePriceRepository;
@@ -67,6 +68,7 @@ public class ProductService {
             ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
             productInvoicePrice.setInvoicePrice(priceDTO.getInvoicePrice());
             productInvoicePrice.setQuantity(priceDTO.getQuantity());
+            productInvoicePrice.setInvoiceNumber(priceDTO.getInvoiceNumber());
             invoicePriceList.add(productInvoicePrice);
             productIvoicePriceRepository.save(productInvoicePrice);
         }

@@ -148,11 +148,13 @@ public class InvoiceService {
                     productDTO.getInvoicePriceList(),
                     productDTO.getSellPrice(),
                     productDTO.getQuantity());
+
         }
     }
 
     public void save() {
         Invoice invoice = new Invoice();
+
 
         invoice.setBoughtProducts(toItemList());
 
@@ -170,6 +172,8 @@ public class InvoiceService {
         invoice.setOpr(invoiceComponent.getInvoiceDTO().getOpr());
 
         invoiceRepository.save(invoice);
+
+
 
     }
 
@@ -283,6 +287,8 @@ public class InvoiceService {
                 ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
                 productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
                 productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
+                productInvoicePriceDTO.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
+
                 productInvoicePriceDTOList.add(productInvoicePriceDTO);
 
                 productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());

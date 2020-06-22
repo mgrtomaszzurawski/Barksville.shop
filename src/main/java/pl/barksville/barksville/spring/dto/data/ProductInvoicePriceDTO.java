@@ -15,4 +15,6 @@ public class ProductInvoicePriceDTO {
     private Double invoicePrice;
 
     private Double quantity;
+
+    private String invoiceNumber;
 }
