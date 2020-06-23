@@ -220,7 +220,7 @@ public class InvoiceService {
     public void deleteInvoiceById(Long id) {
         invoiceRepository.deleteById(id);
     }
-
+@Transactional
     public void deleteInvoiceByInvoiceNumber(String invoiceNumber) {
         invoiceRepository.deleteByInvoiceNumber(invoiceNumber);
     }
@@ -311,12 +311,13 @@ public class InvoiceService {
         return item;
 
     }
-
-    public void changeInvoiceData(String oldInvoiceNumber, String invoiceNumber, String company, String invoiceDate, Double cost) {
+@Transactional
+    public void changeInvoiceData(String oldInvoiceNumber, String invoiceNumber, String company, String invoiceDate, Double cost,String opr) {
 
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCompany(company);
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setDate(LocalDate.parse(invoiceDate));
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCost(cost);
+    invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setOpr(opr);
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setInvoiceNumber(invoiceNumber);
 
 

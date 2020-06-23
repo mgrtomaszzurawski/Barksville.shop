@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.InvoiceService;
 import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
 
+import java.security.Principal;
+
 @Slf4j
 @Controller
 @RequestMapping("/admin/invoice-list")
@@ -110,8 +112,8 @@ public class InvoiceViewController {
     }
 
     @PostMapping(value ="invoice/data", params = {"change"})
-    public String uchangeInvoiceData(String oldInvoiceNumber, Model model,String invoiceNumber, String company, String invoiceDate, Double cost) {
-        invoiceService.changeInvoiceData(oldInvoiceNumber,invoiceNumber, company, invoiceDate, cost);
+    public String uchangeInvoiceData(Principal principal,String oldInvoiceNumber, Model model, String invoiceNumber, String company, String invoiceDate, Double cost) {
+        invoiceService.changeInvoiceData(oldInvoiceNumber,invoiceNumber, company, invoiceDate, cost, principal.getName());
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceData";
     }
