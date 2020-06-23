@@ -53,12 +53,12 @@
 <p>Suma na Fakturze: ${invoice.cost}</p>
 
 <form method="post" action="/admin/invoice-list/invoice/data">
-    <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
-    <button type="submit" name="edit">Edytuj fakturę/TODO</button>
+    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+    <button type="submit" name="edit">Edytuj fakturę</button>
 </form>
 <form method="post" action="/admin/invoice-list/invoice/data">
-    <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
-    <button type="submit" name="delete">Usuń fakture/TODO</button>
+    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+    <button type="submit" name="delete">Usuń fakture</button>
 </form>
 
 
@@ -108,7 +108,7 @@
 
 <form method="post" action="/admin/invoice-list/invoice/row">
     <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
-    <button type="submit" name="add">Dodaj/TODO</button>
+    <button type="submit" name="add">Dodaj</button>
 </form>
 <form method="get" action="/admin/invoice-list">
     <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>

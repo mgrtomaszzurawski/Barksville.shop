@@ -103,10 +103,24 @@ public class InvoiceViewController {
         return "adminPanel/invoiceView";
     }
 
-    @PostMapping("invoice/data")
+    @PostMapping(value ="invoice/data", params = {"edit"})
     public String editInvoiceData(String invoiceNumber, Model model) {
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceData";
+    }
+
+    @PostMapping(value ="invoice/data", params = {"change"})
+    public String uchangeInvoiceData(String oldInvoiceNumber, Model model,String invoiceNumber, String company, String invoiceDate, Double cost) {
+        invoiceService.changeInvoiceData(oldInvoiceNumber,invoiceNumber, company, invoiceDate, cost);
+        model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
+        return "adminPanel/invoiceData";
+    }
+
+    @PostMapping(value ="invoice/data", params = {"delete"})
+    public String deleteInvoice(String invoiceNumber, Model model) {
+        invoiceService.deleteInvoiceByInvoiceNumber(invoiceNumber);
+        model.addAttribute("invoices", invoiceService.getInvoices());
+        return "adminPanel/invoiceList";
     }
 
 

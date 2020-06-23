@@ -45,53 +45,61 @@
 </head>
 <body>
 <jsp:include page="invoice_menu.jsp"/>
-<h1>Faktura nr: ${invoice.invoiceNumber}</h1>
+<h1 style="color: red">Trzeba uzupełnic wszystkie pola!</h1>
+<p>Faktura nr: ${invoice.invoiceNumber}</p>
 <p>Firma: ${invoice.company}</p>
 <p>Data wystawienia: ${invoice.date}</p>
 <p>Wprowadził: ${invoice.opr}</p>
 <p>Suma na Fakturze: ${invoice.cost}</p>
-<p>
-<form method="get" action="/admin/invoice-list/invoice/data">
-    <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
-    <button type="submit" name="edit">Edytuj</button>
+
+<form method="post">
+    <input type="hidden" name="oldInvoiceNumber" value="${invoice.invoiceNumber}"/>
+    <fieldset>
+        <legend>Dane Faktury</legend>
+        <p>
+            <label for="company">Nazwa firmy: </label><input id="company" type="text"
+                                                             name="company"/>
+        </p>
+        <p>
+            <label for="invoiceNumber">Nr faktury: </label><input id="invoiceNumber" type="text"
+                                                                  name="invoiceNumber"/>
+        </p>
+        <p>
+            <label for="invoiceDate">Data wystawienia faktury: </label><input id="invoiceDate" type="date"
+                                                                              name="invoiceDate" />
+        </p>
+        <p>
+            <label for="cost">Suma na fakturze: </label><input id="cost" type="number" placeholder="0.00" step="0.01"
+                                                               name="cost" />
+        </p>
+
+        <div class="column">
+            <div class="content">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-success is-link" type="submit"
+                                name="change">
+                            Zapisz zmiany
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="column"></div>
+    </fieldset>
+
 </form>
-</p>
 
 
-<table>
-<tr>
-    <th>Nr</th>
-    <th>Nazwa</th>
-    <th>Ilosc</th>
-    <th>Cena netto</th>
-    <th>vat</th>
-    <th>Podzielona</th>
-    <th>Cześci</th>
-    <th>Jednostkowa cena brutto</th>
-    <th>Edytuj</th>
-</tr>
-<c:forEach items="${invoice.boughtProducts}" var="product" varStatus="stat">
-    <tr>
-        <td>${stat.count}</td>
-        <td>${product.product.name}</td>
-        <td>${product.quantity}</td>
-        <td>${product.nettoPrice}</td>
-        <td>${product.vat}</td>
-        <td>${product.isDivided}</td>
-        <td>${product.parts}</td>
-        <td>${product.price}</td>
+
+<form method="post" action="/admin/invoice-list/invoice">
+    <input type="hidden" name="invoiceNumber" value="${invoice.invoiceNumber}"/>
+    <button type="submit" name="edit">Wróć</button>
+</form>
 
 
-        <td>
-            <form method="get" action="/admin/invoice-list/invoice/row">
-                <input type="hidden" name="name" value="${invoice.invoiceNumber}"/>
-                <input type="hidden" name="name" value="${product.id}"/>
-                <button type="submit" name="edit">Edytuj</button>
-            </form>
-        </td>
-    </tr>
-</c:forEach>
-</table>
 
 <footer></footer>
 </body>

@@ -12,7 +12,7 @@
 <section>
     <h2>Wypełnij dane faktury</h2>
     <div>
-        <form method="post">
+        <form method="post" action="/admin/invoice-list/invoice/data">
 
             <fieldset>
                 <legend>Dane Faktury</legend>

@@ -107,7 +107,7 @@ public class InvoiceService {
         String fileName = invoiceComponent.getInvoiceDTO().getCompany() + "-" + invoiceComponent.getInvoiceDTO().getInvoiceNumber();
 
         InvoiceScanFileDTO invoiceScanFileDTO = new InvoiceScanFileDTO();
-        invoiceScanFileDTO.setFileName(fileName+".pdf");
+        invoiceScanFileDTO.setFileName(fileName + ".pdf");
         invoiceScanFileDTO.setContentType(file.getContentType());
         invoiceScanFileDTO.setData(file.getBytes());
 
@@ -166,13 +166,12 @@ public class InvoiceService {
 
         invoice.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
 
-        if(!invoiceComponent.getInvoiceDTO().getInvoiceScanFile().getFileName().isEmpty())
-        invoice.setInvoiceScanFile(toScanFile());
+        if (!invoiceComponent.getInvoiceDTO().getInvoiceScanFile().getFileName().isEmpty())
+            invoice.setInvoiceScanFile(toScanFile());
 
         invoice.setOpr(invoiceComponent.getInvoiceDTO().getOpr());
 
         invoiceRepository.save(invoice);
-
 
 
     }
@@ -180,14 +179,14 @@ public class InvoiceService {
     private InvoiceScanFile toScanFile() {
 
 
-            InvoiceScanFileDTO scanFileDTO = invoiceComponent.getInvoiceDTO().getInvoiceScanFile();
+        InvoiceScanFileDTO scanFileDTO = invoiceComponent.getInvoiceDTO().getInvoiceScanFile();
         InvoiceScanFile invoiceScanFile = new InvoiceScanFile();
 
 
-            invoiceScanFile.setFileName(scanFileDTO.getFileName());
-            invoiceScanFile.setContentType(scanFileDTO.getContentType());
-            invoiceScanFile.setData(scanFileDTO.getData());
-            invoiceScanFileRepository.save(invoiceScanFile);
+        invoiceScanFile.setFileName(scanFileDTO.getFileName());
+        invoiceScanFile.setContentType(scanFileDTO.getContentType());
+        invoiceScanFile.setData(scanFileDTO.getData());
+        invoiceScanFileRepository.save(invoiceScanFile);
 
         return invoiceScanFile;
     }
@@ -220,6 +219,10 @@ public class InvoiceService {
 
     public void deleteInvoiceById(Long id) {
         invoiceRepository.deleteById(id);
+    }
+
+    public void deleteInvoiceByInvoiceNumber(String invoiceNumber) {
+        invoiceRepository.deleteByInvoiceNumber(invoiceNumber);
     }
 
     @Transactional
@@ -261,52 +264,61 @@ public class InvoiceService {
         invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().add(item);
 
 
+    }
+
+    public Item createItem(ItemDTO itemDTO) {
+
+        Item item = new Item();
+        item.setPrice(itemDTO.getPrice());
+        if (productService.isExistByName(itemDTO.getProduct().getName())) {
+            item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+            item.setQuantity(itemDTO.getQuantity());
+            item.setNettoPrice(itemDTO.getNettoPrice());
+            item.setVat(itemDTO.getVat());
+            item.setIsDivided(itemDTO.getIsDivided());
+            if (item.getIsDivided()) {
+                item.setParts(itemDTO.getParts());
+            } else {
+                item.setParts(1);
+            }
+
+
+            productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
+        } else {
+            List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
+            ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
+            productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
+            productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
+            productInvoicePriceDTO.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
+
+            productInvoicePriceDTOList.add(productInvoicePriceDTO);
+
+            productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
+
+
+            item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+            item.setQuantity(itemDTO.getQuantity());
+            item.setNettoPrice(itemDTO.getNettoPrice());
+            item.setVat(itemDTO.getVat());
+            item.setIsDivided(itemDTO.getIsDivided());
+            if (item.getIsDivided()) {
+                item.setParts(itemDTO.getParts());
+            } else {
+                item.setParts(1);
+            }
+        }
+        itemRepository.save(item);
+        return item;
 
     }
 
-    public Item createItem(ItemDTO itemDTO){
+    public void changeInvoiceData(String oldInvoiceNumber, String invoiceNumber, String company, String invoiceDate, Double cost) {
 
-            Item item = new Item();
-            item.setPrice(itemDTO.getPrice());
-            if (productService.isExistByName(itemDTO.getProduct().getName())) {
-                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-                item.setQuantity(itemDTO.getQuantity());
-                item.setNettoPrice(itemDTO.getNettoPrice());
-                item.setVat(itemDTO.getVat());
-                item.setIsDivided(itemDTO.getIsDivided());
-                if (item.getIsDivided()) {
-                    item.setParts(itemDTO.getParts());
-                } else {
-                    item.setParts(1);
-                }
+        invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCompany(company);
+        invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setDate(LocalDate.parse(invoiceDate));
+        invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCost(cost);
+        invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setInvoiceNumber(invoiceNumber);
 
-
-                productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
-            } else {
-                List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
-                ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-                productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
-                productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
-                productInvoicePriceDTO.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
-
-                productInvoicePriceDTOList.add(productInvoicePriceDTO);
-
-                productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
-
-
-                item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-                item.setQuantity(itemDTO.getQuantity());
-                item.setNettoPrice(itemDTO.getNettoPrice());
-                item.setVat(itemDTO.getVat());
-                item.setIsDivided(itemDTO.getIsDivided());
-                if (item.getIsDivided()) {
-                    item.setParts(itemDTO.getParts());
-                } else {
-                    item.setParts(1);
-                }
-            }
-            itemRepository.save(item);
-            return item;
 
     }
 }
