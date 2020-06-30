@@ -36,4 +36,5 @@ public class Invoice extends BaseEntity {
     private InvoiceScanFile invoiceScanFile;
     @Column(nullable = false)
     private String opr;
+
 }
