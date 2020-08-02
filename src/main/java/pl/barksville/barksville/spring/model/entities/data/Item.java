@@ -28,12 +28,12 @@ public class Item extends BaseEntity {
     private Boolean isDivided;
     private Integer parts;
 
-    todo
+   // todo
    // @ElementCollection
    // @CollectionTable(name = "item_bought_products",
    //         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")})
    // @MapKeyColumn(name = "item_name")
    // @Column(name = "sold")
-    private Map<String,Double> boughtProducts;
+   // private Map<String,Double> boughtProducts;
 
 }
