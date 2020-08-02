@@ -16,7 +16,7 @@ import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
 
 import java.security.Principal;
 
-@Slf4j
+
 @Controller
 @RequestMapping("/admin/invoice-list")
 public class InvoiceViewController {
@@ -83,7 +83,7 @@ public class InvoiceViewController {
 
     @PostMapping(value = "invoice/row", params = {"update"})
     public String updateInvoiceRow(Long id, String invoiceNumber, Model model, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
-        invoiceService.updateIvoiceRowByInvoiceNymberAndRowID(invoiceNumber, id, nettoPrice, quantity, vat, isDivided, parts, price);
+        invoiceService.updateInvoiceRowByInvoiceNumberAndRowID(invoiceNumber, id, nettoPrice, quantity, vat, isDivided, parts, price);
         model.addAttribute("row", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findAny().get());
         model.addAttribute("invoiceNumber", invoiceNumber);
         return "adminPanel/invoiceRow";
@@ -99,7 +99,7 @@ public class InvoiceViewController {
 
     @PostMapping(value = "invoice/row", params = {"create"})
     public String createInvoiceRow(String name, String invoiceNumber, Model model, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
-        invoiceService.addRowToIvoice(invoiceNumber, name, nettoPrice, quantity, vat, isDivided, parts, price);
+        invoiceService.addRowToInvoice(invoiceNumber, name, nettoPrice, quantity, vat, isDivided, parts, price);
         model.addAttribute("invoiceNumber", invoiceNumber);
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceView";

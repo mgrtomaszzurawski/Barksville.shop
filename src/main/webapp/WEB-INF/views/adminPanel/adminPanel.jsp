@@ -42,6 +42,18 @@
                 </button>
             </form></th>
         </tr>
+            <tr>
+                <th> <form method="get" action="/admin/create-report">
+                    <button  type="submit" >
+                        Utwórz raport
+                    </button>
+                </form></th>
+                <th> <form method="get" action="/admin/view-raports">
+                    <button  type="submit" >
+                        przeglądaj raporty
+                    </button>
+                </form></th>
+            </tr>
 
         </table>
 

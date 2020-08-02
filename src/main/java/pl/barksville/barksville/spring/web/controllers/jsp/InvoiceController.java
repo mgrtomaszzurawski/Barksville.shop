@@ -17,7 +17,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Slf4j
+
 @Controller
 @RequestMapping("/admin/invoice")
 public class InvoiceController {
@@ -33,7 +33,7 @@ public class InvoiceController {
 
     @GetMapping
     public String prepareInvoiceForm() {
-        return "adminPanel/invoiceForm";
+        return "adminPanel/invoiceCreate";
     }
 
     @PostMapping(params = {"upload"})
