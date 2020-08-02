@@ -1,6 +1,10 @@
 package pl.barksville.barksville.spring.core.service;
 
 import org.springframework.stereotype.Service;
+import pl.barksville.barksville.spring.model.dal.repositories.DayReportRepository;
+import pl.barksville.barksville.spring.model.dal.repositories.MonthReportRepository;
+import pl.barksville.barksville.spring.model.dal.repositories.WeekReportRepository;
+import pl.barksville.barksville.spring.model.dal.repositories.YearReportRepository;
 import pl.barksville.barksville.spring.model.entities.reports.DayReport;
 import pl.barksville.barksville.spring.model.entities.reports.MonthReport;
 import pl.barksville.barksville.spring.model.entities.reports.WeekReport;
@@ -13,6 +17,20 @@ import java.util.List;
 //todo
 @Service
 public class ReportService {
+
+    final private DayReportRepository dayReportRepository;
+    final private WeekReportRepository weekReportRepository;
+    final private MonthReportRepository monthReportRepository;
+    final private YearReportRepository yearReportRepository;
+
+    public ReportService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository) {
+        this.dayReportRepository = dayReportRepository;
+        this.weekReportRepository = weekReportRepository;
+        this.monthReportRepository = monthReportRepository;
+        this.yearReportRepository = yearReportRepository;
+    }
+
+
     public static List<DayReport> getDayReportsList() {
         return new ArrayList<>();
     }
