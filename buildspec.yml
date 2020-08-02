@@ -17,9 +17,9 @@ phases:
     commands:
       - echo post_build
       - mvn package
-      - mv target/barksville-0.0.1-SNAPSHOT.war barksville-0.0.1-SNAPSHOT.war
+      - mv target/barksville.war barksville.war
 artifacts:
   files:
-    - barksville-0.0.1-SNAPSHOT.war
+    - barksville.war
     - .ebextensions/**/*
   base-directory: 'target/barksville-0.0.1-SNAPSHOT'
