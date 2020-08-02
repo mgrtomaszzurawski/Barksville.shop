@@ -22,4 +22,4 @@ artifacts:
   files:
     - barksville.war
     - .ebextensions/**/*
-  base-directory: 'target/barksville-0.0.1-SNAPSHOT'
+  base-directory: 'target/barksville'
