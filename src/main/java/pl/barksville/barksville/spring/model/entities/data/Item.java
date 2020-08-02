@@ -34,8 +34,10 @@ public class Item extends BaseEntity {
    //         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")})
    // @MapKeyColumn(name = "item_name")
    // @Column(name = "sold")
+  // private Map<String,Double> boughtProducts;
 
     @Column(nullable = false,name = "is_sold")
     private Boolean isSold;
+
 
 }
