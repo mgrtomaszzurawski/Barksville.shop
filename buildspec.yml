@@ -21,5 +21,5 @@ phases:
 artifacts:
   files:
     - barksville-0.0.1-SNAPSHOT.war
-    -.ebextensions/**/*
+    - .ebextensions/**/*
   base-directory: 'target/barksville-0.0.1-SNAPSHOT'
