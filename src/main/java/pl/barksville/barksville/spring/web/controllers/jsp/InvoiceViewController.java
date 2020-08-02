@@ -16,7 +16,7 @@ import pl.barksville.barksville.spring.model.entities.data.InvoiceScanFile;
 
 import java.security.Principal;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/admin/invoice-list")
 public class InvoiceViewController {
