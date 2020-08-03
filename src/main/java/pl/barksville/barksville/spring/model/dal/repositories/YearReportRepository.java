@@ -5,5 +5,5 @@ import pl.barksville.barksville.spring.model.entities.reports.YearReport;
 
 
 public interface YearReportRepository extends JpaRepository<YearReport, Long> {
-    //todo
+    YearReport findByReportName(String reportName);
 }

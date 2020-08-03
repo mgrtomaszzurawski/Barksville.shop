@@ -8,6 +8,7 @@ import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import pl.barksville.barksville.spring.model.entities.data.ShopReport;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class DayReport extends BaseEntity {
 
 
     @Column(unique = true, nullable = false, name = "report_name")
-    private String reportName;
+    private LocalDate reportName;
 
     @OneToOne
     @Column(unique = true, nullable = false, name = "shop_report")

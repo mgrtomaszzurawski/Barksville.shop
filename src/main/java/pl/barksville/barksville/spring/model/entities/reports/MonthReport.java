@@ -8,6 +8,7 @@ import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import pl.barksville.barksville.spring.model.entities.data.ShopReport;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class MonthReport extends BaseEntity {
 
 
     @Column(unique = true, nullable = false, name = "report_name")
-    private String reportName;
+    private LocalDate reportName;
 
     @Column(nullable = false, name = "net_income")
     private double netIncome;
@@ -31,7 +32,7 @@ public class MonthReport extends BaseEntity {
     private double expenses;
 
     @OneToMany
-    @Column(unique = true, nullable = false, name = "week_report_list")
-    private List<WeekReport> weekReportList;
+    @Column(unique = true, nullable = false, name = "day_report_list")
+    private List<DayReport> dayReportList;
 
 }

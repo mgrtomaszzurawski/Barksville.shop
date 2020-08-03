@@ -6,5 +6,6 @@ import pl.barksville.barksville.spring.model.entities.reports.DayReport;
 import java.util.List;
 
 public interface DayReportRepository extends JpaRepository<DayReport, Long> {
+    DayReport findByReportName(String name);
     //todo
 }

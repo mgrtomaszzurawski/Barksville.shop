@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ import java.util.List;
 public class YearReport extends BaseEntity {
 
     @Column(unique = true, nullable = false, name = "report_name")
-    private String reportName;
+    private LocalDate reportName;
 
     @Column(nullable = false, name = "net_income")
     private double netIncome;

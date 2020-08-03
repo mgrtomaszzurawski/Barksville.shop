@@ -1,20 +1,20 @@
 package pl.barksville.barksville.spring.core.service;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import pl.barksville.barksville.spring.model.dal.repositories.DayReportRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.MonthReportRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.WeekReportRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.YearReportRepository;
+import pl.barksville.barksville.spring.model.dal.repositories.*;
 import pl.barksville.barksville.spring.model.entities.reports.DayReport;
 import pl.barksville.barksville.spring.model.entities.reports.MonthReport;
 import pl.barksville.barksville.spring.model.entities.reports.WeekReport;
 import pl.barksville.barksville.spring.model.entities.reports.YearReport;
 
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-//todo
+
 @Service
 public class ReportService {
 
@@ -22,46 +22,70 @@ public class ReportService {
     final private WeekReportRepository weekReportRepository;
     final private MonthReportRepository monthReportRepository;
     final private YearReportRepository yearReportRepository;
+    final private SoldItemReportRepository soldItemReportRepository;
 
-    public ReportService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository) {
+    public ReportService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository, SoldItemReportRepository soldItemReportRepository) {
         this.dayReportRepository = dayReportRepository;
         this.weekReportRepository = weekReportRepository;
         this.monthReportRepository = monthReportRepository;
         this.yearReportRepository = yearReportRepository;
+        this.soldItemReportRepository = soldItemReportRepository;
     }
 
+    public List<DayReport> getDayReportsList() {
 
-    public static List<DayReport> getDayReportsList() {
+        return dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "reportName"));
+    }
+
+    public DayReport getDayReport(LocalDate reportDate) {
+
+        return dayReportRepository.findByReportName(
+                "Day Report - "
+                        + reportDate.getDayOfMonth() + "."
+                        + reportDate.getMonthValue() + "."
+                        + reportDate.getYear());
+    }
+
+    public List<WeekReport> getWeekReportsList() {
         return new ArrayList<>();
     }
 
-    public static DayReport getDayReport(LocalDate reportDate) {
-        return  new DayReport();
+    public WeekReport getWeekReport(LocalDate reportDate) {
+
+        WeekFields weekFields = WeekFields.ISO;
+
+        return weekReportRepository.findByReportName(
+                "Week Report - "
+                        + reportDate.getMonthValue() + "."
+                        + reportDate.getYear() + " -it is "
+                        + reportDate.get(weekFields.weekOfWeekBasedYear()));
+
+
     }
 
-    public static List<WeekReport> getWeekReportsList() {
+    public List<MonthReport> getMonthReportsList() {
         return new ArrayList<>();
     }
 
-    public static WeekReport getWeekReport(LocalDate reportDate) {
-        return  new WeekReport();
+    public MonthReport getMonthReport(LocalDate reportDate) {
+        return monthReportRepository.findByReportName(
+                "Month Report - "
+                        + reportDate.getMonthValue() + "."
+                        + reportDate.getYear());
     }
 
-    public static List<MonthReport> getMonthReportsList() {
+    }
+
+    public List<YearReport> getYearReportsList() {
         return new ArrayList<>();
     }
 
-    public static MonthReport getMonthReport(LocalDate reportDate) {
-        return  new MonthReport();
+    public YearReport getYearReport(LocalDate reportDate) {
+
+        return yearReportRepository.findByReportName(
+                "Year Report - "
+                        + reportDate.getYear());
     }
-
-    public static List<YearReport> getYearReportsList() {
-        return new ArrayList<>();
-    }
-
-    public static YearReport getYearReport(LocalDate reportDate) {
-
-        return  new YearReport();
     }
 
 
