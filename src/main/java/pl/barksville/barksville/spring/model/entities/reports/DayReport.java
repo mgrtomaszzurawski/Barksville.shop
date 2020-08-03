@@ -35,6 +35,6 @@ public class DayReport extends BaseEntity {
     private double expenses;
 
     @OneToMany
-    @Column(unique = true, nullable = false, name = "shop_report")
+    @Column(unique = true, nullable = false, name = "sold_item_report_list")
     private List<SoldItemReport> soldItemReportList;
 }
