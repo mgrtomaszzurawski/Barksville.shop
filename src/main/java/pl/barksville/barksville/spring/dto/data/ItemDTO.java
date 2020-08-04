@@ -24,4 +24,7 @@ public class ItemDTO {
     private Boolean isDivided;
     private Integer parts;
     private Boolean isSold;
+
+    private Double leftItems;
+
 }

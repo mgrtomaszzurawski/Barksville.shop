@@ -150,6 +150,8 @@ public class ShopReportService {
 
                         itemDTO.setPrice(Double.parseDouble(words[words.length - 1]));
 
+                        itemDTO.setIsSold(true);
+
                         itemService.saveItemDTOAsItem(itemDTO);
 
                         shopReportDTO.getSoldProducts().add(itemDTO);

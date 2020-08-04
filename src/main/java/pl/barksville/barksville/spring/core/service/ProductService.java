@@ -42,6 +42,8 @@ public class ProductService {
         productInvoicePriceDTO.setQuantity(quantity);
         invoicePriceDTOList.add(productInvoicePriceDTO);
 
+        productDTO.setInvoicePriceList(invoicePriceDTOList);
+
         productDTO.setQuantity(quantity);
 
 

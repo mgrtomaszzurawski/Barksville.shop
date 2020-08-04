@@ -83,6 +83,8 @@ public class InvoiceService {
 
         itemDTO.setIsSold(false);
 
+        itemDTO.setLeftItems(quantity);
+
         invoiceComponent.getInvoiceDTO().getBoughtProducts().add(itemDTO);
     }
 
@@ -235,7 +237,7 @@ public class InvoiceService {
 
     public void updateInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
         Item item = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findFirst().get();
-        item.setNettoPrice(netPrice);
+        item.setNetPrice(netPrice);
         item.setQuantity(quantity);
         item.setVat(vat);
         item.setIsDivided(isDivided);
@@ -275,7 +277,7 @@ public class InvoiceService {
         if (productService.isExistByName(itemDTO.getProduct().getName())) {
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
             item.setQuantity(itemDTO.getQuantity());
-            item.setNettoPrice(itemDTO.getNettoPrice());
+            item.setNetPrice(itemDTO.getNettoPrice());
             item.setVat(itemDTO.getVat());
             item.setIsDivided(itemDTO.getIsDivided());
             item.setIsSold(itemDTO.getIsSold());
@@ -301,7 +303,7 @@ public class InvoiceService {
 
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
             item.setQuantity(itemDTO.getQuantity());
-            item.setNettoPrice(itemDTO.getNettoPrice());
+            item.setNetPrice(itemDTO.getNettoPrice());
             item.setVat(itemDTO.getVat());
             item.setIsDivided(itemDTO.getIsDivided());
             if (item.getIsDivided()) {

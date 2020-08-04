@@ -28,7 +28,7 @@ public class ItemService {
         item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
         item.setIsSold(itemDTO.getIsSold());
         item.setIsDivided(itemDTO.getIsDivided());
-        item.setNettoPrice(itemDTO.getNettoPrice());
+        item.setNetPrice(itemDTO.getNettoPrice());
         item.setParts(itemDTO.getParts());
         item.setPrice(itemDTO.getPrice());
         item.setQuantity(itemDTO.getQuantity());

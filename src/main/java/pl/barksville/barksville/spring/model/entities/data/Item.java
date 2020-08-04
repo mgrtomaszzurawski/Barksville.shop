@@ -23,12 +23,14 @@ public class Item extends BaseEntity {
     //cena moze sie roznic od ceny w Product np. przez promocje
     private Double price;
 
-    private Double nettoPrice;
+    @Column(name="net_price")
+    private Double netPrice;
     private Double vat;
+    @Column(name="is_divided")
     private Boolean isDivided;
     private Integer parts;
 
-   // todo
+
    // @ElementCollection
    // @CollectionTable(name = "item_bought_products",
    //         joinColumns = {@JoinColumn(name = "item_id", referencedColumnName = "id")})
@@ -39,5 +41,7 @@ public class Item extends BaseEntity {
     @Column(nullable = false,name = "is_sold")
     private Boolean isSold;
 
+    @Column(name="left_items")
+    private Double leftItems;
 
 }
