@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <jsp:include page="invoice_header.jsp"/>
+    <jsp:include page="invoiceHeader.jsp"/>
     <style>
         table, td, th, tr {
             border: 1px solid black;

@@ -9,7 +9,7 @@
 
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 
 <h1 style="color: red">Trzeba wypelnic wszystkie pola!!!</h1>
 <form method="post" action="/admin/invoice-list/invoice/row">

@@ -4,7 +4,7 @@
 <html>
 <head>
 
-    <jsp:include page="invoice_header.jsp"/>
+    <jsp:include page="invoiceHeader.jsp"/>
     <title>Rejestracja</title>
     <style>
         #ramka{
@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 <h1 style="color: red">Trzeba uzupełnic wszystkie pola!</h1>
 <p>Faktura nr: ${invoice.invoiceNumber}</p>
 <p>Firma: ${invoice.company}</p>

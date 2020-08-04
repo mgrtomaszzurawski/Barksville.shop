@@ -4,7 +4,7 @@
 <html>
 <head>
 
-    <jsp:include page="invoice_header.jsp"/>
+    <jsp:include page="invoiceHeader.jsp"/>
     <title>Rejestracja</title>
     <style>
         #ramka {
@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 <table>
     <tr>
         <th>Nr</th>

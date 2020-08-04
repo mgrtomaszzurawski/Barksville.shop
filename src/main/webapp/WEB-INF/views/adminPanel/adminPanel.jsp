@@ -43,12 +43,12 @@
             </form></th>
         </tr>
             <tr>
-                <th> <form method="get" action="/admin/create-report">
+                <th> <form method="get" action="/admin/report-create">
                     <button  type="submit" >
                         Utwórz raport
                     </button>
                 </form></th>
-                <th> <form method="get" action="/admin/view-raports">
+                <th> <form method="get" action="/admin/report-view">
                     <button  type="submit" >
                         przeglądaj raporty
                     </button>

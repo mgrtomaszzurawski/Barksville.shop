@@ -5,7 +5,7 @@
 <head>
 
     <title>Lista Raportów Dziennych</title>
-    <jsp:include page="../elements/header.jsp"/>
+    <jsp:include page="reportViewHeader.jsp"/>
 
 
     <title>Rejestracja</title>
@@ -49,8 +49,7 @@
 </head>
 
 <body>
-<jsp:include page="../elements/menu.jsp"/>
-
+<jsp:include page="reportViewMenu.jsp"/>
 
 <table>
     <tr>

@@ -6,7 +6,7 @@ import pl.barksville.barksville.spring.model.entities.data.Invoice;
 import java.time.LocalDate;
 
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
-    Invoice getInvoiceByInvoiceDate(LocalDate date);
+    Invoice getInvoiceByDate(LocalDate date);
 
    Invoice getInvoiceByInvoiceNumber(String invoiceNumber);
 

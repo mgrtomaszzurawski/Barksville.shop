@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.ReportsService;
 import pl.barksville.barksville.spring.model.entities.reports.DayReport;
+import pl.barksville.barksville.spring.model.entities.reports.MonthReport;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,18 +45,12 @@ private final ReportsService reportsService;
         return "adminPanel/reportView/dayReportsList";
     }
 
-    @PostMapping(value = "/day-report", params = {"get"})
-    public String getDayReport(Model model, String reportDate) {
-        model.addAttribute("dayReport", reportsService.getDayReport(LocalDate.parse(reportDate)));
+    @PostMapping(value = "/day-report")
+    public String getDayReport(Model model, DayReport dayReport) {
+        model.addAttribute("dayReport", dayReport);
 
         return "adminPanel/reportView/dayReport";
     }
-
-
-
-
-
-
 
     @GetMapping(value = "/week-report-list")
     public String getWeekReportsList(Model model) {
@@ -72,6 +67,12 @@ private final ReportsService reportsService;
     @GetMapping(value = "/month-report-list")
     public String getMonthReportsList(Model model) {
         model.addAttribute("monthReports", reportsService.getMonthReportsList());
+        return "adminPanel/reportView/monthReportsList";
+    }
+
+    @GetMapping(value = "/month-report-list-of-year")
+    public String getMonthReportsList(Model model, List<MonthReport> monthReportList) {
+        model.addAttribute("monthReports",monthReportList);
         return "adminPanel/reportView/monthReportsList";
     }
 

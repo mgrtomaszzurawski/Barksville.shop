@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Strona użytkownika</title>
-    <jsp:include page="../elements/header.jsp"/>
+    <jsp:include page="reportCreateHeader.jsp"/>
 </head>
 <body>
-<jsp:include page="../elements/menu.jsp"/>
+<jsp:include page="reportCreateMenu.jsp"/>
 <div class="container">
     <div class="row center">
         <h2>Jesteś w panelu tworzenia raportu dziennego</h2>

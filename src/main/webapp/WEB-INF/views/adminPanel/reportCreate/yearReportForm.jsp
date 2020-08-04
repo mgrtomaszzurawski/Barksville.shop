@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Strona użytkownika</title>
-    <jsp:include page="../elements/header.jsp"/>
+    <jsp:include page="reportCreateHeader.jsp"/>
 </head>
 <body>
-<jsp:include page="../elements/menu.jsp"/>
+<jsp:include page="reportCreateMenu.jsp"/>
 <div class="container">
     <div class="row center">
         <h2>Jesteś w panelu tworzenia raportu rocznego</h2>
@@ -27,7 +27,7 @@
                 <tr>
                     <th>
                         <input id="yearReportDate"
-                               type="date"
+                               type="number"  placeholder="1" step="1" value="2019"
                                name="yearReportDate"/>
                         <button type="submit">
                             Raport roczny

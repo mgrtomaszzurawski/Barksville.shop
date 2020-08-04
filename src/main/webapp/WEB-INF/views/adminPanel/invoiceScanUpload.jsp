@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Invoice scan upload</title>
-    <jsp:include page="invoice_header.jsp"/>
+    <jsp:include page="invoiceHeader.jsp"/>
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 
     <tr>
         <td>1</td>

@@ -1,5 +1,6 @@
 package pl.barksville.barksville.spring.web.controllers.jsp;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.ReportsService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 @Controller
@@ -30,10 +33,10 @@ public class AdminReportCreateController {
     }
 
     @PostMapping(value = "day")
-    public String createDayReport(LocalDate reportDate) {
+    public String createDayReport(String dayReportDate) {
 
 
-        reportsService.createDayReport(reportDate);
+        reportsService.createDayReport(LocalDate.parse(dayReportDate));
 
         return "redirect:/admin/report-create";
     }
@@ -44,9 +47,11 @@ public class AdminReportCreateController {
     }
 
     @PostMapping(value = "week")
-    public String createWeekReport(LocalDate reportDate) {
+    public String createWeekReport(String weekReportDate) {
 
-        reportsService.createWeekReport(reportDate);
+        String date = weekReportDate+"-1";
+
+        reportsService.createWeekReport(LocalDate.parse(date, DateTimeFormatter.ISO_WEEK_DATE));
 
         return "redirect:/admin/report-create";
     }
@@ -57,7 +62,9 @@ public class AdminReportCreateController {
     }
 
     @PostMapping(value = "month")
-    public String createMonthReport(LocalDate reportDate) {
+    public String createMonthReport(String monthReportDate) {
+
+        LocalDate reportDate= LocalDate.parse(monthReportDate+"-01");
 
         reportsService.createMonthReport(reportDate);
 
@@ -70,7 +77,8 @@ public class AdminReportCreateController {
     }
 
     @PostMapping(value = "year")
-    public String createYearReport(LocalDate reportDate) {
+    public String createYearReport(String yearReportDate) {
+    LocalDate reportDate= LocalDate.of(Integer.parseInt(yearReportDate),1,1);
 
         reportsService.createYearReport(reportDate);
 

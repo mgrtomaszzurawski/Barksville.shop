@@ -5,7 +5,7 @@
 <head>
 
     <title>Lista Raportów Dziennych</title>
-    <jsp:include page="../elements/header.jsp"/>
+    <jsp:include page="reportViewHeader.jsp"/>
 
 
     <title>Rejestracja</title>
@@ -49,7 +49,7 @@
 </head>
 
 <body>
-<jsp:include page="../elements/menu.jsp"/>
+<jsp:include page="reportViewMenu.jsp"/>
 
 
 <table>
@@ -64,25 +64,25 @@
         <th>Podgląd listy tranzakcji</th>
 
     </tr>
-    <c:forEach items="${dayreports}" var="monthReport" varStatus="stat">
+    <c:forEach items="${dayReports}" var="dayReport" varStatus="stat">
         <tr>
             <td>${stat.count}</td>
             <td>${dayReport.reportDate}</td>
             <td>${dayReport.reportName}</td>
-            <td>${monthReport.grossIncome}</td>
-            <td>${monthReport.netIncome}</td>
-            <td>${monthReport.expenses}</td>
+            <td>${dayReport.grossIncome}</td>
+            <td>${dayReport.netIncome}</td>
+            <td>${dayReport.expenses}</td>
 
             <td>
                 <form method="post" action="/admin/shop-report/shop-report-view">
-                    <input type="hidden" name="invoiceNumber" value="${dayReport.shopReport}"/>
+                    <input type="hidden" name="shopReport" value="${dayReport.shopReport}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>
 
             <td>
                 <form method="Post" action="/admin/report-view/day-report">
-                    <input type="hidden" name="reportDate" value="${dayReport.reportDate}"/>
+                    <input type="hidden" name="reportDate" value="${dayReport}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>

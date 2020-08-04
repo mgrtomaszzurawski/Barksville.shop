@@ -4,10 +4,10 @@
 <html>
 <head>
     <title>Strona użytkownika</title>
-    <jsp:include page="../elements/header.jsp"/>
+    <jsp:include page="reportCreateHeader.jsp"/>
 </head>
 <body>
-<jsp:include page="../elements/menu.jsp"/>
+<jsp:include page="reportCreateMenu.jsp"/>
 <div class="container">
     <div class="row center">
         <h2>Jesteś w panelu tworzenia raportów</h2>
@@ -26,7 +26,7 @@
             </tr>
 
             <tr>
-                <th> <form method="get" action="/admin/shop-report">
+                <th> <form method="get" action="/admin/report-create/week">
                     <button  type="submit" >
                         Raport tygodniowy
                     </button>
@@ -34,14 +34,14 @@
 
             </tr>
             <tr>
-                <th> <form method="get" action="/admin/create-report">
+                <th> <form method="get" action="/admin/report-create/month">
                     <button  type="submit" >
                         Raport miesięczny
                     </button>
                 </form></th>
             </tr>
             <tr>
-                <th> <form method="get" action="/admin/create-report">
+                <th> <form method="get" action="/admin/report-create/year">
                     <button  type="submit" >
                         Raport roczny
                     </button>

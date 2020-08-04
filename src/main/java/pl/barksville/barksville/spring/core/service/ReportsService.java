@@ -109,8 +109,15 @@ public class ReportsService {
         DayReport dayReport = new DayReport();
 
         List<Invoice> invoiceList = invoiceRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
+        if(invoiceList.isEmpty()){
+            return;
+        }
 
         ShopReport shopReport = shopReportRepository.getShopReportByDate(reportDate);
+        if(shopReport==null){
+            return;
+        }
+
 
         dayReport.setShopReport(shopReport);
         dayReport.setReportName("Day Report - "
@@ -185,13 +192,20 @@ public class ReportsService {
 
         List<DayReport> dayReportList = new ArrayList<>();
 
+
         for (int i = 0; i < 7; i++) {
             DayReport dayReport = new DayReport();
             if (dayReportRepository.existsByReportDate(reportDate)) {
                 dayReportRepository.findByReportDate(reportDate);
+                dayReportList.add(dayReport);
             }
-            dayReportList.add(dayReport);
+
         }
+
+        if(dayReportList.isEmpty()){
+            return;
+        }
+
         weekReport.setDayReportList(dayReportList);
 
         weekReport.setExpenses(dayReportList.stream().map(DayReport::getExpenses).reduce(0., Double::sum));
@@ -217,12 +231,17 @@ public class ReportsService {
 
         List<DayReport> dayReportList = new ArrayList<>();
 
+
         for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
             DayReport dayReport = new DayReport();
             if (dayReportRepository.existsByReportDate(reportDate)) {
                 dayReportRepository.findByReportDate(reportDate);
+                dayReportList.add(dayReport);
             }
-            dayReportList.add(dayReport);
+
+        }
+        if(dayReportList.isEmpty()){
+            return;
         }
 
         monthReport.setDayReportList(dayReportList);
@@ -242,13 +261,17 @@ public class ReportsService {
         YearReport yearReport = new YearReport();
 
         List<MonthReport> monthReportList = new ArrayList<>();
+        if(monthReportList.isEmpty()){
+            return;
+        }
 
         for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
             MonthReport monthReport = new MonthReport();
             if (monthReportRepository.existsByReportDate(reportDate)) {
                 monthReportRepository.findByReportDate(reportDate);
+                monthReportList.add(monthReport);
             }
-            monthReportList.add(monthReport);
+
         }
 
         yearReport.setMonthReportList(monthReportList);
