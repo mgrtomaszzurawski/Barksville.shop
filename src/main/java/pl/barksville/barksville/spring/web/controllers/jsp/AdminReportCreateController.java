@@ -43,7 +43,7 @@ public class AdminReportCreateController {
         return "adminPanel/reportCreate/weekReportForm";
     }
 
-    @PostMapping(value = "week",params = {"create"})
+    @PostMapping(value = "week")
     public String createWeekReport(LocalDate reportDate) {
 
         reportsService.createWeekReport(reportDate);
@@ -56,7 +56,7 @@ public class AdminReportCreateController {
         return "adminPanel/reportCreate/monthReportForm";
     }
 
-    @PostMapping(value = "month",params = {"create"})
+    @PostMapping(value = "month")
     public String createMonthReport(LocalDate reportDate) {
 
         reportsService.createMonthReport(reportDate);
@@ -69,7 +69,7 @@ public class AdminReportCreateController {
         return "adminPanel/reportCreate/yearReportForm";
     }
 
-    @PostMapping(value = "year",params = {"create"})
+    @PostMapping(value = "year")
     public String createYearReport(LocalDate reportDate) {
 
         reportsService.createYearReport(reportDate);

@@ -19,7 +19,7 @@ import java.util.List;
 @ToString
 public class YearReport extends BaseEntity {
 
-    @Column(unique = true, nullable = false, name = "report_name")
+    @Column(unique = true, nullable = false, name = "report_date")
     private LocalDate reportDate;
 
     @Column(unique = true, nullable = false, name = "report_name")

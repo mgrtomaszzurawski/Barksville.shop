@@ -21,6 +21,7 @@ import pl.barksville.barksville.spring.model.entities.data.*;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ShopReportController {
 
         return "adminPanel/shopReport";
     }
-    
+
     @PostMapping(params = {"cancel"})
     public String cancelEditUserData() {
         return "adminPanel/shopReport";
@@ -59,5 +60,11 @@ public class ShopReportController {
         return "redirect:/admin/panel";
     }
 
+    @PostMapping(value = "/shop-report-view")
+    public String prepareUserAccountPage(Model model, ShopReport shopReport) {
+
+        model.addAttribute("shopReport", shopReport);
+        return "adminPanel/shopReportView";
+    }
 
 }

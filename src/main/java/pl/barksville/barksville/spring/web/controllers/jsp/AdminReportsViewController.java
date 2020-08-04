@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.barksville.barksville.spring.core.service.ReportsService;
+import pl.barksville.barksville.spring.model.entities.reports.DayReport;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/report-view")
@@ -21,12 +23,24 @@ private final ReportsService reportsService;
 
     @GetMapping
     public String getReports() {
-        return "adminPanel/reportView/reports";
+        return "adminPanel/reportView/reportViewPanel";
     }
 
     @GetMapping(value = "/day-report-list")
     public String getDayReportsList(Model model) {
         model.addAttribute("dayReports", reportsService.getDayReportsList());
+        return "adminPanel/reportView/dayReportsList";
+    }
+
+    @GetMapping(value = "/day-report-list-of-month")
+    public String getDayReportsListOfMonth(Model model, List<DayReport> dayReportListOfMonth) {
+        model.addAttribute("dayReports", dayReportListOfMonth);
+        return "adminPanel/reportView/dayReportsList";
+    }
+
+    @GetMapping(value = "/day-report-list-of-week")
+    public String getDayReportsListOfWeek(Model model, List<DayReport> dayReportListOfWeek) {
+        model.addAttribute("dayReports", dayReportListOfWeek);
         return "adminPanel/reportView/dayReportsList";
     }
 
@@ -36,6 +50,12 @@ private final ReportsService reportsService;
 
         return "adminPanel/reportView/dayReport";
     }
+
+
+
+
+
+
 
     @GetMapping(value = "/week-report-list")
     public String getWeekReportsList(Model model) {

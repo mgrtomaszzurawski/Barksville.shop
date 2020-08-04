@@ -1,6 +1,6 @@
 package pl.barksville.barksville.spring.core.service;
 
-import jdk.vm.ci.meta.Local;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.barksville.barksville.spring.model.dal.repositories.*;
@@ -10,11 +10,9 @@ import pl.barksville.barksville.spring.model.entities.data.ShopReport;
 import pl.barksville.barksville.spring.model.entities.reports.*;
 
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Stream;
+
 
 
 @Service
