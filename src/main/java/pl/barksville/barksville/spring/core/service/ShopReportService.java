@@ -14,7 +14,9 @@ import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ShopReportRepository;
 import pl.barksville.barksville.spring.model.entities.data.*;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +25,16 @@ public class ShopReportService {
     private final ShopReportRepository shopReportRepository;
     private final ProductService productService;
     private final ItemService itemService;
+    private final ReportsService reportsService;
 
-    public ShopReportService(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService, ItemService itemService) {
+    public ShopReportService(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService, ItemService itemService, ReportsService reportsService) {
         this.shopReportRepository = shopReportRepository;
         this.productService = productService;
         this.itemService = itemService;
+        this.reportsService = reportsService;
     }
 
-
+@Transactional
     public void createShopReport(MultipartFile file,String oprName) throws IOException {
 
         ShopReportDTO newReport = new ShopReportDTO();
@@ -50,9 +54,10 @@ public class ShopReportService {
             newReport.setOpr(oprName);
 
             createShopReportByShopReportDTO(newReport);
+
         }
     }
-
+@Transactional
     private void createShopReportByShopReportDTO(ShopReportDTO shopReportDTO) {
 
         ShopReport shopReport = new ShopReport();
@@ -78,6 +83,8 @@ public class ShopReportService {
         }
 
         shopReport.setSoldProducts(soldProductList);
+
+
 
         shopReportRepository.save(shopReport);
 
@@ -152,14 +159,13 @@ public class ShopReportService {
 
                         itemDTO.setIsSold(true);
 
-                        itemService.saveItemDTOAsItem(itemDTO);
-
                         shopReportDTO.getSoldProducts().add(itemDTO);
 
                     } else if (words[0].matches("Za")) {
                         // System.out.println( words[words.length-1]);
                         String[] date = words[words.length-1].split("\\.");
                         shopReportDTO.setName(date[0]+"-"+date[1]+"-"+date[2]);
+                        shopReportDTO.setDate(LocalDate.parse(date[2]+"-"+date[1]+"-"+date[0]));
 
                         //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
 

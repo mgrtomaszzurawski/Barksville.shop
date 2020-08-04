@@ -24,11 +24,11 @@ public class SoldItemReport extends BaseEntity {
     @Column(name="gross_income",nullable = false)
     private Double grossIncome;
 
-    @Column(name="netIncome",nullable = false)
+    @Column(name="net_income",nullable = false)
     private Double netIncome;
 
     @ManyToOne
-    private Item soldinvoiceItem;
+    private Item soldInvoiceItem;
 
 
 }

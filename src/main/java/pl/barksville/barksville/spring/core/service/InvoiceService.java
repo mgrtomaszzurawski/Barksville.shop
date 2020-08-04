@@ -174,6 +174,7 @@ public class InvoiceService {
 
         invoice.setOpr(invoiceComponent.getInvoiceDTO().getOpr());
 
+
         invoiceRepository.save(invoice);
 
 
@@ -281,6 +282,7 @@ public class InvoiceService {
             item.setVat(itemDTO.getVat());
             item.setIsDivided(itemDTO.getIsDivided());
             item.setIsSold(itemDTO.getIsSold());
+            item.setLeftItems(item.getQuantity());
             if (item.getIsDivided()) {
                 item.setParts(itemDTO.getParts());
             } else {
@@ -306,6 +308,7 @@ public class InvoiceService {
             item.setNetPrice(itemDTO.getNettoPrice());
             item.setVat(itemDTO.getVat());
             item.setIsDivided(itemDTO.getIsDivided());
+            item.setLeftItems(item.getQuantity());
             if (item.getIsDivided()) {
                 item.setParts(itemDTO.getParts());
             } else {

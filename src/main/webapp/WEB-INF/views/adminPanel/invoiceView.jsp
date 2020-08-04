@@ -81,7 +81,7 @@
             <td>${stat.count}</td>
             <td>${product.product.name}</td>
             <td>${product.quantity}</td>
-            <td>${product.nettoPrice}</td>
+            <td>${product.netPrice}</td>
             <td>${product.vat}</td>
             <td>${product.isDivided}</td>
             <td>${product.parts}</td>

@@ -33,6 +33,7 @@ public class ItemService {
         item.setPrice(itemDTO.getPrice());
         item.setQuantity(itemDTO.getQuantity());
         item.setVat(itemDTO.getVat());
+        itemRepository.save(item);
         return item;
     }
 }

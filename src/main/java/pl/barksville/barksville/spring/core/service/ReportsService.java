@@ -9,10 +9,10 @@ import pl.barksville.barksville.spring.model.entities.data.Item;
 import pl.barksville.barksville.spring.model.entities.data.ShopReport;
 import pl.barksville.barksville.spring.model.entities.reports.*;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 @Service
@@ -105,16 +105,17 @@ public class ReportsService {
                         + reportDate.getYear());*/
     }
 
+    @Transactional
     public void createDayReport(LocalDate reportDate) {
         DayReport dayReport = new DayReport();
 
         List<Invoice> invoiceList = invoiceRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
-        if(invoiceList.isEmpty()){
+        if (invoiceList.isEmpty()) {
             return;
         }
 
         ShopReport shopReport = shopReportRepository.getShopReportByDate(reportDate);
-        if(shopReport==null){
+        if (shopReport == null) {
             return;
         }
 
@@ -158,7 +159,7 @@ public class ReportsService {
                                 invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter);
                             }
                         }
-                        soldItemReport.setSoldinvoiceItem(invoiceItem);
+                        soldItemReport.setSoldInvoiceItem(invoiceItem);
                         break;
                     }
 
@@ -177,10 +178,16 @@ public class ReportsService {
         dayReport.setSoldItemReportList(soldItemReportList);
 
 
-        Double dayReportCost = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
-        dayReport.setNetIncome(dayReport.getGrossIncome() - dayReportCost);
+        Double dayReportDayIncome = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
+        dayReport.setNetIncome(dayReportDayIncome);
 
-        dayReport.setExpenses(dayReportCost);
+        dayReport.setExpenses(dayReport.getGrossIncome()-dayReportDayIncome);
+
+
+        for (SoldItemReport soldItemReport :
+                dayReport.getSoldItemReportList()) {
+            soldItemReportRepository.save(soldItemReport);
+        }
 
         dayReportRepository.save(dayReport);
 
@@ -202,7 +209,7 @@ public class ReportsService {
 
         }
 
-        if(dayReportList.isEmpty()){
+        if (dayReportList.isEmpty()) {
             return;
         }
 
@@ -240,7 +247,7 @@ public class ReportsService {
             }
 
         }
-        if(dayReportList.isEmpty()){
+        if (dayReportList.isEmpty()) {
             return;
         }
 
@@ -261,7 +268,7 @@ public class ReportsService {
         YearReport yearReport = new YearReport();
 
         List<MonthReport> monthReportList = new ArrayList<>();
-        if(monthReportList.isEmpty()){
+        if (monthReportList.isEmpty()) {
             return;
         }
 
@@ -275,9 +282,9 @@ public class ReportsService {
         }
 
         yearReport.setMonthReportList(monthReportList);
-        yearReport.setExpenses(monthReportList.stream().map(MonthReport::getExpenses).reduce(0.,Double::sum));
-        yearReport.setGrossIncome(monthReportList.stream().map(MonthReport::getGrossIncome).reduce(0.,Double::sum));
-        yearReport.setNetIncome(monthReportList.stream().map(MonthReport::getNetIncome).reduce(0.,Double::sum));
+        yearReport.setExpenses(monthReportList.stream().map(MonthReport::getExpenses).reduce(0., Double::sum));
+        yearReport.setGrossIncome(monthReportList.stream().map(MonthReport::getGrossIncome).reduce(0., Double::sum));
+        yearReport.setNetIncome(monthReportList.stream().map(MonthReport::getNetIncome).reduce(0., Double::sum));
         yearReport.setReportDate(reportDate);
         yearReport.setReportName("Year Report - "
                 + reportDate.getYear());
