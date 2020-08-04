@@ -147,8 +147,8 @@ public class ReportsService {
                                 soldItemCounter -= invoiceItem.getLeftItems();
                                 invoiceItem.setLeftItems(0.);
                                 invoiceItem.setIsSold(true);
-                            }else{
-                                cost += soldItemCounter* invoiceItem.getPrice();
+                            } else {
+                                cost += soldItemCounter * invoiceItem.getPrice();
                                 soldItemCounter -= 0.;
                                 invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter);
                             }
@@ -159,64 +159,106 @@ public class ReportsService {
 
                 }
 
-                soldItemReport.setNetIncome(soldItemReport.getGrossIncome()-cost);
+                soldItemReport.setNetIncome(soldItemReport.getGrossIncome() - cost);
 
                 soldItemReportList.add(soldItemReport);
 
-                if(soldItemCounter==0.){
+                if (soldItemCounter == 0.) {
                     break;
                 }
             }
         }
 
-            dayReport.setSoldItemReportList(soldItemReportList);
+        dayReport.setSoldItemReportList(soldItemReportList);
 
 
-            Double dayReportCost=soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s->s).reduce(0,Double::sum);
-            dayReport.setNetIncome(dayReport.getGrossIncome()-dayReportCost);
+        Double dayReportCost = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
+        dayReport.setNetIncome(dayReport.getGrossIncome() - dayReportCost);
 
-            dayReport.setExpenses(dayReportCost);
+        dayReport.setExpenses(dayReportCost);
 
-            dayReportRepository.save(dayReport);
+        dayReportRepository.save(dayReport);
 
 
-        }
+    }
 
-        public void createWeekReport (LocalDate reportDate){
+    public void createWeekReport(LocalDate reportDate) {
         WeekReport weekReport = new WeekReport();
 
         List<DayReport> dayReportList = new ArrayList<>();
 
-        for(int i=0;i<7;i++){
+        for (int i = 0; i < 7; i++) {
             DayReport dayReport = new DayReport();
-            if(dayReportRepository.existsByReportDate(reportDate)) {
+            if (dayReportRepository.existsByReportDate(reportDate)) {
                 dayReportRepository.findByReportDate(reportDate);
             }
             dayReportList.add(dayReport);
         }
         weekReport.setDayReportList(dayReportList);
 
-        weekReport.setExpenses(dayReportList.stream().map(DayReport::getExpenses).reduce(0.,Double::sum));
+        weekReport.setExpenses(dayReportList.stream().map(DayReport::getExpenses).reduce(0., Double::sum));
 
-        weekReport.setGrossIncome(dayReportList.stream().map(DayReport::getGrossIncome).reduce(0.,Double::sum));
+        weekReport.setGrossIncome(dayReportList.stream().map(DayReport::getGrossIncome).reduce(0., Double::sum));
 
-        weekReport.setNetIncome(dayReportList.stream().map(DayReport::getNetIncome).reduce(0.,Double::sum));
+        weekReport.setNetIncome(dayReportList.stream().map(DayReport::getNetIncome).reduce(0., Double::sum));
 
         weekReport.setReportDate(reportDate);
 
-        weekReport.setReportName(  "Week Report - "
-                + reportDate.getDayOfMonth()+"-"
-                + reportDate.getDayOfMonth()+6+"."
+        weekReport.setReportName("Week Report - "
+                + reportDate.getDayOfMonth() + "-"
+                + reportDate.getDayOfMonth() + 6 + "."
                 + reportDate.getMonthValue() + "."
                 + reportDate.getYear()
-                );
+        );
 
         weekReportRepository.save(weekReport);
-        }
-
-        public void createMonthReport (LocalDate reportDate){
-        }
-
-        public void createYearReport (LocalDate reportDate){
-        }
     }
+
+    public void createMonthReport(LocalDate reportDate) {
+        MonthReport monthReport = new MonthReport();
+
+        List<DayReport> dayReportList = new ArrayList<>();
+
+        for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
+            DayReport dayReport = new DayReport();
+            if (dayReportRepository.existsByReportDate(reportDate)) {
+                dayReportRepository.findByReportDate(reportDate);
+            }
+            dayReportList.add(dayReport);
+        }
+
+        monthReport.setDayReportList(dayReportList);
+        monthReport.setExpenses(dayReportList.stream().map(DayReport::getExpenses).reduce(0., Double::sum));
+        monthReport.setGrossIncome(dayReportList.stream().map(DayReport::getGrossIncome).reduce(0., Double::sum));
+        monthReport.setNetIncome(dayReportList.stream().map(DayReport::getNetIncome).reduce(0., Double::sum));
+        monthReport.setReportDate(reportDate);
+        monthReport.setReportName("Month Report - "
+                + reportDate.getMonthValue() + "."
+                + reportDate.getYear());
+
+        monthReportRepository.save(monthReport);
+
+    }
+
+    public void createYearReport(LocalDate reportDate) {
+        YearReport yearReport = new YearReport();
+
+        List<MonthReport> monthReportList = new ArrayList<>();
+
+        for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
+            MonthReport monthReport = new MonthReport();
+            if (monthReportRepository.existsByReportDate(reportDate)) {
+                monthReportRepository.findByReportDate(reportDate);
+            }
+            monthReportList.add(monthReport);
+        }
+
+        yearReport.setMonthReportList(monthReportList);
+        yearReport.setExpenses(monthReportList.stream().map(MonthReport::getExpenses).reduce(0.,Double::sum));
+        yearReport.setGrossIncome(monthReportList.stream().map(MonthReport::getGrossIncome).reduce(0.,Double::sum));
+        yearReport.setNetIncome(monthReportList.stream().map(MonthReport::getNetIncome).reduce(0.,Double::sum));
+        yearReport.setReportDate(reportDate);
+        yearReport.setReportName("Year Report - "
+                + reportDate.getYear());
+    }
+}
