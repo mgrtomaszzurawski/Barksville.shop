@@ -21,58 +21,58 @@ public class AdminReportCreateController {
 
     @GetMapping
     public String createReport() {
-        return "adminPanel/report-create";
+        return "adminPanel/reportCreate/reportPanel";
     }
 
     @GetMapping(value = "day")
     public String getDayForReport() {
-        return "adminPanel/report-create/day";
+        return "adminPanel/reportCreate/dayReportForm";
     }
 
-    @PostMapping(value = "day",params = {"create"})
-    public String createDayReport(String reportDate) {
+    @PostMapping(value = "day")
+    public String createDayReport(LocalDate reportDate) {
 
 
-        reportsService.createDayReport(LocalDate.parse(reportDate));
+        reportsService.createDayReport(reportDate);
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "week")
     public String getWeekForReport() {
-        return "adminPanel/report-create/week";
+        return "adminPanel/reportCreate/weekReportForm";
     }
 
     @PostMapping(value = "week",params = {"create"})
-    public String createWeekReport(String reportDate) {
+    public String createWeekReport(LocalDate reportDate) {
 
-        reportsService.createWeekReport(LocalDate.parse(reportDate));
+        reportsService.createWeekReport(reportDate);
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "month")
     public String getMonthForReport() {
-        return "adminPanel/report-create/month";
+        return "adminPanel/reportCreate/monthReportForm";
     }
 
     @PostMapping(value = "month",params = {"create"})
-    public String createMonthReport(String reportDate) {
+    public String createMonthReport(LocalDate reportDate) {
 
-        reportsService.createMonthReport(LocalDate.parse(reportDate));
+        reportsService.createMonthReport(reportDate);
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "year")
     public String getYearForReport() {
-        return "adminPanel/report-create/month";
+        return "adminPanel/reportCreate/yearReportForm";
     }
 
     @PostMapping(value = "year",params = {"create"})
-    public String createYearReport(String reportDate) {
+    public String createYearReport(LocalDate reportDate) {
 
-        reportsService.createYearReport(LocalDate.parse(reportDate));
+        reportsService.createYearReport(reportDate);
 
         return "redirect:/admin/report-create";
     }
