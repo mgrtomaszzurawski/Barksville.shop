@@ -6,6 +6,7 @@ import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,9 @@ public class ShopReport extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private LocalDate date;
 
     @OneToMany
     private List<Item> soldProducts;

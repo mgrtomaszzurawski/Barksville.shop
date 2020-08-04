@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.barksville.barksville.spring.core.service.ReportService;
+import pl.barksville.barksville.spring.core.service.ReportsService;
 
 import java.time.LocalDate;
 
@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @RequestMapping("/admin/report-create")
 public class AdminReportCreateController {
 
-    private final ReportService reportService;
+    private final ReportsService reportsService;
 
-    public AdminReportCreateController(ReportService reportService) {
-        this.reportService = reportService;
+    public AdminReportCreateController(ReportsService reportsService) {
+        this.reportsService = reportsService;
     }
 
     @GetMapping
@@ -32,7 +32,8 @@ public class AdminReportCreateController {
     @PostMapping(value = "day",params = {"create"})
     public String createDayReport(String reportDate) {
 
-        reportService.createDayReport(LocalDate.parse(reportDate));
+
+        reportsService.createDayReport(LocalDate.parse(reportDate));
 
         return "redirect:/admin/report-create";
     }
@@ -45,7 +46,7 @@ public class AdminReportCreateController {
     @PostMapping(value = "week",params = {"create"})
     public String createWeekReport(String reportDate) {
 
-        reportService.createWeekReport(LocalDate.parse(reportDate));
+        reportsService.createWeekReport(LocalDate.parse(reportDate));
 
         return "redirect:/admin/report-create";
     }
@@ -58,7 +59,7 @@ public class AdminReportCreateController {
     @PostMapping(value = "month",params = {"create"})
     public String createMonthReport(String reportDate) {
 
-        reportService.createMonthReport(LocalDate.parse(reportDate));
+        reportsService.createMonthReport(LocalDate.parse(reportDate));
 
         return "redirect:/admin/report-create";
     }
@@ -71,7 +72,7 @@ public class AdminReportCreateController {
     @PostMapping(value = "year",params = {"create"})
     public String createYearReport(String reportDate) {
 
-        reportService.createYearReport(LocalDate.parse(reportDate));
+        reportsService.createYearReport(LocalDate.parse(reportDate));
 
         return "redirect:/admin/report-create";
     }

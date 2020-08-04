@@ -24,13 +24,12 @@ public class ProductService {
         this.productIvoicePriceRepository = productIvoicePriceRepository;
     }
 
-    public List<Product> allActiveProducts(){
-      return  productRepository.findAllByStateIsTrue();
+    public List<Product> allActiveProducts() {
+        return productRepository.findAllByStateIsTrue();
     }
 
 
-
-    public ProductDTO createProductDTOBaseOnInvoice (String name, Double price, Double quantity ){
+    public ProductDTO createProductDTOBaseOnInvoice(String name, Double price, Double quantity) {
         ProductDTO productDTO = new ProductDTO();
 
         productDTO.setName(name);
@@ -46,10 +45,10 @@ public class ProductService {
         productDTO.setQuantity(quantity);
 
 
-        return  productDTO;
+        return productDTO;
     }
 
-    public Product productByName(String name){
+    public Product productByName(String name) {
         return productRepository.findByName(name);
     }
 
@@ -57,14 +56,14 @@ public class ProductService {
         return productRepository.existsByName(name);
     }
 
-    public void createProduct(String name, Boolean state, List<ProductInvoicePriceDTO> invoicePriceListDTO, Double sellPrice, Double quantity  ) {
+    public void createProduct(String name, Boolean state, List<ProductInvoicePriceDTO> invoicePriceListDTO, Double sellPrice, Double quantity) {
         Product product = new Product();
         product.setName(name);
         product.setState(state);
 
         List<ProductInvoicePrice> invoicePriceList = new ArrayList<>();
 
-        for(ProductInvoicePriceDTO priceDTO:invoicePriceListDTO){
+        for (ProductInvoicePriceDTO priceDTO : invoicePriceListDTO) {
             ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
             productInvoicePrice.setInvoicePrice(priceDTO.getInvoicePrice());
             productInvoicePrice.setQuantity(priceDTO.getQuantity());
@@ -83,19 +82,63 @@ public class ProductService {
     }
 
     public List<Product> allProducts() {
-     return productRepository.findAll();
+        return productRepository.findAll();
     }
 
-    public List<String> allProductsNames(){
+    public List<String> allProductsNames() {
         return productRepository.findAll().stream().map(Product::getName).collect(Collectors.toList());
     }
 
     public void addQuantityToProduct(String name, Double quantity) {
-        Double sum =productRepository.findByName(name).getQuantity();
-        sum+=quantity;
+        Double sum = productRepository.findByName(name).getQuantity();
+        sum += quantity;
         Product product = productRepository.findByName(name);
         product.setQuantity(sum);
         productRepository.save(product);
-      //  productRepository.updateQuantity(name,sum);
+        //  productRepository.updateQuantity(name,sum);
+    }
+
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
+
+    public ProductDTO getProductDTOByProductName(String productName) {
+        Product product = productRepository.findByName(productName);
+
+        ProductDTO productDTO = new ProductDTO();
+
+        productDTO.setName(product.getName());
+
+        productDTO.setQuantity(product.getQuantity());
+
+        productDTO.setRating(product.getRating());
+
+        productDTO.setSellPrice(product.getSellPrice());
+
+        productDTO.setState(product.getState());
+
+        productDTO.setDescription(product.getDescription());
+
+        List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
+        for (ProductInvoicePrice productInvoicePrice : product.getInvoicePriceList()
+        ) {
+
+            ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
+            productInvoicePriceDTO.setInvoiceNumber(productInvoicePrice.getInvoiceNumber());
+            productInvoicePriceDTO.setInvoicePrice(productInvoicePrice.getInvoicePrice());
+            productInvoicePriceDTO.setQuantity(productInvoicePrice.getQuantity());
+
+            productInvoicePriceDTOList.add(productInvoicePriceDTO);
+
+        }
+
+        productDTO.setInvoicePriceList(productInvoicePriceDTOList);
+
+        return productDTO;
+    }
+
+    public void changeQuantityOfProduct(String name, Double quantity) {
+        Double productQuantity=productRepository.findByName(name.toString()).getQuantity()-quantity;
+        productRepository.findByName(name.toString()).setQuantity(productQuantity);
     }
 }

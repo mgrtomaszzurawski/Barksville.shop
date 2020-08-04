@@ -20,7 +20,10 @@ public class MonthReport extends BaseEntity {
 
 
     @Column(unique = true, nullable = false, name = "report_name")
-    private LocalDate reportName;
+    private LocalDate reportDate;
+
+    @Column(unique = true, nullable = false, name = "report_name")
+    private String reportName;
 
     @Column(nullable = false, name = "net_income")
     private double netIncome;

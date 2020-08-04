@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.core.service.ProductService;
+import pl.barksville.barksville.spring.core.service.ShopReportService;
 import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductIvoicePriceRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
@@ -28,18 +29,14 @@ import java.util.List;
 @RequestMapping("/admin/shop-report")
 public class ShopReportController {
 
-    private final ShopReportRepository shopReportRepository;
-    private final ProductRepository productRepository;
-    private final ItemRepository itemRepository;
-    private final ProductIvoicePriceRepository productIvoicePriceRepository;
-    private final ProductService productService;
 
-    public ShopReportController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService) {
-        this.shopReportRepository = shopReportRepository;
-        this.productRepository = productRepository;
-        this.itemRepository = itemRepository;
-        this.productIvoicePriceRepository = productIvoicePriceRepository;
+    private final ProductService productService;
+    private final ShopReportService shopReportService;
+
+    public ShopReportController(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService, ShopReportService shopReportService) {
+
         this.productService = productService;
+        this.shopReportService = shopReportService;
     }
 
     @GetMapping
@@ -48,18 +45,7 @@ public class ShopReportController {
 
         return "adminPanel/shopReport";
     }
-
-    /*
-        @PostMapping(params = {"edit"})
-        public String beginEditUserData(Model model, Principal principal) {
-
-        }
-
-        @PostMapping(params = {"save"})
-        public String saveEditUserData(String firstName, String lastName, String pesel, String dateOfBirth, Principal principal) {
-
-        }
-    */
+    
     @PostMapping(params = {"cancel"})
     public String cancelEditUserData() {
         return "adminPanel/shopReport";
@@ -68,156 +54,10 @@ public class ShopReportController {
     @PostMapping(params = {"upload"})
     public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal) throws IOException {
 
-        // log.debug("Dodawanie zdjęcia profilowego dla użytkownika: {}", loggedUser);
+        shopReportService.createShopReport(file, principal.getName());
 
-        ShopReport newReport = new ShopReport();
-        List<Item> itemList = new ArrayList<>();
-        newReport.setSoldProducts(itemList);
-
-
-        ShopReportScanFile shopReportScanFile = new ShopReportScanFile();
-
-        shopReportScanFile.setContentType(file.getContentType());
-        shopReportScanFile.setFileName(file.getOriginalFilename());
-        shopReportScanFile.setData(file.getBytes());
-
-        if (isValidProfileFile(shopReportScanFile)) {
-            newReport.setShopReportScanFile(shopReportScanFile);
-            parsePDF(newReport, file);
-            newReport.setOpr(principal.getName());
-
-            shopReportRepository.save(newReport);
-        }
         return "redirect:/admin/panel";
     }
 
-    /*
-    @GetMapping("/profile-file")
-    public ResponseEntity<Resource> getUserProfileFile(Principal principal) {
-        UserEntity loggedUser = userRepository.getWithDetailsByUsername(principal.getName());
-        log.debug("Pobieranie zdjęcia profilowego dla użytkownika: {}", loggedUser);
 
-        if (hasProfileFile(loggedUser)) {
-            log.debug("Zwrócono zdjęcie profilowe użytkownika: {}", loggedUser);
-            return buildProfileFileResponse(loggedUser);
-        }
-        else {
-            log.debug("Nie zwrócono zdjęcia profilowego użytkownika: {}", loggedUser);
-            return buildNoProfileFileResponse();
-        }
-    }
-
-    private ResponseEntity<Resource> buildNoProfileFileResponse() {
-        return ResponseEntity.noContent().build();
-    }
-
-    private ResponseEntity<Resource> buildProfileFileResponse(UserEntity loggedUser) {
-        UserDetailsEntity details = userDetailsRepository.getWithProfileFileByOwnerUsername(loggedUser.getUsername());
-        FileEntity profileFile = details.getProfileFile();
-        ByteArrayResource data = getProfileFileData(profileFile);
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.valueOf(profileFile.getContentType()))
-                .header("Content-Disposition", String.format("filename=%s", profileFile.getFileName()))
-                .body(data);
-    }
-
-    private ByteArrayResource getProfileFileData(FileEntity profileFile) {
-        return new ByteArrayResource(profileFile.getData());
-    }
-
-    private boolean hasProfileFile(UserEntity loggedUser) {
-        if (loggedUser.getDetails() == null) return false;
-        if (loggedUser.getDetails().getProfileFileId() == null) return false;
-        return true;
-    }
-*/
-    private boolean isValidProfileFile(ShopReportScanFile shopReportScanFile) {
-        if (shopReportScanFile.getContentType() == null) return false;
-        if (shopReportScanFile.getFileName() == null || shopReportScanFile.getFileName().isEmpty()) return false;
-        if (shopReportScanFile.getData() == null) return false;
-        return true;
-    }
-
-
-    private void parsePDF(ShopReport shopReport, MultipartFile file) throws IOException {
-        try (PDDocument document = PDDocument.load(file.getBytes())) {
-
-            document.getClass();
-
-            if (!document.isEncrypted()) {
-
-                PDFTextStripperByArea stripper = new PDFTextStripperByArea();
-                stripper.setSortByPosition(true);
-
-                PDFTextStripper tStripper = new PDFTextStripper();
-
-                String pdfFileInText = tStripper.getText(document);
-                //System.out.println("Text:" + st);
-
-
-                // split by whitespace
-                String lines[] = pdfFileInText.split("\\r?\\n");
-                for (String line : lines) {
-                    String[] words = line.split(" ");
-                    if (words[0].matches("\\d+")) {
-                        StringBuilder name = new StringBuilder();
-                        for (int i = 1; i < words.length - 2; i++) {
-                            name.append(words[i] + " ");
-                        }
-                        name.deleteCharAt(name.length() - 1);
-
-                        Item item = new Item();
-
-                        //tworzenie produktu
-                        if(!productService.isExistByName(name.toString())) {
-                            Product product = new Product();
-
-                         //   ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
-                        //    productInvoicePrice.setInvoicePrice(Double.parseDouble(words[words.length - 1]));
-                        //    productInvoicePrice.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        //    productIvoicePriceRepository.save(productInvoicePrice);
-                            List<ProductInvoicePrice> productInvoicePriceList = new ArrayList<>();
-                         //   productInvoicePriceList.add(productInvoicePrice);
-                            product.setInvoicePriceList(productInvoicePriceList);
-
-                            product.setName(name.toString());
-                            product.setQuantity(0.);
-                            product.setState(Boolean.TRUE);
-                            product.setSellPrice(0.);
-
-                            productRepository.save(product);
-                            //koniec tworzenia prodkutku
-                        }
-                        item.setProduct(productRepository.findByName(name.toString()));
-
-                        item.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        Double productQuantity=productRepository.findByName(name.toString()).getQuantity()-item.getQuantity();
-                        productRepository.findByName(name.toString()).setQuantity(productQuantity);
-
-                        item.setPrice(Double.parseDouble(words[words.length - 1]));
-                        itemRepository.save(item);
-
-
-                        shopReport.getSoldProducts().add(item);
-
-                    } else if (words[0].matches("Za")) {
-                        // System.out.println( words[words.length-1]);
-                          String[] date = words[words.length-1].split("\\.");
-                          shopReport.setName(date[0]+"-"+date[1]+"-"+date[2]);
-
-                        //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
-
-                        //  shopReport.setCreatedOn(reportDate);
-                    } else if (words[0].matches("Pozycji:")) {
-                        shopReport.setTransactionsNumber(Integer.parseInt(words[1]));
-                        shopReport.setEarnings(Double.parseDouble(words[words.length - 1]));
-
-                    }
-                }
-
-            }
-
-        }
-    }
 }

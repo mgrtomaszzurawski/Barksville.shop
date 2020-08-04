@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.barksville.barksville.spring.core.service.ReportService;
+import pl.barksville.barksville.spring.core.service.ReportsService;
 
 import java.time.LocalDate;
 
@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @RequestMapping("/admin/report-view")
 public class AdminReportsViewController {
 
-private final ReportService reportService;
+private final ReportsService reportsService;
 
-    public AdminReportsViewController(ReportService reportService) {
-        this.reportService = reportService;
+    public AdminReportsViewController(ReportsService reportsService) {
+        this.reportsService = reportsService;
     }
 
     @GetMapping
@@ -26,50 +26,50 @@ private final ReportService reportService;
 
     @GetMapping(value = "/day-report-list")
     public String getDayReportsList(Model model) {
-        model.addAttribute("dayReports", reportService.getDayReportsList());
+        model.addAttribute("dayReports", reportsService.getDayReportsList());
         return "adminPanel/reportView/dayReportsList";
     }
 
     @PostMapping(value = "/day-report", params = {"get"})
     public String getDayReport(Model model, String reportDate) {
-        model.addAttribute("dayReport", reportService.getDayReport(LocalDate.parse(reportDate)));
+        model.addAttribute("dayReport", reportsService.getDayReport(LocalDate.parse(reportDate)));
 
         return "adminPanel/reportView/dayReport";
     }
 
     @GetMapping(value = "/week-report-list")
     public String getWeekReportsList(Model model) {
-        model.addAttribute("weekReports", reportService.getWeekReportsList());
+        model.addAttribute("weekReports", reportsService.getWeekReportsList());
         return "adminPanel/reportView/weekReportsList";
     }
 
     @PostMapping(value = "/week-report", params = {"get"})
     public String getWeekReport(Model model, String reportDate) {
-        model.addAttribute("weekReport", reportService.getWeekReport(LocalDate.parse(reportDate)));
+        model.addAttribute("weekReport", reportsService.getWeekReport(LocalDate.parse(reportDate)));
 
         return "adminPanel/reportView/weekReport";
     }
     @GetMapping(value = "/month-report-list")
     public String getMonthReportsList(Model model) {
-        model.addAttribute("monthReports", reportService.getMonthReportsList());
+        model.addAttribute("monthReports", reportsService.getMonthReportsList());
         return "adminPanel/reportView/monthReportsList";
     }
 
     @PostMapping(value = "/month-report", params = {"get"})
     public String getMonthReport(Model model, String reportDate) {
-        model.addAttribute("monthReport", reportService.getMonthReport(LocalDate.parse(reportDate)));
+        model.addAttribute("monthReport", reportsService.getMonthReport(LocalDate.parse(reportDate)));
 
         return "adminPanel/reportView/monthReport";
     }
     @GetMapping(value = "/year-report-list")
     public String getYearReportsList(Model model) {
-        model.addAttribute("yearReports", reportService.getYearReportsList());
+        model.addAttribute("yearReports", reportsService.getYearReportsList());
         return "adminPanel/reportView/yearReportsList";
     }
 
     @PostMapping(value = "/year-report", params = {"get"})
     public String getYearReport(Model model, String reportDate) {
-        model.addAttribute("yearReport", reportService.getYearReport(LocalDate.parse(reportDate)));
+        model.addAttribute("yearReport", reportsService.getYearReport(LocalDate.parse(reportDate)));
 
         return "adminPanel/reportView/yearReport";
     }

@@ -20,7 +20,10 @@ public class DayReport extends BaseEntity {
 
 
     @Column(unique = true, nullable = false, name = "report_name")
-    private LocalDate reportName;
+    private LocalDate reportDate;
+
+    @Column(unique = true, nullable = false, name = "report_name")
+    private String reportName;
 
     @OneToOne
     @Column(unique = true, nullable = false, name = "shop_report")

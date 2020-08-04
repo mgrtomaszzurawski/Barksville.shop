@@ -22,7 +22,7 @@ public class Invoice extends BaseEntity {
     private List<Item> boughtProducts;
 
     @Column(nullable = false)
-    private String Company;
+    private String company;
     @Column(nullable = false)
     private LocalDate date;
     @Column(nullable = false)
