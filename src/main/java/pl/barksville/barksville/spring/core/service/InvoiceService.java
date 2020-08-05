@@ -55,6 +55,7 @@ public class InvoiceService {
     }
 
     public void addProduct(String name, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
+
         ItemDTO itemDTO = new ItemDTO();
 
 
@@ -71,7 +72,7 @@ public class InvoiceService {
 
         itemDTO.setQuantity(quantity);
 
-        itemDTO.setNettoPrice(netPrice);
+        itemDTO.setNetPrice(netPrice);
 
         itemDTO.setPrice(price);
 
@@ -86,6 +87,7 @@ public class InvoiceService {
         itemDTO.setLeftItems(quantity);
 
         invoiceComponent.getInvoiceDTO().getBoughtProducts().add(itemDTO);
+
     }
 
     private boolean isValidProfileFile(ShopReportScanFile shopReportScanFile) {
@@ -198,7 +200,7 @@ public class InvoiceService {
     private List<Item> toItemList() {
         List<Item> boughtProducts = new ArrayList<>();
         for (ItemDTO itemDTO : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
-            Item item = createItem(itemDTO);
+            Item item = createItem(itemDTO,invoiceComponent.getInvoiceDTO().getInvoiceNumber());
             boughtProducts.add(item);
         }
         return boughtProducts;
@@ -236,25 +238,39 @@ public class InvoiceService {
         itemRepository.deleteById(id);
     }
 
-    public void updateInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+    public void updateInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
         Item item = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findFirst().get();
         item.setNetPrice(netPrice);
         item.setQuantity(quantity);
         item.setVat(vat);
         item.setIsDivided(isDivided);
         item.setParts(parts);
-        item.setPrice(price);
+        if(isDivided){
+            item.setPrice((netPrice*(1+vat))/parts);
+        }else{
+            item.setPrice(netPrice*(1+vat));
+        }
+
+        itemRepository.save(item);
     }
 
-
-    public void addRowToInvoice(String invoiceNumber, String name, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+@Transactional
+    public void addRowToInvoice(String invoiceNumber, String name, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
         ItemDTO itemDTO = new ItemDTO();
 
-        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, netPrice, quantity));
 
+        Double productQuantity = quantity;
+        Double price = Math.round((netPrice + netPrice * vat) * 100) / 100.;
+
+        if (isDivided) {
+            price = price / parts;
+            productQuantity = quantity * parts;
+        }
+
+        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, netPrice, productQuantity));
         itemDTO.setQuantity(quantity);
 
-        itemDTO.setNettoPrice(netPrice);
+        itemDTO.setNetPrice(netPrice);
 
         itemDTO.setPrice(price);
 
@@ -264,30 +280,30 @@ public class InvoiceService {
 
         itemDTO.setParts(parts);
 
-        Item item = createItem(itemDTO);
+        itemDTO.setIsSold(false);
 
-        invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().add(item);
+        itemDTO.setLeftItems(quantity);
+
+        Item item = createItem(itemDTO, invoiceNumber);
+
+        Invoice invoice = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber);
+
+        invoice.getBoughtProducts().add(item);
+
+        invoiceRepository.save(invoice);
+
+        //invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().add(item);
 
 
     }
 
-    public Item createItem(ItemDTO itemDTO) {
+    public Item createItem(ItemDTO itemDTO, String invoiceNumber ) {
 
         Item item = new Item();
         item.setPrice(itemDTO.getPrice());
         if (productService.isExistByName(itemDTO.getProduct().getName())) {
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-            item.setQuantity(itemDTO.getQuantity());
-            item.setNetPrice(itemDTO.getNettoPrice());
-            item.setVat(itemDTO.getVat());
-            item.setIsDivided(itemDTO.getIsDivided());
-            item.setIsSold(itemDTO.getIsSold());
-            item.setLeftItems(item.getQuantity());
-            if (item.getIsDivided()) {
-                item.setParts(itemDTO.getParts());
-            } else {
-                item.setParts(1);
-            }
+
 
 
             productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
@@ -296,7 +312,7 @@ public class InvoiceService {
             ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
             productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
             productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
-            productInvoicePriceDTO.setInvoiceNumber(invoiceComponent.getInvoiceDTO().getInvoiceNumber());
+            productInvoicePriceDTO.setInvoiceNumber(invoiceNumber);
 
             productInvoicePriceDTOList.add(productInvoicePriceDTO);
 
@@ -304,16 +320,17 @@ public class InvoiceService {
 
 
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-            item.setQuantity(itemDTO.getQuantity());
-            item.setNetPrice(itemDTO.getNettoPrice());
-            item.setVat(itemDTO.getVat());
-            item.setIsDivided(itemDTO.getIsDivided());
-            item.setLeftItems(item.getQuantity());
-            if (item.getIsDivided()) {
-                item.setParts(itemDTO.getParts());
-            } else {
-                item.setParts(1);
-            }
+        }
+        item.setQuantity(itemDTO.getQuantity());
+        item.setNetPrice(itemDTO.getNetPrice());
+        item.setVat(itemDTO.getVat());
+        item.setIsDivided(itemDTO.getIsDivided());
+        item.setIsSold(itemDTO.getIsSold());
+        item.setLeftItems(item.getQuantity());
+        if (item.getIsDivided()) {
+            item.setParts(itemDTO.getParts());
+        } else {
+            item.setParts(1);
         }
         itemRepository.save(item);
         return item;

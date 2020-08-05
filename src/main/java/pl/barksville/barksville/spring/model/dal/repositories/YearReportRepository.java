@@ -10,4 +10,8 @@ public interface YearReportRepository extends JpaRepository<YearReport, Long> {
     YearReport findByReportName(String reportName);
 
     YearReport findByReportDate(LocalDate reportDate);
+
+    boolean existsByReportDate(LocalDate localDate);
+
+    void deleteByReportDate(LocalDate localDate);
 }

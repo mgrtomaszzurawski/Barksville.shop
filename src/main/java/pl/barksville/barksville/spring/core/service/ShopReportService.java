@@ -54,7 +54,7 @@ public class ShopReportService {
             newReport.setOpr(oprName);
 
             createShopReportByShopReportDTO(newReport);
-
+            reportsService.createDayReport(newReport.getDate());
         }
     }
 @Transactional

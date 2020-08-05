@@ -13,4 +13,6 @@ public interface DayReportRepository extends JpaRepository<DayReport, Long> {
     DayReport findByReportDate(LocalDate reportDate);
 
     boolean existsByReportDate(LocalDate reportDate);
+
+    void deleteByReportDate(LocalDate localDate);
 }

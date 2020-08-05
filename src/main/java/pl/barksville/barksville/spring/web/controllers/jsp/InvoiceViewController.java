@@ -82,8 +82,8 @@ public class InvoiceViewController {
     }
 
     @PostMapping(value = "invoice/row", params = {"update"})
-    public String updateInvoiceRow(Long id, String invoiceNumber, Model model, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
-        invoiceService.updateInvoiceRowByInvoiceNumberAndRowID(invoiceNumber, id, nettoPrice, quantity, vat, isDivided, parts, price);
+    public String updateInvoiceRow(Long id, String invoiceNumber, Model model, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
+        invoiceService.updateInvoiceRowByInvoiceNumberAndRowID(invoiceNumber, id, nettoPrice, quantity, vat, isDivided, parts);
         model.addAttribute("row", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findAny().get());
         model.addAttribute("invoiceNumber", invoiceNumber);
         return "adminPanel/invoiceRow";
@@ -98,8 +98,8 @@ public class InvoiceViewController {
     }
 
     @PostMapping(value = "invoice/row", params = {"create"})
-    public String createInvoiceRow(String name, String invoiceNumber, Model model, Double nettoPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
-        invoiceService.addRowToInvoice(invoiceNumber, name, nettoPrice, quantity, vat, isDivided, parts, price);
+    public String createInvoiceRow(String name, String invoiceNumber, Model model, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts, Double price) {
+        invoiceService.addRowToInvoice(invoiceNumber, name, netPrice, quantity, vat, isDivided, parts);
         model.addAttribute("invoiceNumber", invoiceNumber);
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceView";

@@ -28,12 +28,20 @@ public class ItemService {
         item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
         item.setIsSold(itemDTO.getIsSold());
         item.setIsDivided(itemDTO.getIsDivided());
-        item.setNetPrice(itemDTO.getNettoPrice());
+        item.setNetPrice(itemDTO.getNetPrice());
         item.setParts(itemDTO.getParts());
         item.setPrice(itemDTO.getPrice());
         item.setQuantity(itemDTO.getQuantity());
         item.setVat(itemDTO.getVat());
         itemRepository.save(item);
         return item;
+    }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id).get();
+    }
+
+    public void saveItem(Item item) {
+        itemRepository.save(item);
     }
 }

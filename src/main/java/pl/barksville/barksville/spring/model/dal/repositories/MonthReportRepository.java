@@ -11,4 +11,6 @@ public interface MonthReportRepository extends JpaRepository<MonthReport, Long> 
     MonthReport findByReportName(String reportName);
 
     boolean existsByReportDate(LocalDate reportDate);
+
+    void deleteByReportDate(LocalDate localDate);
 }

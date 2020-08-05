@@ -25,8 +25,9 @@ public class ReportsService {
     final private SoldItemReportRepository soldItemReportRepository;
     final private InvoiceRepository invoiceRepository;
     final private ShopReportRepository shopReportRepository;
+    final private ItemService itemService;
 
-    public ReportsService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository, SoldItemReportRepository soldItemReportRepository, InvoiceRepository invoiceRepository, ShopReportRepository shopReportRepository) {
+    public ReportsService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository, SoldItemReportRepository soldItemReportRepository, InvoiceRepository invoiceRepository, ShopReportRepository shopReportRepository, ItemService itemService) {
         this.dayReportRepository = dayReportRepository;
         this.weekReportRepository = weekReportRepository;
         this.monthReportRepository = monthReportRepository;
@@ -34,6 +35,7 @@ public class ReportsService {
         this.soldItemReportRepository = soldItemReportRepository;
         this.invoiceRepository = invoiceRepository;
         this.shopReportRepository = shopReportRepository;
+        this.itemService = itemService;
     }
 
     public List<DayReport> getDayReportsList() {
@@ -105,9 +107,24 @@ public class ReportsService {
                         + reportDate.getYear());*/
     }
 
+
     @Transactional
     public void createDayReport(LocalDate reportDate) {
-        DayReport dayReport = new DayReport();
+        DayReport dayReport;
+        if (dayReportRepository.existsByReportDate(reportDate)) {
+            dayReport = dayReportRepository.findByReportDate(reportDate);
+
+            for (SoldItemReport soldItemReport : dayReport.getSoldItemReportList()
+            ) {
+                Item item = itemService.findById(soldItemReport.getSoldInvoiceItem().getId());
+                item.setLeftItems(soldItemReport.getQuantity());
+                item.setIsSold(false);
+                itemService.saveItem(item);
+            }
+        } else {
+            dayReport = new DayReport();
+        }
+
 
         List<Invoice> invoiceList = invoiceRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
         if (invoiceList.isEmpty()) {
@@ -148,15 +165,15 @@ public class ReportsService {
                 ) {
                     if (item.getProduct().getName().equals(invoiceItem.getProduct().getName())) {
                         if (!invoiceItem.getIsSold()) {
-                            if (invoiceItem.getLeftItems() <= soldItemCounter) {
-                                cost += invoiceItem.getLeftItems() * invoiceItem.getPrice();
-                                soldItemCounter -= invoiceItem.getLeftItems();
+                            if (invoiceItem.getLeftItems()* invoiceItem.getParts() <= soldItemCounter) {
+                                cost += invoiceItem.getLeftItems() * invoiceItem.getPrice()* invoiceItem.getParts(); ;
+                                soldItemCounter -= invoiceItem.getLeftItems()* invoiceItem.getParts();
                                 invoiceItem.setLeftItems(0.);
                                 invoiceItem.setIsSold(true);
                             } else {
-                                cost += soldItemCounter * invoiceItem.getPrice();
+                                cost += soldItemCounter * invoiceItem.getPrice()* invoiceItem.getParts();;
                                 soldItemCounter -= 0.;
-                                invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter);
+                                invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter/invoiceItem.getParts());
                             }
                         }
                         soldItemReport.setSoldInvoiceItem(invoiceItem);
@@ -181,7 +198,7 @@ public class ReportsService {
         Double dayReportDayIncome = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
         dayReport.setNetIncome(dayReportDayIncome);
 
-        dayReport.setExpenses(dayReport.getGrossIncome()-dayReportDayIncome);
+        dayReport.setExpenses(dayReport.getGrossIncome() - dayReportDayIncome);
 
 
         for (SoldItemReport soldItemReport :
@@ -189,21 +206,33 @@ public class ReportsService {
             soldItemReportRepository.save(soldItemReport);
         }
 
+
         dayReportRepository.save(dayReport);
 
 
     }
 
+    @Transactional
+    public void deleteDayReport(LocalDate localDate) {
+        if (dayReportRepository.existsByReportDate(localDate)) {
+            dayReportRepository.deleteByReportDate(localDate);
+        }
+    }
+
     public void createWeekReport(LocalDate reportDate) {
-        WeekReport weekReport = new WeekReport();
+        WeekReport weekReport;
+        if (weekReportRepository.existsByReportDate(reportDate)) {
+            weekReport = weekReportRepository.findByReportDate(reportDate);
+        } else {
+            weekReport = new WeekReport();
+        }
 
         List<DayReport> dayReportList = new ArrayList<>();
 
-
         for (int i = 0; i < 7; i++) {
-            DayReport dayReport = new DayReport();
-            if (dayReportRepository.existsByReportDate(reportDate)) {
-                dayReportRepository.findByReportDate(reportDate);
+            DayReport dayReport;
+            if (dayReportRepository.existsByReportDate(reportDate.plusDays(i))) {
+                dayReport = dayReportRepository.findByReportDate(reportDate.plusDays(i));
                 dayReportList.add(dayReport);
             }
 
@@ -233,20 +262,31 @@ public class ReportsService {
         weekReportRepository.save(weekReport);
     }
 
+    public void deleteWeekReport(LocalDate localDate) {
+        if (weekReportRepository.existsByReportDate(localDate)) {
+            weekReportRepository.deleteByReportDate(localDate);
+        }
+    }
+
     public void createMonthReport(LocalDate reportDate) {
-        MonthReport monthReport = new MonthReport();
+        MonthReport monthReport;
+        if (monthReportRepository.existsByReportDate(reportDate)) {
+            monthReport = monthReportRepository.findByReportDate(reportDate);
+        } else {
+            monthReport = new MonthReport();
+        }
 
         List<DayReport> dayReportList = new ArrayList<>();
 
 
         for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
-            DayReport dayReport = new DayReport();
-            if (dayReportRepository.existsByReportDate(reportDate)) {
-                dayReportRepository.findByReportDate(reportDate);
+            DayReport dayReport;
+            if (dayReportRepository.existsByReportDate(reportDate.plusDays(i))) {
+                dayReport = dayReportRepository.findByReportDate(reportDate.plusDays(i));
                 dayReportList.add(dayReport);
             }
-
         }
+
         if (dayReportList.isEmpty()) {
             return;
         }
@@ -264,22 +304,37 @@ public class ReportsService {
 
     }
 
+    public void deleteMonthReport(LocalDate localDate) {
+        if (monthReportRepository.existsByReportDate(localDate)) {
+            monthReportRepository.deleteByReportDate(localDate);
+        }
+    }
+
     public void createYearReport(LocalDate reportDate) {
-        YearReport yearReport = new YearReport();
+        YearReport yearReport;
+        if (yearReportRepository.existsByReportDate(reportDate)) {
+            yearReport = yearReportRepository.findByReportDate(reportDate);
+        } else {
+            yearReport = new YearReport();
+        }
+
 
         List<MonthReport> monthReportList = new ArrayList<>();
+
+        for (int i = 0; i < 12; i++) {
+            MonthReport monthReport;
+            if (monthReportRepository.existsByReportDate(reportDate.plusMonths(i))) {
+               monthReport= monthReportRepository.findByReportDate(reportDate.plusMonths(i));
+                monthReportList.add(monthReport);
+            }
+        }
+
         if (monthReportList.isEmpty()) {
             return;
         }
 
-        for (int i = 0; i < reportDate.lengthOfMonth(); i++) {
-            MonthReport monthReport = new MonthReport();
-            if (monthReportRepository.existsByReportDate(reportDate)) {
-                monthReportRepository.findByReportDate(reportDate);
-                monthReportList.add(monthReport);
-            }
 
-        }
+
 
         yearReport.setMonthReportList(monthReportList);
         yearReport.setExpenses(monthReportList.stream().map(MonthReport::getExpenses).reduce(0., Double::sum));
@@ -288,5 +343,13 @@ public class ReportsService {
         yearReport.setReportDate(reportDate);
         yearReport.setReportName("Year Report - "
                 + reportDate.getYear());
+
+        yearReportRepository.save(yearReport);
+    }
+
+    public void deleteYearReport(LocalDate localDate) {
+        if (yearReportRepository.existsByReportDate(localDate)) {
+            yearReportRepository.deleteByReportDate(localDate);
+        }
     }
 }

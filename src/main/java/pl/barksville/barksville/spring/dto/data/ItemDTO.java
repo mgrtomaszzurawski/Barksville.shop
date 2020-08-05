@@ -19,7 +19,7 @@ public class ItemDTO {
     private Double price;
 
 
-    private Double nettoPrice;
+    private Double netPrice;
     private Double vat;
     private Boolean isDivided;
     private Integer parts;

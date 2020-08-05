@@ -11,4 +11,6 @@ public interface WeekReportRepository extends JpaRepository<WeekReport, Long> {
 
     Boolean existsByReportDate(LocalDate reportDate);
     WeekReport findByReportDate(LocalDate reportDate);
+
+    void deleteByReportDate(LocalDate localDate);
 }

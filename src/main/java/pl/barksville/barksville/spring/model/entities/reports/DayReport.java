@@ -37,7 +37,7 @@ public class DayReport extends BaseEntity {
     @Column(nullable = false)
     private double expenses;
 
-    @OneToMany
+    @OneToMany(cascade=CascadeType.REMOVE)
     @Column(unique = true, nullable = false, name = "sold_item_report_list")
     private List<SoldItemReport> soldItemReportList;
 }
