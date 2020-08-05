@@ -73,7 +73,7 @@
 
             <td>
                 <form method="Post" action="/admin/report-view/day-report-list-of-month">
-                    <input type="hidden" name="dayReportList" value="${monthReport.dayReportList}"/>
+                    <input type="hidden" name="reportDate" value="${monthReport.reportDate}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>

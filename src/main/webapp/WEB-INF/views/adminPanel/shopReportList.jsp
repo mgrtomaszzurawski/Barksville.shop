@@ -4,10 +4,7 @@
 <html>
 <head>
 
-    <title>Lista Raportów Dziennych</title>
-    <jsp:include page="reportViewHeader.jsp"/>
-
-
+    <jsp:include page="invoiceHeader.jsp"/>
     <title>Rejestracja</title>
     <style>
         #ramka {
@@ -47,63 +44,43 @@
         }
     </style>
 </head>
-
 <body>
-<jsp:include page="reportViewMenu.jsp"/>
-
-
-<h2>Lista sprzedanych przedmiotów w miesiacu ${monthReport.reportDate}</h2>
+<jsp:include page="invoiceMenu.jsp"/>
+<h2>Lista raportów sklepowych</h2>
 <table>
     <tr>
         <th>Nr</th>
         <th>Data</th>
         <th>Nazwa</th>
+        <th>Ilość tranzakcji</th>
         <th>Obrót</th>
-        <th>Zysk netto</th>
-        <th>Cena zakupu towaru</th>
-        <th>Czy poprawna</th>
-        <th>Podgląd raportu</th>
+        <th>Skan</th>
+        <th>Dodał</th>
+        <th>Podgląd</th>
 
     </tr>
-    <c:forEach items="${monthReport.dayReportList}" var="dayReport" varStatus="stat">
+    <c:forEach items="${shopReportList}" var="shopReport" varStatus="stat">
         <tr>
             <td>${stat.count}</td>
-            <td>${dayReport.reportDate}</td>
-            <td>${dayReport.reportName}</td>
-            <td>${dayReport.grossIncome}</td>
-            <td>${dayReport.netIncome}</td>
-            <td>${dayReport.expenses}</td>
-            <td>${dayReport.isCorrect}</td>
+            <td>${shopReport.date}</td>
+            <td>${shopReport.name}</td>
+            <td>${shopReport.transactionsNumber}</td>
+            <td>${shopReport.earnings}</td>
+
+
+            <td><c:if test="${not empty shopReport.shopReportScanFile}"><form method="post" action="/admin/shop-report/download" target="_blank">
+                <input type="hidden" name="reportDate" value="${shopReport.date}"/>
+                <button type="submit" name="download" >Pobierz</button>
+            </form></c:if></td>
+            <td><b>${shopReport.opr}</b></td>
             <td>
-                <form method="Post" action="/admin/report-view/day-report">
-                    <input type="hidden" name="reportDate" value="${dayReport.reportDate}"/>
+                <form method="post" action="/admin/shop-report/shop-report-view/" >
+                    <input type="hidden" name="reportDate" value="${shopReport.date}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>
         </tr>
     </c:forEach>
-</table>
-
-<h2>Podsumowanie</h2>
-<table>
-    <tr>
-        <th>Data</th>
-        <th>Nazwa</th>
-        <th>Obrót</th>
-        <th>Zysk netdto</th>
-        <th>Cena zakupu towarów</th>
-
-
-    </tr>
-    <tr>
-        <td>${monthReport.reportDate}</td>
-        <td>${monthReport.reportName}</td>
-        <td>${monthReport.grossIncome}</td>
-        <td>${monthReport.netIncome}</td>
-        <td>${monthReport.expenses}</td>
-
-    </tr>
-
 </table>
 
 <footer></footer>

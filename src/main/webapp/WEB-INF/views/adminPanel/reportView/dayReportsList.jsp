@@ -75,14 +75,14 @@
 
             <td>
                 <form method="post" action="/admin/shop-report/shop-report-view">
-                    <input type="hidden" name="shopReport" value="${dayReport.shopReport}"/>
+                    <input type="hidden" name="reportDate" value="${dayReport.reportDate}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>
 
             <td>
                 <form method="Post" action="/admin/report-view/day-report">
-                    <input type="hidden" name="reportDate" value="${dayReport}"/>
+                    <input type="hidden" name="reportDate" value="${dayReport.reportDate}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>

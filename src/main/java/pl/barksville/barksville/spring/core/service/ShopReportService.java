@@ -3,6 +3,7 @@ package pl.barksville.barksville.spring.core.service;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.dto.data.ItemDTO;
@@ -181,6 +182,14 @@ public class ShopReportService {
             }
 
         }
+    }
+
+    public ShopReport getShopReportByDate(LocalDate reportDate) {
+      return  shopReportRepository.getShopReportByDate(reportDate);
+    }
+
+    public List<ShopReport> findAll() {
+        return shopReportRepository.findAll(Sort.by(Sort.Direction.DESC, "date"));
     }
 }
 

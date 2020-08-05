@@ -1,6 +1,6 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8"  pageEncoding="UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
     <title>Strona użytkownika</title>
@@ -12,52 +12,82 @@
     <div class="row center">
         <h2>Jesteś w panelu administratora</h2>
         <table>
-        <tr>
-            <th>Wprowadz</th>
-            <th>Podgląd</th>
-        </tr>
-
-        <tr>
-            <th>  <form method="get" action="/admin/invoice">
-                <button  type="submit" >
-                    wprowadz fakture
-                </button>
-            </form></th>
-            <th><form method="get" action="/admin/invoice-list">
-                <button  type="submit" >
-                    lista faktur
-                </button>
-            </form></th>
-        </tr>
-
-        <tr>
-            <th> <form method="get" action="/admin/shop-report">
-                <button  type="submit" >
-                    wprowadz raport sklepowy
-                </button>
-            </form></th>
-            <th> <form method="get" action="/admin/products">
-                <button  type="submit" >
-                    sprawdz produkty
-                </button>
-            </form></th>
-        </tr>
             <tr>
-                <th> <form method="get" action="/admin/report-create">
-                    <button  type="submit" >
-                        Utwórz raport
-                    </button>
-                </form></th>
-                <th> <form method="get" action="/admin/report-view">
-                    <button  type="submit" >
-                        przeglądaj raporty
-                    </button>
-                </form></th>
+                <th>Wprowadz</th>
+                <th>Podgląd</th>
+            </tr>
+
+            <tr>
+                <th>
+                    <form method="get" action="/admin/invoice">
+                        <button type="submit">
+                            wprowadz fakture
+                        </button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get" action="/admin/invoice-list">
+                        <button type="submit">
+                            lista faktur
+                        </button>
+                    </form>
+                </th>
+            </tr>
+
+            <tr>
+                <th>
+                    <form method="get" action="/admin/shop-report">
+                        <button type="submit">
+                            wprowadz raport sklepowy
+                        </button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get" action="/admin/shop-report/list">
+                        <button type="submit">
+                            pokarz liste raportów sklepowych
+                        </button>
+                    </form>
+                </th>
+            </tr>
+
+
+            <tr>
+                <th>
+                    <form method="get" action="/admin/products">
+                        <button type="submit">
+                            sprawdz produkty
+                        </button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get" action="/admin/products-edit">
+                        <button type="submit">
+                            edytuj produkty
+                        </button>
+                    </form>
+                </th>
+            </tr>
+
+
+            <tr>
+                <th>
+                    <form method="get" action="/admin/report-create">
+                        <button type="submit">
+                            Utwórz raport
+                        </button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get" action="/admin/report-view">
+                        <button type="submit">
+                            przeglądaj raporty
+                        </button>
+                    </form>
+                </th>
             </tr>
 
         </table>
-
-
 
 
     </div>

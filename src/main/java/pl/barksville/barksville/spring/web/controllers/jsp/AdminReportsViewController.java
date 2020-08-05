@@ -33,21 +33,22 @@ private final ReportsService reportsService;
         return "adminPanel/reportView/dayReportsList";
     }
 
-    @GetMapping(value = "/day-report-list-of-month")
-    public String getDayReportsListOfMonth(Model model, List<DayReport> dayReportListOfMonth) {
-        model.addAttribute("dayReports", dayReportListOfMonth);
-        return "adminPanel/reportView/dayReportsList";
+    @PostMapping(value = "/day-report-list-of-month")
+    public String getDayReportsListOfMonth(Model model, String reportDate) {
+        model.addAttribute("monthReport", reportsService.getMonthReport(LocalDate.parse(reportDate)));
+        return "adminPanel/reportView/monthReport";
     }
 
-    @GetMapping(value = "/day-report-list-of-week")
-    public String getDayReportsListOfWeek(Model model, List<DayReport> dayReportListOfWeek) {
-        model.addAttribute("dayReports", dayReportListOfWeek);
-        return "adminPanel/reportView/dayReportsList";
+    @PostMapping(value = "/day-report-list-of-week")
+    public String getDayReportsListOfWeek(Model model, String reportDate) {
+        model.addAttribute("weekReport", reportsService.getWeekReport(LocalDate.parse(reportDate)));
+        return "adminPanel/reportView/weekReport";
     }
 
     @PostMapping(value = "/day-report")
-    public String getDayReport(Model model, DayReport dayReport) {
-        model.addAttribute("dayReport", dayReport);
+    public String getDayReport(Model model, String reportDate) {
+        model.addAttribute("dayReport", reportsService.getDayReport(LocalDate.parse(reportDate)));
+    //    model.addAttribute("soldItemList", reportsService.getDayReport(reportDate).getSoldItemReportList());
 
         return "adminPanel/reportView/dayReport";
     }
@@ -70,10 +71,10 @@ private final ReportsService reportsService;
         return "adminPanel/reportView/monthReportsList";
     }
 
-    @GetMapping(value = "/month-report-list-of-year")
-    public String getMonthReportsList(Model model, List<MonthReport> monthReportList) {
-        model.addAttribute("monthReports",monthReportList);
-        return "adminPanel/reportView/monthReportsList";
+    @PostMapping(value = "/year-report-list-of-month")
+    public String getMonthReportsList(Model model, String reportDate) {
+        model.addAttribute("yearReport",reportsService.getYearReport(LocalDate.parse(reportDate)));
+        return "adminPanel/reportView/yearReport";
     }
 
     @PostMapping(value = "/month-report", params = {"get"})

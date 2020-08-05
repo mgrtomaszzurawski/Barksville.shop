@@ -72,8 +72,8 @@
             <td>${yearReport.expenses}</td>
 
             <td>
-                <form method="Post" action="/admin/report-view/month-report-list-of-month">
-                    <input type="hidden" name="monthReportList" value="${yearReport.monthReportList}"/>
+                <form method="Post" action="/admin/report-view/year-report-list-of-month">
+                    <input type="hidden" name="reportDate" value="${yearReport.reportDate}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>

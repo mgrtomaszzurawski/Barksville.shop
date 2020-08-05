@@ -1,6 +1,11 @@
 package pl.barksville.barksville.spring.web.controllers.jsp;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +24,7 @@ import pl.barksville.barksville.spring.model.entities.data.*;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 
 @Slf4j
 @Controller
@@ -38,19 +44,15 @@ public class ShopReportController {
     }
 
     @GetMapping
-    public String prepareUserAccountPage(Model model, Principal principal) {
+    public String chooseShopReport(Model model, Principal principal) {
 
 
         return "adminPanel/shopReport";
     }
 
-    @PostMapping(params = {"cancel"})
-    public String cancelEditUserData() {
-        return "adminPanel/shopReport";
-    }
 
     @PostMapping(params = {"upload"})
-    public String uploadProfileFile(@RequestParam MultipartFile file, Principal principal) throws IOException {
+    public String uploadReportFile(@RequestParam MultipartFile file, Principal principal) throws IOException {
 
         shopReportService.createShopReport(file, principal.getName());
 
@@ -58,10 +60,40 @@ public class ShopReportController {
     }
 
     @PostMapping(value = "/shop-report-view")
-    public String prepareUserAccountPage(Model model, ShopReport shopReport) {
+    public String viewShopReport(Model model, String reportDate) {
 
-        model.addAttribute("shopReport", shopReport);
+        model.addAttribute("shopReport", shopReportService.getShopReportByDate(LocalDate.parse(reportDate)));
         return "adminPanel/shopReportView";
+    }
+
+
+    @PostMapping(value = "download", params = {"download"})
+    public ResponseEntity<Resource> downloadFile(String reportDate) {
+
+        ShopReportScanFile scanFile = shopReportService.getShopReportByDate(LocalDate.parse(reportDate)).getShopReportScanFile();
+
+        // Load file as Resource
+
+        Resource resource = new ByteArrayResource(scanFile.getData());
+
+        //Determine file's content type
+        String contentType = scanFile.getContentType();
+
+
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + scanFile.getFileName() + "\"")
+                .body(resource);
+
+
+    }
+
+    @GetMapping(value="/list")
+    public String shopReportList(Model model, String reportDate) {
+
+        model.addAttribute("shopReportList", shopReportService.findAll());
+        return "adminPanel/shopReportList";
     }
 
 }

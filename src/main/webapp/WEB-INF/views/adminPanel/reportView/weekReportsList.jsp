@@ -59,7 +59,7 @@
         <th>Obrót</th>
         <th>Zysk netto</th>
         <th>Cena zakupu towarów</th>
-        <th>Podgląd listy raportów dziennych miesiąca:}</th>
+        <th>Podgląd listy raportów dziennych z tygonia</th>
 
     </tr>
     <c:forEach items="${weekReports}" var="weekReport" varStatus="stat">
@@ -73,7 +73,7 @@
 
             <td>
                 <form method="Post" action="/admin/report-view/day-report-list-of-week">
-                    <input type="hidden" name="dayReportList" value="${weekReport.dayReportList}"/>
+                    <input type="hidden" name="reportDate" value="${weekReport.reportDate}"/>
                     <button type="submit" name="view">>Podgląd</button>
                 </form>
             </td>
