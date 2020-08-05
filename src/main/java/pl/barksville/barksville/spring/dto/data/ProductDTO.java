@@ -8,6 +8,8 @@ import lombok.ToString;
 import pl.barksville.barksville.spring.model.entities.data.ProductInvoicePrice;
 
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import java.util.List;
 
 @Getter
@@ -29,4 +31,19 @@ public class ProductDTO {
     private Double rating;
 
     private String description;
+
+
+    private Double minimalQuantity;
+
+    private Double totalBoughtQuantity;
+
+    private Double totalSoldQuantity;
+
+    private Double totalGrossIncome;
+
+    private Double totalNetIncome;
+
+    private Double totalExpenses;
+
+    private List<String> aliasNames;
 }
