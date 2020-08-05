@@ -144,6 +144,7 @@ public class ReportsService {
                 + reportDate.getYear());
         dayReport.setReportDate(reportDate);
         dayReport.setGrossIncome(shopReport.getEarnings());
+        dayReport.setIsCorrect(true);
 
 
         List<SoldItemReport> soldItemReportList = new ArrayList<>();
@@ -190,6 +191,10 @@ public class ReportsService {
                     break;
                 }
             }
+
+           if(soldItemCounter>0){
+               dayReport.setIsCorrect(false);
+           }
         }
 
         dayReport.setSoldItemReportList(soldItemReportList);
@@ -351,5 +356,22 @@ public class ReportsService {
         if (yearReportRepository.existsByReportDate(localDate)) {
             yearReportRepository.deleteByReportDate(localDate);
         }
+    }
+
+    public void recreateWrongDayReports() {
+        List<DayReport> dayReportList = new ArrayList<>();
+
+        for (DayReport dayReport: dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "date"))
+             ) {
+            if(!dayReport.getIsCorrect()){
+                dayReportList.add(dayReport);
+            }
+        }
+
+        for (DayReport dayReport:dayReportList
+             ) {
+            createDayReport(dayReport.getReportDate());
+        }
+
     }
 }

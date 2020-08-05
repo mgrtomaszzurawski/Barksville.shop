@@ -34,8 +34,8 @@ public class ShopReportService {
         this.reportsService = reportsService;
     }
 
-@Transactional
-    public void createShopReport(MultipartFile file,String oprName) throws IOException {
+    @Transactional
+    public void createShopReport(MultipartFile file, String oprName) throws IOException {
 
         ShopReportDTO newReport = new ShopReportDTO();
         List<ItemDTO> itemList = new ArrayList<>();
@@ -54,11 +54,13 @@ public class ShopReportService {
             newReport.setOpr(oprName);
 
             createShopReportByShopReportDTO(newReport);
+            reportsService.recreateWrongDayReports();
             reportsService.createDayReport(newReport.getDate());
         }
     }
-@Transactional
-    private void createShopReportByShopReportDTO(ShopReportDTO shopReportDTO) {
+
+    @Transactional
+    public void createShopReportByShopReportDTO(ShopReportDTO shopReportDTO) {
 
         ShopReport shopReport = new ShopReport();
 
@@ -77,13 +79,12 @@ public class ShopReportService {
 
         List<Item> soldProductList = new ArrayList<>();
 
-        for (ItemDTO itemDTO:shopReportDTO.getSoldProducts()
-             ) {
-           soldProductList.add(itemService.itemDTOToItem(itemDTO));
+        for (ItemDTO itemDTO : shopReportDTO.getSoldProducts()
+        ) {
+            soldProductList.add(itemService.itemDTOToItem(itemDTO));
         }
 
         shopReport.setSoldProducts(soldProductList);
-
 
 
         shopReportRepository.save(shopReport);
@@ -129,7 +130,7 @@ public class ShopReportService {
                         ItemDTO itemDTO = new ItemDTO();
 
                         //tworzenie produktu
-                        if(!productService.isExistByName(name.toString())) {
+                        if (!productService.isExistByName(name.toString())) {
                             Product product = new Product();
 
                             //   ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
@@ -152,7 +153,7 @@ public class ShopReportService {
 
 
                         itemDTO.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        productService.changeQuantityOfProduct(name.toString(),itemDTO.getQuantity());
+                        productService.changeQuantityOfProduct(name.toString(), itemDTO.getQuantity());
 
 
                         itemDTO.setPrice(Double.parseDouble(words[words.length - 1]));
@@ -163,9 +164,9 @@ public class ShopReportService {
 
                     } else if (words[0].matches("Za")) {
                         // System.out.println( words[words.length-1]);
-                        String[] date = words[words.length-1].split("\\.");
-                        shopReportDTO.setName(date[0]+"-"+date[1]+"-"+date[2]);
-                        shopReportDTO.setDate(LocalDate.parse(date[2]+"-"+date[1]+"-"+date[0]));
+                        String[] date = words[words.length - 1].split("\\.");
+                        shopReportDTO.setName(date[0] + "-" + date[1] + "-" + date[2]);
+                        shopReportDTO.setDate(LocalDate.parse(date[2] + "-" + date[1] + "-" + date[0]));
 
                         //  LocalDateTime reportDate = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),0,0,0);
 
