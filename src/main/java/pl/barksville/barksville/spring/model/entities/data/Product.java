@@ -49,8 +49,7 @@ public class Product extends BaseEntity {
     private Double totalSoldQuantity;
     @Column(name="total_gross_income",nullable = false)
     private Double totalGrossIncome;
-    @Column(name="total_net_income",nullable = false)
-    private Double totalNetIncome;
+
     @Column(name="total_expenses",nullable = false)
     private Double totalExpenses;
 

@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <html>
 <head>
-    <jsp:include page="invoiceHeader.jsp"/>
+    <jsp:include page="../invoiceHeader.jsp"/>
     <style>
         table, td, th, tr {
             border: 1px solid black;
@@ -17,16 +17,18 @@
     <title>Rejestracja</title>
 </head>
 <body>
-<jsp:include page="../elements/menu.jsp"/>
+<jsp:include page="../../elements/menu.jsp"/>
 <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
 
 <table>
     <tr>
         <th>nr</th>
         <th>nazwa</th>
-        <th>aktywny</th>
-        <th>Cena sprzedarzy</th>
-        <th>ilosc</th>
+        <th>Aliasy</th>
+        <th>Ilość w magazynie</th>
+        <th>Minimalna ilość na magazynie</th>
+        <th>Edytuj</th>
+
     </tr>
 
     <c:forEach items="${products}" var="product" varStatus="stat">
@@ -34,19 +36,35 @@
         <tr>
             <td>${stat.count}</td>
             <td>${product.name}</td>
-            <td>${product.state}</td>
-            <td>${product.sellPrice}</td>
+            <td>${product.aliasNames}</td>
             <td>${product.quantity}</td>
-        </tr>
+            <td>${product.minimalQuantity}</td>
 
+
+
+                <td>
+                    <form method="post" action="/admin/products/change-minimal-quantity">
+                    <label for="minQuantity">Minimalna ilość: </label>
+                    <input type="hidden" name="id" value="${product.id}"/>
+                    <input id="minQuantity"
+                           type="number" type="number" placeholder="0.00" step="0.01"
+                           name="minQuantity"/>
+                    <button type="submit">
+                        zapisz
+                    </button>
+                    </form>
+            </td>
+
+        </tr>
     </c:forEach>
 </table>
+
+
 <sec:authorize access="hasRole('ROLE_ADMIN')">
 
     <li><a href="/admin/panel">Panel administracyjny</a></li>
 
 </sec:authorize>
-
 
 
 <footer></footer>

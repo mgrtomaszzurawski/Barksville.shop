@@ -9,6 +9,7 @@ import pl.barksville.barksville.spring.core.service.ProductService;
 import pl.barksville.barksville.spring.model.entities.data.Product;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -27,13 +28,11 @@ public class ProductsController {
         return "products/products";
     }
 
+
     @PostMapping(params = {"save"})
-    public String saveProductsToInvoice(){
+    public String saveActiveOrder(){
 
         return "redirect:/orders/active-order";
     }
-
-
-
 
 }

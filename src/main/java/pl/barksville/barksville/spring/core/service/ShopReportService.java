@@ -147,6 +147,21 @@ public class ShopReportService {
                             product.setState(Boolean.TRUE);
                             product.setSellPrice(0.);
 
+                            product.setQuantity(0.);
+
+                            product.setMinimalQuantity(0.);
+
+                            product.setTotalBoughtQuantity(0.);
+
+                            product.setTotalSoldQuantity(0.);
+
+                            product.setTotalGrossIncome(0.);
+
+                            product.setTotalExpenses(0.);
+
+                            product.setAliasNames(new ArrayList<String>());
+
+
                             productService.saveProduct(product);
                             //koniec tworzenia prodkutku
                         }
@@ -154,10 +169,10 @@ public class ShopReportService {
 
 
                         itemDTO.setQuantity(Double.parseDouble(words[words.length - 2]));
-                        productService.changeQuantityOfProduct(name.toString(), itemDTO.getQuantity());
-
-
                         itemDTO.setPrice(Double.parseDouble(words[words.length - 1]));
+
+                        productService.updateProductByShopReport(name.toString(), itemDTO.getQuantity(),itemDTO.getPrice());
+
 
                         itemDTO.setIsSold(true);
 

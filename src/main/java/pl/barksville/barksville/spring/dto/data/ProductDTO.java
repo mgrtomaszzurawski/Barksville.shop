@@ -41,8 +41,6 @@ public class ProductDTO {
 
     private Double totalGrossIncome;
 
-    private Double totalNetIncome;
-
     private Double totalExpenses;
 
     private List<String> aliasNames;

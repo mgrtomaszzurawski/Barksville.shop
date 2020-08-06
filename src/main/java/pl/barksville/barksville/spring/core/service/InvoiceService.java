@@ -145,18 +145,6 @@ public class InvoiceService {
         return productDTOList;
     }
 
-    public void createProductsBaseOnInvoice(List<ProductDTO> nonExisting) {
-
-        for (ProductDTO productDTO : nonExisting) {
-            productService.createProduct(productDTO.getName(),
-                    productDTO.getState(),
-                    productDTO.getInvoicePriceList(),
-                    productDTO.getSellPrice(),
-                    productDTO.getQuantity());
-
-        }
-    }
-
     public void save() {
         Invoice invoice = new Invoice();
 
@@ -267,7 +255,7 @@ public class InvoiceService {
             productQuantity = quantity * parts;
         }
 
-        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, netPrice, productQuantity));
+        itemDTO.setProduct(productService.createProductDTOBaseOnInvoice(name, price, productQuantity));
         itemDTO.setQuantity(quantity);
 
         itemDTO.setNetPrice(netPrice);
@@ -303,21 +291,11 @@ public class InvoiceService {
         item.setPrice(itemDTO.getPrice());
         if (productService.isExistByName(itemDTO.getProduct().getName())) {
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
+            productService.updateProductByInvoice(itemDTO.getProduct().getName(), itemDTO.getQuantity(),itemDTO.getPrice());
 
 
-
-            productService.addQuantityToProduct(itemDTO.getProduct().getName(), itemDTO.getQuantity());
         } else {
-            List<ProductInvoicePriceDTO> productInvoicePriceDTOList = new ArrayList<>();
-            ProductInvoicePriceDTO productInvoicePriceDTO = new ProductInvoicePriceDTO();
-            productInvoicePriceDTO.setInvoicePrice(itemDTO.getPrice());
-            productInvoicePriceDTO.setQuantity(itemDTO.getQuantity());
-            productInvoicePriceDTO.setInvoiceNumber(invoiceNumber);
-
-            productInvoicePriceDTOList.add(productInvoicePriceDTO);
-
-            productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, productInvoicePriceDTOList, itemDTO.getProduct().getSellPrice(), itemDTO.getQuantity());
-
+            productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, itemDTO.getPrice(),itemDTO.getQuantity(),invoiceNumber, itemDTO.getProduct().getSellPrice());
 
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
         }

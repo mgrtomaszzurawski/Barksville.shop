@@ -56,14 +56,32 @@
                 <th>
                     <form method="get" action="/admin/products">
                         <button type="submit">
-                            sprawdz produkty
+                            Stan produktów
                         </button>
                     </form>
                 </th>
                 <th>
-                    <form method="get" action="/admin/products-edit">
+                    <form method="get" action="/admin/products/product-alias-list">
                         <button type="submit">
-                            edytuj produkty
+                            Dodaj alias do produktu
+                        </button>
+                    </form>
+                </th>
+            </tr>
+
+
+            <tr>
+                <th>
+                    <form method="get" action="/admin/products/low-quantity-products">
+                        <button type="submit">
+                           Produkty do kupienia
+                        </button>
+                    </form>
+                </th>
+                <th>
+                    <form method="get" action="/admin/products/product-minimal-quantity-list">
+                        <button type="submit">
+                            Ustaw minimalne ilości produktów
                         </button>
                     </form>
                 </th>
