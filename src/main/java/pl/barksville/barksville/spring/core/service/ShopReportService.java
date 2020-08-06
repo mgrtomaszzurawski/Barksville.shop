@@ -55,7 +55,8 @@ public class ShopReportService {
             newReport.setOpr(oprName);
 
             createShopReportByShopReportDTO(newReport);
-            reportsService.recreateWrongDayReports();
+            //TODO repair recreateWrongDayReports
+          //  reportsService.recreateWrongDayReports();
             reportsService.createDayReport(newReport.getDate());
         }
     }

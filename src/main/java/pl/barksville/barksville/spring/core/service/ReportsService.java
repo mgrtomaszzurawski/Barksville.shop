@@ -257,9 +257,11 @@ public class ReportsService {
 
         weekReport.setReportDate(reportDate);
 
+         int endOfWeekDay=reportDate.getDayOfMonth()+6;
+
         weekReport.setReportName("Week Report - "
                 + reportDate.getDayOfMonth() + "-"
-                + reportDate.getDayOfMonth() + 6 + "."
+                + endOfWeekDay+ "."
                 + reportDate.getMonthValue() + "."
                 + reportDate.getYear()
         );
@@ -361,7 +363,7 @@ public class ReportsService {
     public void recreateWrongDayReports() {
         List<DayReport> dayReportList = new ArrayList<>();
 
-        for (DayReport dayReport: dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "date"))
+        for (DayReport dayReport: dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "reportDate"))
              ) {
             if(!dayReport.getIsCorrect()){
                 dayReportList.add(dayReport);
