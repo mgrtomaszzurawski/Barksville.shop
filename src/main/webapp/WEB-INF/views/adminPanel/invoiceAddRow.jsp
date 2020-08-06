@@ -9,7 +9,7 @@
 
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 
 <h1 style="color: red">Trzeba wypelnic wszystkie pola!!!</h1>
 <form method="post" action="/admin/invoice-list/invoice/row">
@@ -39,8 +39,8 @@
                                                                      title="Type in a name"/></td>
                 <td><label for="quantity"></label><input id="quantity" type="number" placeholder="0.00" step="0.01"
                                                          name="quantity"/></td>
-                <td><label for="nettoPrice"></label><input id="nettoPrice" type="number" placeholder="0.00" step="0.01"
-                                                           name="nettoPrice"/></td>
+                <td><label for="netPrice"></label><input id="netPrice" type="number" placeholder="0.00" step="0.01"
+                                                           name="netPrice"/></td>
                 <td>
                     <input type="radio" id="23" name="vat" value="0.23"
                            checked>

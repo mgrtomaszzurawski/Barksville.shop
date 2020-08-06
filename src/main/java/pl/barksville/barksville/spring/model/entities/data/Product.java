@@ -41,4 +41,21 @@ public class Product extends BaseEntity {
     private String description;
 
 
+    @Column(name="minimal_quantity",nullable = false)
+    private Double minimalQuantity;
+    @Column(name="total_bought_quantity",nullable = false)
+    private Double totalBoughtQuantity;
+    @Column(name="total_sold_quantity",nullable = false)
+    private Double totalSoldQuantity;
+    @Column(name="total_gross_income",nullable = false)
+    private Double totalGrossIncome;
+
+    @Column(name="total_expenses",nullable = false)
+    private Double totalExpenses;
+
+    @ElementCollection
+    @Column(name="alias_names",nullable = false)
+    private List<String> aliasNames;
+
+
 }

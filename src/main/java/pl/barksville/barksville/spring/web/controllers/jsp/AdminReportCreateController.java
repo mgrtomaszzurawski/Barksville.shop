@@ -1,77 +1,86 @@
 package pl.barksville.barksville.spring.web.controllers.jsp;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.barksville.barksville.spring.core.service.ReportService;
+import pl.barksville.barksville.spring.core.service.ReportsService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 @Controller
 @RequestMapping("/admin/report-create")
 public class AdminReportCreateController {
 
-    private final ReportService reportService;
+    private final ReportsService reportsService;
 
-    public AdminReportCreateController(ReportService reportService) {
-        this.reportService = reportService;
+    public AdminReportCreateController(ReportsService reportsService) {
+        this.reportsService = reportsService;
     }
 
     @GetMapping
     public String createReport() {
-        return "adminPanel/report-create";
+        return "adminPanel/reportCreate/reportPanel";
     }
 
     @GetMapping(value = "day")
     public String getDayForReport() {
-        return "adminPanel/report-create/day";
+        return "adminPanel/reportCreate/dayReportForm";
     }
 
-    @PostMapping(value = "day",params = {"create"})
-    public String createDayReport(String reportDate) {
+    @PostMapping(value = "day")
+    public String createDayReport(String dayReportDate) {
 
-        reportService.createDayReport(LocalDate.parse(reportDate));
+
+        reportsService.createDayReport(LocalDate.parse(dayReportDate));
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "week")
     public String getWeekForReport() {
-        return "adminPanel/report-create/week";
+        return "adminPanel/reportCreate/weekReportForm";
     }
 
-    @PostMapping(value = "week",params = {"create"})
-    public String createWeekReport(String reportDate) {
+    @PostMapping(value = "week")
+    public String createWeekReport(String weekReportDate) {
 
-        reportService.createWeekReport(LocalDate.parse(reportDate));
+        String date = weekReportDate+"-1";
+
+        reportsService.createWeekReport(LocalDate.parse(date, DateTimeFormatter.ISO_WEEK_DATE));
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "month")
     public String getMonthForReport() {
-        return "adminPanel/report-create/month";
+        return "adminPanel/reportCreate/monthReportForm";
     }
 
-    @PostMapping(value = "month",params = {"create"})
-    public String createMonthReport(String reportDate) {
+    @PostMapping(value = "month")
+    public String createMonthReport(String monthReportDate) {
 
-        reportService.createMonthReport(LocalDate.parse(reportDate));
+        LocalDate reportDate= LocalDate.parse(monthReportDate+"-01");
+
+        reportsService.createMonthReport(reportDate);
 
         return "redirect:/admin/report-create";
     }
 
     @GetMapping(value = "year")
     public String getYearForReport() {
-        return "adminPanel/report-create/month";
+        return "adminPanel/reportCreate/yearReportForm";
     }
 
-    @PostMapping(value = "year",params = {"create"})
-    public String createYearReport(String reportDate) {
+    @PostMapping(value = "year")
+    public String createYearReport(String yearReportDate) {
+    LocalDate reportDate= LocalDate.of(Integer.parseInt(yearReportDate),1,1);
 
-        reportService.createYearReport(LocalDate.parse(reportDate));
+        reportsService.createYearReport(reportDate);
 
         return "redirect:/admin/report-create";
     }

@@ -44,7 +44,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 <table>
 <tr>
     <th>Nr</th>

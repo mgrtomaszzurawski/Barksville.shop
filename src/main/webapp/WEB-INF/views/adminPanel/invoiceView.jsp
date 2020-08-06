@@ -4,7 +4,7 @@
 <html>
 <head>
 
-    <jsp:include page="invoice_header.jsp"/>
+    <jsp:include page="invoiceHeader.jsp"/>
     <title>Rejestracja</title>
     <style>
         #ramka {
@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="invoice_menu.jsp"/>
+<jsp:include page="invoiceMenu.jsp"/>
 <h1>Faktura nr: ${invoice.invoiceNumber}</h1>
 <p>Firma: ${invoice.company}</p>
 <p>Data wystawienia: ${invoice.date}</p>
@@ -81,7 +81,7 @@
             <td>${stat.count}</td>
             <td>${product.product.name}</td>
             <td>${product.quantity}</td>
-            <td>${product.nettoPrice}</td>
+            <td>${product.netPrice}</td>
             <td>${product.vat}</td>
             <td>${product.isDivided}</td>
             <td>${product.parts}</td>
