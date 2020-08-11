@@ -23,18 +23,28 @@ public class ReportsService {
     final private MonthReportRepository monthReportRepository;
     final private YearReportRepository yearReportRepository;
     final private SoldItemReportRepository soldItemReportRepository;
-    final private InvoiceRepository invoiceRepository;
+    final private InvoiceService invoiceService;
+    //cyclic dependency ShopReportService- change to shopReportRepository;
+    //final private ShopReportService shopReportService;
     final private ShopReportRepository shopReportRepository;
     final private ItemService itemService;
 
-    public ReportsService(DayReportRepository dayReportRepository, WeekReportRepository weekReportRepository, MonthReportRepository monthReportRepository, YearReportRepository yearReportRepository, SoldItemReportRepository soldItemReportRepository, InvoiceRepository invoiceRepository, ShopReportRepository shopReportRepository, ItemService itemService) {
+    public ReportsService(DayReportRepository dayReportRepository,
+                          WeekReportRepository weekReportRepository,
+                          MonthReportRepository monthReportRepository,
+                          YearReportRepository yearReportRepository,
+                          SoldItemReportRepository soldItemReportRepository,
+                          InvoiceService invoiceService,
+                          ShopReportRepository shopReportRepository, ItemService itemService) {
+
         this.dayReportRepository = dayReportRepository;
         this.weekReportRepository = weekReportRepository;
         this.monthReportRepository = monthReportRepository;
         this.yearReportRepository = yearReportRepository;
         this.soldItemReportRepository = soldItemReportRepository;
-        this.invoiceRepository = invoiceRepository;
+        this.invoiceService = invoiceService;
         this.shopReportRepository = shopReportRepository;
+
         this.itemService = itemService;
     }
 
@@ -116,17 +126,19 @@ public class ReportsService {
 
             for (SoldItemReport soldItemReport : dayReport.getSoldItemReportList()
             ) {
-                Item item = itemService.findById(soldItemReport.getSoldInvoiceItem().getId());
-                item.setLeftItems(soldItemReport.getQuantity());
-                item.setIsSold(false);
-                itemService.saveItem(item);
+                if(soldItemReport.getSoldInvoiceItem()!=null) {
+                    Item item = itemService.findById(soldItemReport.getSoldInvoiceItem().getId());
+                    item.setLeftItems(item.getQuantity() + soldItemReport.getQuantity() / item.getParts());
+                    item.setIsSold(false);
+                    itemService.saveItem(item);
+                }
             }
         } else {
             dayReport = new DayReport();
         }
 
 
-        List<Invoice> invoiceList = invoiceRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
+        List<Invoice> invoiceList = invoiceService.findAll(Sort.by(Sort.Direction.ASC, "date"));
         if (invoiceList.isEmpty()) {
             return;
         }
@@ -151,10 +163,7 @@ public class ReportsService {
 
         for (Item item : shopReport.getSoldProducts()
         ) {
-            SoldItemReport soldItemReport = new SoldItemReport();
 
-            soldItemReport.setGrossIncome(item.getPrice());
-            soldItemReport.setQuantity(item.getQuantity());
 
 
             Double cost = 0.;
@@ -166,30 +175,50 @@ public class ReportsService {
                 ) {
                     if (item.getProduct().getName().equals(invoiceItem.getProduct().getName())) {
                         if (!invoiceItem.getIsSold()) {
+
+                            SoldItemReport soldItemReport = new SoldItemReport();
+
+
+
+
                             if (invoiceItem.getLeftItems()* invoiceItem.getParts() <= soldItemCounter) {
-                                cost += invoiceItem.getLeftItems() * invoiceItem.getPrice()* invoiceItem.getParts(); ;
+
+
+
+                                soldItemReport.setGrossIncome((item.getPrice()/item.getQuantity())*invoiceItem.getLeftItems()*invoiceItem.getParts());
+                                soldItemReport.setQuantity(invoiceItem.getLeftItems()*invoiceItem.getParts());
+
+                                cost += invoiceItem.getLeftItems() * invoiceItem.getPrice()/ invoiceItem.getParts();
                                 soldItemCounter -= invoiceItem.getLeftItems()* invoiceItem.getParts();
                                 invoiceItem.setLeftItems(0.);
                                 invoiceItem.setIsSold(true);
+
+
+
                             } else {
-                                cost += soldItemCounter * invoiceItem.getPrice()* invoiceItem.getParts();;
+                                soldItemReport.setGrossIncome((item.getPrice()/item.getQuantity())*invoiceItem.getLeftItems()*invoiceItem.getParts());
+                                soldItemReport.setQuantity(soldItemCounter*invoiceItem.getParts());
+
+                                cost += soldItemCounter * invoiceItem.getPrice()/ invoiceItem.getParts();;
                                 soldItemCounter -= 0.;
                                 invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter/invoiceItem.getParts());
                             }
+                            soldItemReport.setSoldInvoiceItem(invoiceItem);
+                            soldItemReport.setNetIncome(soldItemReport.getGrossIncome() - cost);
+
+                            soldItemReportList.add(soldItemReport);
                         }
-                        soldItemReport.setSoldInvoiceItem(invoiceItem);
-                        break;
+
+                       // break; - it can have many repeated items on invoice
                     }
 
+
+
                 }
-
-                soldItemReport.setNetIncome(soldItemReport.getGrossIncome() - cost);
-
-                soldItemReportList.add(soldItemReport);
-
                 if (soldItemCounter == 0.) {
                     break;
                 }
+
             }
 
            if(soldItemCounter>0){
@@ -199,11 +228,15 @@ public class ReportsService {
 
         dayReport.setSoldItemReportList(soldItemReportList);
 
+if(dayReport.getIsCorrect()) {
+    Double dayReportDayNetIncome = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
+    dayReport.setNetIncome(dayReportDayNetIncome);
 
-        Double dayReportDayIncome = soldItemReportList.stream().map(SoldItemReport::getNetIncome).mapToDouble(s -> s).reduce(0, Double::sum);
-        dayReport.setNetIncome(dayReportDayIncome);
-
-        dayReport.setExpenses(dayReport.getGrossIncome() - dayReportDayIncome);
+    dayReport.setExpenses(dayReport.getGrossIncome() - dayReportDayNetIncome);
+} else {
+    dayReport.setNetIncome(0);
+    dayReport.setExpenses(0);
+}
 
 
         for (SoldItemReport soldItemReport :
@@ -257,9 +290,11 @@ public class ReportsService {
 
         weekReport.setReportDate(reportDate);
 
+         int endOfWeekDay=reportDate.getDayOfMonth()+6;
+
         weekReport.setReportName("Week Report - "
                 + reportDate.getDayOfMonth() + "-"
-                + reportDate.getDayOfMonth() + 6 + "."
+                + endOfWeekDay+ "."
                 + reportDate.getMonthValue() + "."
                 + reportDate.getYear()
         );
@@ -361,7 +396,7 @@ public class ReportsService {
     public void recreateWrongDayReports() {
         List<DayReport> dayReportList = new ArrayList<>();
 
-        for (DayReport dayReport: dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "date"))
+        for (DayReport dayReport: dayReportRepository.findAll(Sort.by(Sort.Direction.ASC, "reportDate"))
              ) {
             if(!dayReport.getIsCorrect()){
                 dayReportList.add(dayReport);

@@ -1,12 +1,13 @@
 package pl.barksville.barksville.spring.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.dto.data.*;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.InvoiceScanFileRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
 import pl.barksville.barksville.spring.model.entities.data.*;
 import pl.barksville.barksville.spring.session.InvoiceComponent;
 
@@ -22,16 +23,15 @@ public class InvoiceService {
     private final InvoiceScanFileRepository invoiceScanFileRepository;
     private final InvoiceComponent invoiceComponent;
     private final ProductService productService;
-    private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, InvoiceScanFileRepository invoiceScanFileRepository, InvoiceComponent invoiceComponent, ProductService productService, ItemRepository itemRepository) {
+    public InvoiceService(InvoiceRepository invoiceRepository, InvoiceScanFileRepository invoiceScanFileRepository, InvoiceComponent invoiceComponent, ProductService productService, ItemService itemService) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceScanFileRepository = invoiceScanFileRepository;
         this.invoiceComponent = invoiceComponent;
         this.productService = productService;
-        this.itemRepository = itemRepository;
+        this.itemService = itemService;
     }
-
     public void createInvoiceDTOWithoutScanAndItems(String invoiceNumber, String opr, String company, LocalDate invoiceDate, String cost) {
 
 
@@ -188,7 +188,7 @@ public class InvoiceService {
     private List<Item> toItemList() {
         List<Item> boughtProducts = new ArrayList<>();
         for (ItemDTO itemDTO : invoiceComponent.getInvoiceDTO().getBoughtProducts()) {
-            Item item = createItem(itemDTO,invoiceComponent.getInvoiceDTO().getInvoiceNumber());
+            Item item = createItem(itemDTO, invoiceComponent.getInvoiceDTO().getInvoiceNumber());
             boughtProducts.add(item);
         }
         return boughtProducts;
@@ -219,30 +219,39 @@ public class InvoiceService {
     public void deleteInvoiceByInvoiceNumber(String invoiceNumber) {
         invoiceRepository.deleteByInvoiceNumber(invoiceNumber);
     }
-
     @Transactional
     public void deleteInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id) {
+        Item item = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findFirst().get();
+        productService.updateProductOnDeleteInvoiceRow(item.getProduct().getId(), item.getQuantity(), item.getPrice());
         invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().removeIf(row -> id.equals(row.getId()));
-        itemRepository.deleteById(id);
+        itemService.deleteById(id);
     }
 
+    @Transactional
     public void updateInvoiceRowByInvoiceNumberAndRowID(String invoiceNumber, Long id, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
         Item item = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber).getBoughtProducts().stream().filter(row -> id.equals(row.getId())).findFirst().get();
+        Invoice invoice = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber);
+
+        invoice.setCost(invoice.getCost() - item.getPrice() * item.getQuantity() + netPrice * (1 + vat) * quantity);
+
+        productService.updateProductOnUpdateInvoiceRow(item.getProduct().getId(), item.getQuantity() * item.getParts(), item.getPrice(), quantity * parts, netPrice * (vat + 1) / quantity * parts);
+
         item.setNetPrice(netPrice);
         item.setQuantity(quantity);
         item.setVat(vat);
         item.setIsDivided(isDivided);
         item.setParts(parts);
-        if(isDivided){
-            item.setPrice((netPrice*(1+vat))/parts);
-        }else{
-            item.setPrice(netPrice*(1+vat));
+        if (isDivided) {
+            item.setPrice((netPrice * (1 + vat)) / parts);
+        } else {
+            item.setPrice(netPrice * (1 + vat));
         }
 
-        itemRepository.save(item);
+        itemService.save(item);
+
     }
 
-@Transactional
+    @Transactional
     public void addRowToInvoice(String invoiceNumber, String name, Double netPrice, Double quantity, Double vat, Boolean isDivided, Integer parts) {
         ItemDTO itemDTO = new ItemDTO();
 
@@ -285,17 +294,17 @@ public class InvoiceService {
 
     }
 
-    public Item createItem(ItemDTO itemDTO, String invoiceNumber ) {
+    public Item createItem(ItemDTO itemDTO, String invoiceNumber) {
 
         Item item = new Item();
         item.setPrice(itemDTO.getPrice());
         if (productService.isExistByName(itemDTO.getProduct().getName())) {
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
-            productService.updateProductByInvoice(itemDTO.getProduct().getName(), itemDTO.getQuantity(),itemDTO.getPrice());
+            productService.updateProductByInvoice(itemDTO.getProduct().getName(), itemDTO.getQuantity() * itemDTO.getParts(), itemDTO.getPrice() / itemDTO.getParts());
 
 
         } else {
-            productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, itemDTO.getPrice(),itemDTO.getQuantity(),invoiceNumber, itemDTO.getProduct().getSellPrice());
+            productService.createProduct(itemDTO.getProduct().getName(), Boolean.TRUE, itemDTO.getPrice() / itemDTO.getParts(), itemDTO.getQuantity() * itemDTO.getParts(), invoiceNumber, itemDTO.getProduct().getSellPrice());
 
             item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
         }
@@ -310,20 +319,23 @@ public class InvoiceService {
         } else {
             item.setParts(1);
         }
-        itemRepository.save(item);
+        itemService.save(item);
         return item;
 
     }
 
     @Transactional
-    public void changeInvoiceData(String oldInvoiceNumber, String invoiceNumber, String company, String invoiceDate, Double cost, String opr) {
+    public void changeInvoiceData(String oldInvoiceNumber, String invoiceNumber, String company, String invoiceDate, String opr) {
 
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCompany(company);
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setDate(LocalDate.parse(invoiceDate));
-        invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setCost(cost);
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setOpr(opr);
         invoiceRepository.getInvoiceByInvoiceNumber(oldInvoiceNumber).setInvoiceNumber(invoiceNumber);
 
 
+    }
+
+    public List<Invoice> findAll(Sort date) {
+        return invoiceRepository.findAll();
     }
 }

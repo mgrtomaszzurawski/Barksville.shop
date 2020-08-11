@@ -12,4 +12,5 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     void deleteByInvoiceNumber(String invoiceNumber);
 
+
 }

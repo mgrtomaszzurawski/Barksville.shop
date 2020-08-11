@@ -22,6 +22,7 @@ public class ProductService {
     public ProductService(ProductRepository productRepository, ProductIvoicePriceRepository productIvoicePriceRepository) {
         this.productRepository = productRepository;
         this.productIvoicePriceRepository = productIvoicePriceRepository;
+
     }
 
     public List<Product> allActiveProducts() {
@@ -206,7 +207,7 @@ public class ProductService {
         Product product = productRepository.findByName(name);
         Double productQuantity = product.getQuantity() - quantity;
         Double productTotalSoldQuantity = product.getTotalSoldQuantity() + quantity;
-        Double productTotalGrossIncome = product.getTotalGrossIncome() + quantity * price;
+        Double productTotalGrossIncome = product.getTotalGrossIncome() + quantity* price;
 
         product.setQuantity(productQuantity);
         product.setTotalSoldQuantity(productTotalSoldQuantity);
@@ -218,5 +219,53 @@ public class ProductService {
 
     public Product getProductById(Long id) {
        return productRepository.findById(id).get();
+    }
+
+    public void updateProductOnUpdateInvoiceRow(Long id,Double oldQuantity, Double oldPrice,Double quantity, Double price) {
+
+
+
+
+        Product product = productRepository.findById(id).get();
+        Double sum = product.getQuantity();
+        sum += quantity-oldQuantity;
+        Double totalSum = product.getTotalBoughtQuantity();
+        totalSum += quantity-oldQuantity;
+        Double totalExpenses =product.getTotalExpenses();
+        totalExpenses+=price*quantity-oldPrice*oldQuantity;
+
+
+        product.setQuantity(sum);
+        product.setTotalBoughtQuantity(totalSum);
+        product.setTotalExpenses(totalExpenses);
+        productRepository.save(product);
+
+
+
+
+
+
+    }
+
+    public void updateProductOnDeleteInvoiceRow(Long id,Double Quantity, Double Price) {
+
+        Product product = productRepository.findById(id).get();
+
+        Double sum = product.getQuantity();
+        sum += Quantity;
+        Double totalSum = product.getTotalBoughtQuantity();
+        totalSum += Quantity;
+        Double totalExpenses =product.getTotalExpenses();
+        totalExpenses+=Price*Quantity;
+
+
+        product.setQuantity(sum);
+        product.setTotalBoughtQuantity(totalSum);
+        product.setTotalExpenses(totalExpenses);
+        productRepository.save(product);
+    }
+
+    public Product getOne(Long id) {
+      return  productRepository.getOne(id);
     }
 }

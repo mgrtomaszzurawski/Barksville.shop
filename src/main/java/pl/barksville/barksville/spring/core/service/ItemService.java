@@ -12,7 +12,7 @@ public class ItemService {
 
     public ItemService(ItemRepository itemRepository, ProductService productService) {
         this.itemRepository = itemRepository;
-        this.productService = productService;
+      this.productService = productService;
     }
 
    public void saveItemDTOAsItem(ItemDTO itemDTO){
@@ -24,7 +24,6 @@ public class ItemService {
 
     public Item itemDTOToItem(ItemDTO itemDTO) {
         Item item = new Item();
-
         item.setProduct(productService.productByName(itemDTO.getProduct().getName()));
         item.setIsSold(itemDTO.getIsSold());
         item.setIsDivided(itemDTO.getIsDivided());
@@ -43,5 +42,13 @@ public class ItemService {
 
     public void saveItem(Item item) {
         itemRepository.save(item);
+    }
+
+    public void save(Item item) {
+        itemRepository.save(item);
+    }
+
+    public void deleteById(Long id) {
+        itemRepository.deleteById(id);
     }
 }

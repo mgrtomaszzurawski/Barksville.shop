@@ -9,9 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.barksville.barksville.spring.dto.data.ItemDTO;
 import pl.barksville.barksville.spring.dto.data.ShopReportDTO;
 import pl.barksville.barksville.spring.dto.data.ShopReportScanFileDTO;
-import pl.barksville.barksville.spring.model.dal.repositories.ItemRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.ProductIvoicePriceRepository;
-import pl.barksville.barksville.spring.model.dal.repositories.ProductRepository;
 import pl.barksville.barksville.spring.model.dal.repositories.ShopReportRepository;
 import pl.barksville.barksville.spring.model.entities.data.*;
 
@@ -28,7 +25,7 @@ public class ShopReportService {
     private final ItemService itemService;
     private final ReportsService reportsService;
 
-    public ShopReportService(ShopReportRepository shopReportRepository, ProductRepository productRepository, ItemRepository itemRepository, ProductIvoicePriceRepository productIvoicePriceRepository, ProductService productService, ItemService itemService, ReportsService reportsService) {
+    public ShopReportService(ShopReportRepository shopReportRepository, ProductService productService, ItemService itemService, ReportsService reportsService) {
         this.shopReportRepository = shopReportRepository;
         this.productService = productService;
         this.itemService = itemService;
@@ -55,6 +52,7 @@ public class ShopReportService {
             newReport.setOpr(oprName);
 
             createShopReportByShopReportDTO(newReport);
+
             reportsService.recreateWrongDayReports();
             reportsService.createDayReport(newReport.getDate());
         }
