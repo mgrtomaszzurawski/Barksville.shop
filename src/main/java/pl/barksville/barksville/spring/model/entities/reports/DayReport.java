@@ -41,6 +41,6 @@ public class DayReport extends BaseEntity {
     private Boolean isCorrect;
 
     @OneToMany(cascade=CascadeType.REMOVE)
-    @Column(unique = true, nullable = false, name = "sold_item_report_list")
+    @Column( nullable = false, name = "sold_item_report_list")
     private List<SoldItemReport> soldItemReportList;
 }

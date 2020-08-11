@@ -91,8 +91,6 @@ public class InvoiceViewController {
 
     @PostMapping(value = "invoice/row", params = {"add"})
     public String addInvoiceRow(String invoiceNumber, Model model) {
-
-
         model.addAttribute("invoiceNumber", invoiceNumber);
         return "adminPanel/invoiceAddRow";
     }
@@ -112,8 +110,8 @@ public class InvoiceViewController {
     }
 
     @PostMapping(value ="invoice/data", params = {"change"})
-    public String uchangeInvoiceData(Principal principal,String oldInvoiceNumber, Model model, String invoiceNumber, String company, String invoiceDate, Double cost) {
-        invoiceService.changeInvoiceData(oldInvoiceNumber,invoiceNumber, company, invoiceDate, cost, principal.getName());
+    public String uchangeInvoiceData(Principal principal,String oldInvoiceNumber, Model model, String invoiceNumber, String company, String invoiceDate) {
+        invoiceService.changeInvoiceData(oldInvoiceNumber,invoiceNumber, company, invoiceDate, principal.getName());
         model.addAttribute("invoice", invoiceService.getInvoiceByInvoiceNumber(invoiceNumber));
         return "adminPanel/invoiceData";
     }

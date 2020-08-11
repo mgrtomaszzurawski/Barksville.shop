@@ -91,16 +91,16 @@
                                                                  type="text"
                                                                  name="name"
                                                                  placeholder="Search for names.."
-                                                                 title="Type in a name"/>
+                                                                 title="Type in a name" required/>
             </p>
 
             <p>
                 <label for="quantity">Ilość: </label><input id="quantity" type="number" placeholder="0.00" step="0.01"
-                                                            name="quantity"/>
+                                                            name="quantity" required/>
             </p>
             <p>
                 <label for="price">Jednostkowa Cenna netto: </label><input id="price" type="number" placeholder="0.00" step="0.01"
-                                                                    name="price"/>
+                                                                    name="price" required/>
             </p>
             <p>Stawka VAT:</p>
 
@@ -125,8 +125,8 @@
 
             <p>
                 <label for="parts">Ile części: </label>
-                <input id="parts" type="number" placeholder="0" step="1"
-                                                            name="parts"/>
+                <input id="parts" type="number" placeholder="0" step="1" value="1"
+                                                            name="parts" required/>
             </p>
 
             <div class="column">
@@ -144,23 +144,26 @@
 
             </div>
 
-            <div class="column">
-                <div class="content">
-                    <div class="field is-grouped">
-                        <div class="control">
-                            <button class="button is-success is-link" type="submit"
-                                    name="save">
-                                Zapisz liste produktów
-                            </button>
-                        </div>
-                    </div>
 
-                </div>
-
-            </div>
             <div class="column"></div>
         </fieldset>
 
+    </form>
+<form method="post">
+    <div class="column">
+        <div class="content">
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-success is-link" type="submit"
+                            name="save">
+                        Zapisz liste produktów
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
     </form>
 </div>
 

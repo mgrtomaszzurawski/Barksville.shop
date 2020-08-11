@@ -68,10 +68,7 @@
             <label for="invoiceDate">Data wystawienia faktury: </label><input id="invoiceDate" type="date"
                                                                               name="invoiceDate" />
         </p>
-        <p>
-            <label for="cost">Suma na fakturze: </label><input id="cost" type="number" placeholder="0.00" step="0.01"
-                                                               name="cost" />
-        </p>
+
 
         <div class="column">
             <div class="content">
