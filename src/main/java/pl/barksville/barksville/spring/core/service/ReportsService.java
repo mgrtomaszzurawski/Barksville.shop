@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -66,7 +67,7 @@ public class ReportsService {
 
     public List<WeekReport> getWeekReportsList() {
 
-        return weekReportRepository.findAll();
+        return weekReportRepository.findAll(Sort.by(Sort.Direction.DESC, "reportDate"));
     }
 
     public WeekReport getWeekReport(LocalDate reportDate) {
@@ -88,7 +89,7 @@ public class ReportsService {
 
     public List<MonthReport> getMonthReportsList() {
 
-        return monthReportRepository.findAll();
+        return monthReportRepository.findAll(Sort.by(Sort.Direction.DESC, "reportDate"));
     }
 
     public MonthReport getMonthReport(LocalDate reportDate) {
@@ -105,7 +106,7 @@ public class ReportsService {
 
     public List<YearReport> getYearReportsList() {
 
-        return yearReportRepository.findAll();
+        return yearReportRepository.findAll(Sort.by(Sort.Direction.DESC, "reportDate"));
     }
 
     public YearReport getYearReport(LocalDate reportDate) {
@@ -133,6 +134,13 @@ public class ReportsService {
                     itemService.saveItem(item);
                 }
             }
+
+            List<Long> soldItemId= dayReport.getSoldItemReportList().stream().map(report-> report.getSoldInvoiceItem().getId()).collect(Collectors.toList());
+            for (Long id:soldItemId
+                 ) {
+                soldItemReportRepository.deleteById(id);
+            }
+
         } else {
             dayReport = new DayReport();
         }
@@ -197,21 +205,24 @@ public class ReportsService {
 
                             } else {
                                 soldItemReport.setGrossIncome((item.getPrice()/item.getQuantity())*invoiceItem.getLeftItems()*invoiceItem.getParts());
-                                soldItemReport.setQuantity(soldItemCounter*invoiceItem.getParts());
+                                soldItemReport.setQuantity(soldItemCounter);
 
-                                cost += soldItemCounter * invoiceItem.getPrice()/ invoiceItem.getParts();;
+                                cost += soldItemCounter * invoiceItem.getPrice();;
                                 soldItemCounter -= 0.;
                                 invoiceItem.setLeftItems(invoiceItem.getLeftItems() - soldItemCounter/invoiceItem.getParts());
                             }
+
                             soldItemReport.setSoldInvoiceItem(invoiceItem);
                             soldItemReport.setNetIncome(soldItemReport.getGrossIncome() - cost);
-
+                            soldItemReportRepository.save(soldItemReport);
                             soldItemReportList.add(soldItemReport);
+                            if (soldItemCounter == 0.) {
+                                break;
+                            }
                         }
 
-                       // break; - it can have many repeated items on invoice
-                    }
 
+                    }
 
 
                 }
@@ -238,11 +249,6 @@ if(dayReport.getIsCorrect()) {
     dayReport.setExpenses(0);
 }
 
-
-        for (SoldItemReport soldItemReport :
-                dayReport.getSoldItemReportList()) {
-            soldItemReportRepository.save(soldItemReport);
-        }
 
 
         dayReportRepository.save(dayReport);
@@ -408,5 +414,15 @@ if(dayReport.getIsCorrect()) {
             createDayReport(dayReport.getReportDate());
         }
 
+    }
+
+    public void createNotCreatedDayReports() {
+      List<ShopReport> shopReportList =  shopReportRepository.findAll();
+        for (ShopReport shopReport: shopReportList
+             ) {
+            if(!dayReportRepository.existsByReportDate(shopReport.getDate())){
+                createDayReport(shopReport.getDate());
+            }
+        }
     }
 }

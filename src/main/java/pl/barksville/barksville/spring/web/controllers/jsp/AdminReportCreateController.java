@@ -32,6 +32,25 @@ public class AdminReportCreateController {
         return "adminPanel/reportCreate/dayReportForm";
     }
 
+
+
+
+    @GetMapping(value = "recalculate")
+    public String recalculateDayReports() {
+
+        reportsService.recreateWrongDayReports();
+
+        return "redirect:/admin/report-create";
+    }
+
+    @GetMapping(value = "create-not-created")
+    public String createNotCreatedDayReports() {
+
+        reportsService.createNotCreatedDayReports();
+
+        return "redirect:/admin/report-create";
+    }
+
     @PostMapping(value = "day")
     public String createDayReport(String dayReportDate) {
 

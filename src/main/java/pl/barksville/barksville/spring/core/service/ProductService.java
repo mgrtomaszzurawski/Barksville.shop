@@ -1,5 +1,6 @@
 package pl.barksville.barksville.spring.core.service;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.barksville.barksville.spring.dto.data.ProductDTO;
 import pl.barksville.barksville.spring.dto.data.ProductInvoicePriceDTO;
@@ -105,7 +106,7 @@ public class ProductService {
         //return productRepository.existsByName(name);
     }
 
-    public void createProduct(String name, Boolean state, Double price, Double quantity, String invoiceNumber, Double sellPrice) {
+    public void createProduct(String name, Boolean state, Double price, Double quantity, Integer parts, String invoiceNumber, Double sellPrice) {
         Product product = new Product();
         product.setName(name);
         product.setState(state);
@@ -114,7 +115,7 @@ public class ProductService {
 
         ProductInvoicePrice productInvoicePrice = new ProductInvoicePrice();
         productInvoicePrice.setInvoicePrice(price);
-        productInvoicePrice.setQuantity(quantity);
+        productInvoicePrice.setQuantity(quantity*parts);
         productInvoicePrice.setInvoiceNumber(invoiceNumber);
         invoicePriceList.add(productInvoicePrice);
         productIvoicePriceRepository.save(productInvoicePrice);
@@ -123,17 +124,17 @@ public class ProductService {
 
         product.setSellPrice(sellPrice);
 
-        product.setQuantity(quantity);
+        product.setQuantity(quantity*parts);
 
         product.setMinimalQuantity(0.);
 
-        product.setTotalBoughtQuantity(quantity);
+        product.setTotalBoughtQuantity(quantity*parts);
 
         product.setTotalSoldQuantity(0.);
 
         product.setTotalGrossIncome(0.);
 
-        product.setTotalExpenses(price * quantity);
+        product.setTotalExpenses(price * quantity*parts);
 
         product.setAliasNames(new ArrayList<String>());
 
@@ -141,27 +142,48 @@ public class ProductService {
     }
 
     public List<Product> allProducts() {
-        return productRepository.findAll();
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
     }
 
     public List<String> allProductsNames() {
-        return productRepository.findAll().stream().map(Product::getName).collect(Collectors.toList());
+        return productRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream().map(Product::getName).collect(Collectors.toList());
     }
 
-    public void updateProductByInvoice(String name, Double quantity, Double price) {
-        Product product = productRepository.findByName(name);
+    public void updateProductByInvoice(String name, Double quantity, Integer parts, Double price) {
+
+        Product product =  getProductByName(name);
         Double sum = product.getQuantity();
-        sum += quantity;
+        sum += quantity*parts;
         Double totalSum = product.getTotalBoughtQuantity();
-        totalSum += quantity;
+        totalSum += quantity*parts;
         Double totalExpenses = product.getTotalExpenses();
-        totalExpenses += price * quantity;
+        totalExpenses += price * quantity*parts;
 
         product.setQuantity(sum);
         product.setTotalBoughtQuantity(totalSum);
         product.setTotalExpenses(totalExpenses);
         productRepository.save(product);
-        //  productRepository.updateQuantity(name,sum);
+
+    }
+
+    private Product getProductByName(String name) {
+        if (productRepository.existsByName(name)) {
+            return productRepository.findByName(name);
+        } else {
+            List<Product> productList = productRepository.findAll();
+
+            for (Product product : productList
+            ) {
+                for (String aliasName :
+                        product.getAliasNames()) {
+                    if (aliasName.equals(name)) {
+                        return product;
+                    }
+                }
+            }
+        }
+        //it should not return it!!
+        return new Product();
     }
 
     public void saveProduct(Product product) {
@@ -169,7 +191,7 @@ public class ProductService {
     }
 
     public ProductDTO getProductDTOByProductName(String productName) {
-        Product product = productRepository.findByName(productName);
+        Product product = getProductByName(productName);
 
         ProductDTO productDTO = new ProductDTO();
 
@@ -204,7 +226,7 @@ public class ProductService {
     }
 
     public void updateProductByShopReport(String name, Double quantity, Double price) {
-        Product product = productRepository.findByName(name);
+        Product product = getProductByName(name);
         Double productQuantity = product.getQuantity() - quantity;
         Double productTotalSoldQuantity = product.getTotalSoldQuantity() + quantity;
         Double productTotalGrossIncome = product.getTotalGrossIncome() + quantity* price;
@@ -221,18 +243,18 @@ public class ProductService {
        return productRepository.findById(id).get();
     }
 
-    public void updateProductOnUpdateInvoiceRow(Long id,Double oldQuantity, Double oldPrice,Double quantity, Double price) {
+    public void updateProductOnUpdateInvoiceRow(Long id,Double oldQuantity, Integer oldParts, Double oldPrice,Double quantity, Integer parts, Double price) {
 
 
 
 
         Product product = productRepository.findById(id).get();
         Double sum = product.getQuantity();
-        sum += quantity-oldQuantity;
+        sum += quantity*parts-oldQuantity*oldParts;
         Double totalSum = product.getTotalBoughtQuantity();
-        totalSum += quantity-oldQuantity;
+        totalSum += quantity*parts-oldQuantity*oldParts;
         Double totalExpenses =product.getTotalExpenses();
-        totalExpenses+=price*quantity-oldPrice*oldQuantity;
+        totalExpenses+=price*quantity*parts-oldPrice*oldQuantity*oldParts;
 
 
         product.setQuantity(sum);
@@ -247,16 +269,16 @@ public class ProductService {
 
     }
 
-    public void updateProductOnDeleteInvoiceRow(Long id,Double Quantity, Double Price) {
+    public void updateProductOnDeleteInvoiceRow(Long id,Double quantity, Integer parts, Double price) {
 
         Product product = productRepository.findById(id).get();
 
         Double sum = product.getQuantity();
-        sum += Quantity;
+        sum -= quantity*parts;
         Double totalSum = product.getTotalBoughtQuantity();
-        totalSum += Quantity;
+        totalSum -= quantity*parts;
         Double totalExpenses =product.getTotalExpenses();
-        totalExpenses+=Price*Quantity;
+        totalExpenses-=price*quantity*parts;
 
 
         product.setQuantity(sum);

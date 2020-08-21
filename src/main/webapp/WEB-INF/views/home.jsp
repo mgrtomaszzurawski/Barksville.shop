@@ -10,8 +10,8 @@
 <jsp:include page="elements/menu.jsp"/>
 <div class="container">
     <div class="row center">
-<h1>I kto tu jest mistrzem?</h1>
-        <h1 style="color:red">Tomasz Żurawski jest mistrzem nad mistrzami!</h1>
+<h1>Sklep Zoologiczny Barksville</h1>
+        <h1 style="color:red">Życzymy udanych zakupów!</h1>
     </div>
     <div class="divider"></div>
     <div class="row center">

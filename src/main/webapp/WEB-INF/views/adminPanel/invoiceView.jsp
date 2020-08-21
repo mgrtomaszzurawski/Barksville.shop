@@ -73,8 +73,9 @@
         <th>Podzielona</th>
         <th>Cześci</th>
         <th>Jednostkowa cena brutto</th>
+        <th>Na stanie</th>
         <th>Edytuj</th>
-        <th>Edytuj</th>
+        <th>Usuń</th>
     </tr>
     <c:forEach items="${invoice.boughtProducts}" var="product" varStatus="stat">
         <tr>
@@ -86,6 +87,7 @@
             <td>${product.isDivided}</td>
             <td>${product.parts}</td>
             <td>${product.price}</td>
+            <td>${product.leftItems}</td>
 
 
             <td>

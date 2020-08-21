@@ -22,9 +22,7 @@
                         Raport dzienny
                     </button>
                 </form></th>
-
             </tr>
-
             <tr>
                 <th> <form method="get" action="/admin/report-create/week">
                     <button  type="submit" >
@@ -50,7 +48,31 @@
 
         </table>
 
+<table>
+    <tr>
+        <th>Generowanie zbiorcze</th>
+    </tr>
+    <tr>
+        <th>  <form method="get" action="/admin/report-create/recalculate">
+            <button  type="submit" >
+                Przelicz niedokończone raporty
+            </button>
+        </form></th>
 
+    </tr>
+
+
+    <tr>
+        <th>  <form method="get" action="/admin/report-create/create-not-created">
+            <button  type="submit" >
+                Wygeneruj brakujące raporty dzienne
+            </button>
+        </form></th>
+    </tr>
+
+
+
+</table>
 
 
     </div>

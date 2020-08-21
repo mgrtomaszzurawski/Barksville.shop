@@ -27,7 +27,7 @@ public class SoldItemReport extends BaseEntity {
     @Column(name="net_income",nullable = false)
     private Double netIncome;
 
-    @ManyToOne
+    @ManyToOne()
     private Item soldInvoiceItem;
 
 

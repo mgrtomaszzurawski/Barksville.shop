@@ -6,4 +6,5 @@ import pl.barksville.barksville.spring.model.entities.reports.SoldItemReport;
 
 public interface SoldItemReportRepository extends JpaRepository<SoldItemReport, Long> {
 
+
 }
