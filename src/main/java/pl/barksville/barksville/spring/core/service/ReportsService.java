@@ -4,6 +4,7 @@ package pl.barksville.barksville.spring.core.service;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.barksville.barksville.spring.model.dal.repositories.*;
+import pl.barksville.barksville.spring.model.entities.base.BaseEntity;
 import pl.barksville.barksville.spring.model.entities.data.Invoice;
 import pl.barksville.barksville.spring.model.entities.data.Item;
 import pl.barksville.barksville.spring.model.entities.data.ShopReport;
@@ -135,7 +136,9 @@ public class ReportsService {
                 }
             }
 
-            List<Long> soldItemId= dayReport.getSoldItemReportList().stream().map(report-> report.getSoldInvoiceItem().getId()).collect(Collectors.toList());
+            dayReport.getSoldItemReportList().clear();
+
+            List<Long> soldItemId= dayReport.getSoldItemReportList().stream().map(SoldItemReport::getId).collect(Collectors.toList());
             for (Long id:soldItemId
                  ) {
                 soldItemReportRepository.deleteById(id);
@@ -204,7 +207,7 @@ public class ReportsService {
 
 
                             } else {
-                                soldItemReport.setGrossIncome((item.getPrice()/item.getQuantity())*invoiceItem.getLeftItems()*invoiceItem.getParts());
+                                soldItemReport.setGrossIncome((item.getPrice()/item.getQuantity())*soldItemCounter);
                                 soldItemReport.setQuantity(soldItemCounter);
 
                                 cost += soldItemCounter * invoiceItem.getPrice();;
@@ -417,7 +420,7 @@ if(dayReport.getIsCorrect()) {
     }
 
     public void createNotCreatedDayReports() {
-      List<ShopReport> shopReportList =  shopReportRepository.findAll();
+      List<ShopReport> shopReportList =  shopReportRepository.findAll(Sort.by(Sort.Direction.ASC, "reportDate"));
         for (ShopReport shopReport: shopReportList
              ) {
             if(!dayReportRepository.existsByReportDate(shopReport.getDate())){

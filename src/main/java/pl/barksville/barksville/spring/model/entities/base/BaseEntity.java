@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Setter
@@ -30,8 +32,8 @@ public abstract class BaseEntity implements Serializable {
 
     @PrePersist
     public void prePersist() {
-        createdOn = LocalDateTime.now();
-        updatedOn = LocalDateTime.now();
+        createdOn = ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toLocalDateTime();
+        updatedOn = ZonedDateTime.now(ZoneId.of("Europe/Warsaw")).toLocalDateTime();
     }
 
     @PreUpdate

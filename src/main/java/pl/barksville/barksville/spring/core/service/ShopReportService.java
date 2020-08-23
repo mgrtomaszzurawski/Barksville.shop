@@ -53,8 +53,8 @@ public class ShopReportService {
 
             createShopReportByShopReportDTO(newReport);
 
-            reportsService.recreateWrongDayReports();
-            reportsService.createDayReport(newReport.getDate());
+          //  reportsService.recreateWrongDayReports();
+          //  reportsService.createDayReport(newReport.getDate());
         }
     }
 
@@ -168,9 +168,9 @@ public class ShopReportService {
 
                         itemDTO.setQuantity(Double.parseDouble(words[words.length - 2]));
                         itemDTO.setPrice(Double.parseDouble(words[words.length - 1]));
-
-                        productService.updateProductByShopReport(name.toString(), itemDTO.getQuantity(),itemDTO.getPrice());
-
+                        if (itemDTO.getQuantity() != 0) {
+                            productService.updateProductByShopReport(name.toString(), itemDTO.getQuantity(), itemDTO.getPrice() / itemDTO.getQuantity());
+                        }
 
                         itemDTO.setIsSold(true);
 
@@ -198,7 +198,7 @@ public class ShopReportService {
     }
 
     public ShopReport getShopReportByDate(LocalDate reportDate) {
-      return  shopReportRepository.getShopReportByDate(reportDate);
+        return shopReportRepository.getShopReportByDate(reportDate);
     }
 
     public List<ShopReport> findAll() {
