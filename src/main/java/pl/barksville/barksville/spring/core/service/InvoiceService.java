@@ -360,6 +360,8 @@ public class InvoiceService {
 
         Invoice invoice = invoiceRepository.getInvoiceByInvoiceNumber(invoiceNumber);
 
+        invoice.setCost(invoice.getCost()+itemDTO.getPrice()*itemDTO.getQuantity()*itemDTO.getParts());
+
         invoice.getBoughtProducts().add(item);
 
         invoiceRepository.save(invoice);

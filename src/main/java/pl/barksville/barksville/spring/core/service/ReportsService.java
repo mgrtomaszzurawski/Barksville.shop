@@ -420,7 +420,7 @@ if(dayReport.getIsCorrect()) {
     }
 
     public void createNotCreatedDayReports() {
-      List<ShopReport> shopReportList =  shopReportRepository.findAll(Sort.by(Sort.Direction.ASC, "reportDate"));
+      List<ShopReport> shopReportList =  shopReportRepository.findAll(Sort.by(Sort.Direction.ASC, "date"));
         for (ShopReport shopReport: shopReportList
              ) {
             if(!dayReportRepository.existsByReportDate(shopReport.getDate())){
