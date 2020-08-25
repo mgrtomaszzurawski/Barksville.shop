@@ -9,6 +9,8 @@ public class GlobalModelHandler {
 
     private final OrderComponent orderComponent;
 
+
+
     public GlobalModelHandler(OrderComponent orderComponent) {
         this.orderComponent = orderComponent;
     }

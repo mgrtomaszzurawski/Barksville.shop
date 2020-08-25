@@ -11,7 +11,7 @@
             border: 1px solid black;
             margin:10px;
             padding: 10px;
-            user-select: all;
+
         }
         table, td, th, tr {
             border: 1px solid black;
@@ -45,6 +45,10 @@
 </head>
 <body>
 <jsp:include page="invoiceMenu.jsp"/>
+
+<a href="#form" class="form">
+  <h1> Do formularza</h1>
+</a>
 <table>
 <tr>
     <th>Nr</th>
@@ -82,9 +86,9 @@
 <h1>Wprowadz produkt:</h1>
 <div>
 
-    <form method="post">
+    <form method="post" >
 
-        <fieldset>
+        <fieldset id="form">
             <legend>Dane produktu</legend>
             <p>
                 <label for="name">Nazwa produktu: </label><input class="name" id="name" onkeyup="myFunction()"
@@ -169,7 +173,9 @@
 
 <table id="myUL">
 <c:forEach items="${products2}" var="product" varStatus="stat">
-        <tr><td id="ramka">${product}</td></tr>
+
+        <tr><td id="ramka"><input id="krab" type="text" class="${stat.count}" onclick="myFunction3(this.value)" value="${product}" readonly> </td></tr>
+
 </c:forEach>
 </table>
 <script>
@@ -182,7 +188,7 @@
         li = ul.getElementsByTagName("tr");
         for (i = 0; i < li.length; i++) {
             a = li[i].getElementsByTagName("td")[0];
-            txtValue = a.textContent || a.innerText;
+            txtValue = a.getElementsByTagName("input").item(0).value;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 li[i].style.display = "";
             } else {
@@ -190,9 +196,27 @@
             }
         }
     }
-    
+
+    function myFunction2(name) {
+        /* Get the text field */
+        var copyText = document.getElementsByClassName(name);
 
 
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+
+        /* Alert the copied text */
+        alert("Copied the text: " + copyText.value);
+    }
+    function myFunction3(name) {
+
+            document.getElementById("name").value = name;
+
+    }
 
 
 </script>
