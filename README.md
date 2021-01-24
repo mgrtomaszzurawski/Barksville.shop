@@ -81,7 +81,7 @@ Elastic Beanstalk is an easy-to-use service for deploying and scaling web applic
 For proper connection to RDS instance of database, i created environmental variables in application.properties file and in Elastic Beanstalk environment configurations.
 
 ```properties
-spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:todos}?useUnicode=yes&characterEncoding=UTF-8
+spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:database}?useUnicode=yes&characterEncoding=UTF-8
 spring.datasource.username=${RDS_USERNAME:user}
 spring.datasource.password=${RDS_PASSWORD:password}
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL57Dialect
