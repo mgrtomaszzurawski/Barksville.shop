@@ -4,18 +4,19 @@
 ![DB Diagram](https://cdn.pixabay.com/photo/2017/06/16/07/26/under-construction-2408059_1280.png)
 ## Controller
 
-### Class body and list of methods.
-```java
+### Class body with list of methods.
+First getter [chooseShopReport](#chooseShopReport) redirect user to page with file upload button and [save](#uploadReportFile) to save the report to database.
 
+Second get mapping [viewShopReportList](#shopReportList
+) shows list of existed shop reports with buttons to [download](#downloadFile) orginal pdf file and [view](#viewShopReport) button to show data on site.
+
+```java
 @Slf4j
 @Controller
 @RequestMapping("/admin/shop-report")
 public class ShopReportController {
 
-
-
     private final ShopReportService shopReportService;
-
 
     public ShopReportController(ShopReportService shopReportService) {
         this.shopReportService = shopReportService;
@@ -24,25 +25,24 @@ public class ShopReportController {
     @GetMapping
     public String chooseShopReport(Model model, Principal principal) {}
 
-
     @PostMapping(params = {"upload"})
     public String uploadReportFile(@RequestParam MultipartFile file, Principal principal) throws IOException {}
+
+    @GetMapping(value="/list")
+    public String shopReportList(Model model, String reportDate) {}
 
     @PostMapping(value = "/shop-report-view")
     public String viewShopReport(Model model, String reportDate) {}
 
-
     @PostMapping(value = "download", params = {"download"})
     public ResponseEntity<Resource> downloadFile(String reportDate) {}
-
-    @GetMapping(value="/list")
-    public String shopReportList(Model model, String reportDate) {}
 
 }
 
 ```
 
-### Get method
+### chooseShopReport
+
 ```java
  @GetMapping
     public String chooseShopReport(Model model, Principal principal) {
@@ -56,8 +56,8 @@ public class ShopReportController {
 ![DB Diagram](shop%20report.png)
 
 
-### Post method
-redirects to admin panel
+### uploadReportFile
+
 ```java
  @PostMapping(params = {"upload"})
     public String uploadReportFile(@RequestParam MultipartFile file, Principal principal) throws IOException {
@@ -68,21 +68,20 @@ redirects to admin panel
     }
 ```
 
-### Shop report list view
+### shopReportList
 
 ```java
- @PostMapping(value = "/shop-report-view")
-    public String viewShopReport(Model model, String reportDate) {
+ @GetMapping(value="/list")
+    public String shopReportList(Model model, String reportDate) {
 
-        model.addAttribute("shopReport", shopReportService.getShopReportByDate(LocalDate.parse(reportDate)));
-        return "adminPanel/shopReportView";
+        model.addAttribute("shopReportList", shopReportService.findAll());
+        return "adminPanel/shopReportList";
     }
 ```
-
 ![DB Diagram](shop%20report%20list%20view.png)
 
 
-### Download shop report pdf file
+### downloadFile
 ```java
 @PostMapping(value = "download", params = {"download"})
     public ResponseEntity<Resource> downloadFile(String reportDate) {
@@ -108,24 +107,91 @@ redirects to admin panel
 ```
 ![DB Diagram](shop%20report%20download.png)
 
-### Shop report view
-
-```java
- @GetMapping(value="/list")
-    public String shopReportList(Model model, String reportDate) {
-
-        model.addAttribute("shopReportList", shopReportService.findAll());
-        return "adminPanel/shopReportList";
-    }
-```
-![DB Diagram](shop%20report%20view.png)
-
 
 [Return to top](#Shop-reports)
 
 
 
+### viewShopReport
+
+```java
+ @PostMapping(value = "/shop-report-view")
+    public String viewShopReport(Model model, String reportDate) {
+
+        model.addAttribute("shopReport", shopReportService.getShopReportByDate(LocalDate.parse(reportDate)));
+        return "adminPanel/shopReportView";
+    }
+```
+
+![DB Diagram](shop%20report%20view.png)
+
+
+
 ## Service
+### Class body with list of methods.
+
+```java
+
+@Service
+public class ShopReportService {
+    private final ShopReportRepository shopReportRepository;
+    private final ProductService productService;
+    private final ItemService itemService;
+    
+
+    public ShopReportService(ShopReportRepository shopReportRepository, ProductService productService, ItemService itemService, ReportsService reportsService) {
+        this.shopReportRepository = shopReportRepository;
+        this.productService = productService;
+        this.itemService = itemService;
+    }
+
+    @Transactional
+    public void createShopReport(MultipartFile file, String oprName) throws IOException {}
+
+    @Transactional
+    public void createShopReportByShopReportDTO(ShopReportDTO shopReportDTO) {}
+
+    private boolean isValidProfileFile(ShopReportScanFileDTO shopReportScanFile) {}
+
+
+    private void parsePDF(ShopReportDTO shopReportDTO, MultipartFile file) throws IOException {}
+
+    public ShopReport getShopReportByDate(LocalDate reportDate) {}
+
+    public List<ShopReport> findAll() {}
+}
+```
+### Saving report to database
+
+```java 
+  @Transactional
+    public void createShopReport(MultipartFile file, String oprName) throws IOException {
+
+        ShopReportDTO newReport = new ShopReportDTO();
+        List<ItemDTO> itemList = new ArrayList<>();
+        newReport.setSoldProducts(itemList);
+
+
+        ShopReportScanFileDTO shopReportScanFile = new ShopReportScanFileDTO();
+
+        shopReportScanFile.setContentType(file.getContentType());
+        shopReportScanFile.setFileName(file.getOriginalFilename());
+        shopReportScanFile.setData(file.getBytes());
+
+        if (isValidProfileFile(shopReportScanFile)) {
+            newReport.setShopReportScanFile(shopReportScanFile);
+            parsePDF(newReport, file);
+            newReport.setOpr(oprName);
+
+            createShopReportByShopReportDTO(newReport);
+
+          
+        }
+    }
+```
+
+
+
 [Return to top](#Shop-reports)
 
 ## DTO
