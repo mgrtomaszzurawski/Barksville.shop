@@ -129,6 +129,10 @@ public class ShopReportController {
 
 ## Service
 ### Class body with list of methods.
+Method createShopReport will be execiuted on [saving](#uploadReportFile) new report. This function calls parsePDF and  createShopReportByShopReportDTO. First one will create ShopReportDTO with data from the file and second one will create ShopReport to save it in database. isValidProfileFile checks if provided pdf file is valid.
+
+Method findAll will return input for [viewShopReportList](#shopReportList
+) and getShopReportByDate for [viewShopReport](#viewShopReport).
 
 ```java
 
@@ -161,42 +165,68 @@ public class ShopReportService {
     public List<ShopReport> findAll() {}
 }
 ```
-### Saving report to database
+[Return to top](#Shop-reports)
+## Entites
+```java
+@Entity
+@Table(name = "Shop")
+@Getter
+@Setter
+@ToString
+public class ShopReport extends BaseEntity {
 
-```java 
-  @Transactional
-    public void createShopReport(MultipartFile file, String oprName) throws IOException {
+    @Column(unique = true, nullable = false)
+    private String name;
 
-        ShopReportDTO newReport = new ShopReportDTO();
-        List<ItemDTO> itemList = new ArrayList<>();
-        newReport.setSoldProducts(itemList);
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @OneToMany
+    private List<Item> soldProducts;
+
+    @Column(name = "transactions_number")
+    private Integer transactionsNumber;
+
+    private Double earnings;
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "shop_report_scan_file_id")
+    private ShopReportScanFile shopReportScanFile;
+
+    private String opr;
 
 
-        ShopReportScanFileDTO shopReportScanFile = new ShopReportScanFileDTO();
+}
 
-        shopReportScanFile.setContentType(file.getContentType());
-        shopReportScanFile.setFileName(file.getOriginalFilename());
-        shopReportScanFile.setData(file.getBytes());
-
-        if (isValidProfileFile(shopReportScanFile)) {
-            newReport.setShopReportScanFile(shopReportScanFile);
-            parsePDF(newReport, file);
-            newReport.setOpr(oprName);
-
-            createShopReportByShopReportDTO(newReport);
-
-          
-        }
-    }
 ```
-
-
-
 [Return to top](#Shop-reports)
 
 ## DTO
+```java
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+public class ShopReportDTO {
+
+    private List<ItemDTO> soldProducts;
+
+    private String name;
+
+    private LocalDate date;
+
+    private Integer transactionsNumber;
+
+    private Double earnings;
+
+    private ShopReportScanFileDTO shopReportScanFile;
+
+    private String opr;
+}
+
+
+```
 [Return to top](#Shop-reports)
-## Entites
-[Return to top](#Shop-reports)
+
 
 

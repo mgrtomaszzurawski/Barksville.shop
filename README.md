@@ -108,3 +108,22 @@ Unfortunately i cannot give access to log in. The registration option is disable
 I expanded my knowledge greatly through this project. I am aware of many problems in my code that will be hard to repair and maintain. Thats why I decided to start from the scratch with TDD approach in:
 
  [BarkShop-REST-API](https://github.com/mgrtomaszzurawski/BarkShop-REST-API)
+
+
+## List of known problems and lack of good practices(Shame list :unamused:)
+
+- Using Double insted of BigDouble(it will preserve precision)
+- Using JSP insted of REST API(JSP is hard to mantain)
+- Using method findAll from JpaRepository (Select n+1 problem)
+- Respond with all data at one request(Need to use pages - for example HATEOAS)
+- Using HTTP insted of HTTPS
+- Zero custom exception handlers(only spring provided)
+- Zero custom logs(it will be nice to log info at some crusial points)
+- Zero unit and integration tests(Not even mention the TDD aproach)
+- No Validators when creating user
+- Code should be refactor more offten(Naming of method and variables, extracting methods, delete old comments)
+- Use patterns(like strategy for taxes calculation)
+- Think more with programing principles like YAGNI, KISS, SOLID...
+- Create more branches at git repository
+
+[Return to top](#Barksville.shop)
