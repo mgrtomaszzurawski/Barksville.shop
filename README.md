@@ -72,12 +72,12 @@ I chose to use Amazon Web Services for deployment of this application. The main 
 
 ### Relational Database Service
 Creating database in AWS RDS is relativley easy task. The main challange is to fill in forms without paid features and to configurate security group. For my convinance i change inbound rules to connect through MySQL Workbench to database instance in RDS.
-![DB Diagram](Sections/Section%203/RDS.png)
+![RDS](Sections/Section%203/RDS.png)
 
 [Return to top](#Barksville.shop)
 ### Deploy application to Elastic Beanstalk
 Elastic Beanstalk is an easy-to-use service for deploying and scaling web applications. And for me it realy is what it said it will be. To create web server environment runing java application i could use plain .jar file, .war file with tomcat or even make a docer image of it. For my porpuse the .war file was the best option. 
-![DB Diagram](Sections/Section%203/BarksvilleApp.png)
+![AWS environment](Sections/Section%203/BarksvilleApp.png)
 For proper connection to RDS instance of database, i created environmental variables in application.properties file and in Elastic Beanstalk environment configurations.
 
 ```properties
@@ -86,13 +86,13 @@ spring.datasource.username=${RDS_USERNAME:user}
 spring.datasource.password=${RDS_PASSWORD:password}
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL57Dialect
 ```
-![DB Diagram](Sections/Section%203/Variables.png)
+![AWS Variables](Sections/Section%203/Variables.png)
 
 [Return to top](#Barksville.shop)
 ### Configurating Route 54
 In amazon web service there is no option to buy a Polish domain. In this scenario connecting app is a more complicated task compared to connecting it with supported domains in AWS. I bought domain at Polish distibutor and configurate it to cooperate with AWS. Last step was to conect website adress to my application instance by Route 53.
 
-![DB Diagram](Sections/Section%203/Route%2053.png)
+![Route 53](Sections/Section%203/Route%2053.png)
 
 [Return to top](#Barksville.shop)
 ## Live version
@@ -112,18 +112,18 @@ I expanded my knowledge greatly through this project. I am aware of many problem
 
 ## List of known problems and lack of good practices(Shame list :unamused:)
 
-- Using Double insted of BigDouble(it will preserve precision)
-- Using JSP insted of REST API(JSP is hard to mantain)
+- Using Double insted of BigDecimal(it will preserve precision)
+- Using JSP insted of REST API (JSP is hard to mantain)
 - Using method findAll from JpaRepository (Select n+1 problem)
-- Respond with all data at one request(Need to use pages - for example HATEOAS)
+- Respond with all data at one request (Need to use pages - for example HATEOAS)
 - Using HTTP insted of HTTPS
-- Zero custom exception handlers(only spring provided)
-- Zero custom logs(it will be nice to log info at some crusial points)
-- Zero unit and integration tests(Not even mention the TDD aproach)
+- Zero custom exception handlers (only spring provided)
+- Zero custom logs (it will be nice to log info at some crusial points)
+- Zero unit and integration tests (Not even mention the TDD aproach)
 - No Validators when creating user
-- Code should be refactor more offten(Naming of method and variables, extracting methods, delete old comments)
-- Use patterns(like strategy for taxes calculation)
+- Code should be refactor more offten (Naming of method and variables, extracting methods, delete old comments)
+- Use patterns (like strategy for taxes calculation)
 - Think more with programing principles like YAGNI, KISS, SOLID...
-- Create more branches at git repository
+- Use branches at git repository
 
 [Return to top](#Barksville.shop)

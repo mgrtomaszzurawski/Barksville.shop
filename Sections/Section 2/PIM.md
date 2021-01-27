@@ -6,9 +6,9 @@
 ## Service
 [Return to top](#Shop-reports)
 
-## DTO
+## Data to Object Classes
 [Return to top](#Shop-reports)
-## Entites
+## Entities
 [Return to top](#Shop-reports)
 
 
