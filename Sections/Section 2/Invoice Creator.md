@@ -2,6 +2,65 @@
 [Main Page](../../README.md)
 ![DB Diagram](https://cdn.pixabay.com/photo/2017/06/16/07/26/under-construction-2408059_1280.png)
 ## Controller
+For invoices there are two controllers, one for invoice form and second for invoice view.
+
+## InvoiceController 
+```Java
+@Controller
+@RequestMapping("/admin/invoice")
+public class InvoiceController {
+
+    private final InvoiceService invoiceService;
+    private final ProductService productService;
+
+    public InvoiceController(InvoiceService invoiceService, ProductService productService) {
+        this.invoiceService = invoiceService;
+        this.productService = productService;
+    }
+
+    @GetMapping
+    public String prepareInvoiceForm() {}
+
+    @PostMapping(params = {"upload"})
+    public String createInvoice(Principal principal, String invoiceNumber, String company, String invoiceDate, String cost) {}
+
+    @GetMapping("/addProduct")
+    public String addProductToInvoice(Model model) {}
+
+    @PostMapping(value = "/addProduct", params = {"upload"})
+    public String addProductToInvoice(String name, Double price, Double quantity, Double vat,Boolean isDivided,Integer parts) {}
+
+    @PostMapping(value = "/addProduct", params = {"delete"})
+    public String deleteProductToInvoice(String name) {}
+
+    @PostMapping(value = "/addProduct", params = {"save"})
+    public String saveProductsToInvoice() {}
+
+    @GetMapping("/scanUpload")
+    public String ScanToInvoice(Model model) {}
+
+    @PostMapping(value = "/scanUpload", params = {"upload"})
+    public String addScanToInvoice(@RequestParam MultipartFile file) throws IOException {}
+
+    @PostMapping(value = "/scanUpload", params = {"delete"})
+    public String deleteInvoiceScan() {}
+
+    @PostMapping(value = "/scanUpload", params = {"next"})
+    public String checkInvoice() {}
+
+    @GetMapping("/checkProducts")
+    public String checkProductInInvoice(Model model) {}
+
+    @PostMapping(value = "/checkProducts", params = {"upload"})
+    public String updateProducts(String name, String price) throws IOException {}
+
+    @PostMapping(value = "/checkProducts", params = {"save"})
+    public String saveInvoice() {}
+}
+```
+
+
+
 [Return to top](#Incoice-creator)
 ## Service
 [Return to top](#Incoice-creator)
