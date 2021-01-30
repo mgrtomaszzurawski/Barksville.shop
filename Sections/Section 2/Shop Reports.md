@@ -62,7 +62,7 @@ public class ShopReportController {
 
 ```
 
-![DB Diagram](shop%20report.png)
+![Shop report](shop%20report.png)
 
 [Return to top](#Shop-Reports)
 
@@ -92,7 +92,7 @@ public class ShopReportController {
         return "adminPanel/shopReportList";
     }
 ```
-![DB Diagram](shop%20report%20list%20view.png)
+![Shop report list view](shop%20report%20list%20view.png)
 
 [Return to top](#Shop-Reports)
 
@@ -122,7 +122,7 @@ public class ShopReportController {
 
     }
 ```
-![DB Diagram](shop%20report%20download.png)
+![Shop report download](shop%20report%20download.png)
 
 
 [Return to top](#Shop-reports)
@@ -140,7 +140,7 @@ public class ShopReportController {
     }
 ```
 
-![DB Diagram](shop%20report%20view.png)
+![Shop report view](shop%20report%20view.png)
 
 [Return to top](#Shop-Reports)
 

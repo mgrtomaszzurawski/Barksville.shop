@@ -2,7 +2,7 @@
 [Main Page](../../README.md)
 ![DB Diagram](https://cdn.pixabay.com/photo/2017/06/16/07/26/under-construction-2408059_1280.png)
 ## Controller
-For invoices there are two controllers, one for invoice form and second for invoice view.
+To create and view invoices there are two separate controller classes: InvoiceController and InvoiceViewController.
 
 ## InvoiceController 
 ```Java
@@ -59,9 +59,225 @@ public class InvoiceController {
 }
 ```
 
+### prepareInvoiceForm
+This page will allow user to fill basic information about date, company, invoice ID and pay sum for verification.
 
+```java
+@GetMapping
+    public String prepareInvoiceForm() {
+        return "adminPanel/invoiceCreate";
+    }
+```
+![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
+
+### createInvoice
+This is the save button on a screenshot above.
+
+```java
+ @PostMapping(params = {"upload"})
+    public String createInvoice(Principal principal, String invoiceNumber, String company, String invoiceDate, String cost) {
+
+        invoiceService.createInvoiceDTOWithoutScanAndItems(invoiceNumber, principal.getName(), company, LocalDate.parse(invoiceDate), cost);
+
+        return "redirect:/admin/invoice/addProduct";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### addProductToInvoice
+
+
+```java
+@GetMapping("/addProduct")
+    public String addProductToInvoice(Model model) {
+
+        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> {
+            Double price = p.getPrice() * p.getQuantity();
+            if(p.getIsDivided()){
+                price=price*p.getParts();
+            }
+            return price;}).mapToDouble(p -> p).sum();
+
+        model.addAttribute("products", invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts());
+        model.addAttribute("products2", productService.allProductsNames());
+        model.addAttribute("sum", sum);
+        return "adminPanel/invoiceAddProduct";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### addProductToInvoice
+
+
+```java
+@PostMapping(value = "/addProduct", params = {"upload"})
+    public String addProductToInvoice(String name, Double price, Double quantity, Double vat,Boolean isDivided,Integer parts) {
+        invoiceService.addProduct(name, price, quantity, vat, isDivided, parts);
+        return "redirect:/admin/invoice/addProduct";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### deleteProductToInvoice
+
+
+```java
+@PostMapping(value = "/addProduct", params = {"delete"})
+    public String deleteProductToInvoice(String name) {
+        invoiceService.deleteProduct(name);
+        return "redirect:/admin/invoice/addProduct";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### 
+
+
+```java
+    @PostMapping(value = "/addProduct", params = {"save"})
+    public String saveProductsToInvoice() {
+        double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()* p.getParts()).mapToDouble(p -> p).sum();
+      invoiceService.getInvoiceComponent().getInvoiceDTO().setCost(sum);
+            return "redirect:/admin/invoice/scanUpload";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### 
+
+
+```java
+    @GetMapping("/scanUpload")
+    public String ScanToInvoice(Model model) {
+        model.addAttribute("scan", invoiceService.getInvoiceComponent().getInvoiceDTO().getInvoiceScanFile());
+        return "adminPanel/invoiceScanUpload";
+    
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### 
+
+
+```java
+@PostMapping(value = "/scanUpload", params = {"upload"})
+    public String addScanToInvoice(@RequestParam MultipartFile file) throws IOException {
+        invoiceService.addScan(file);
+        return "redirect:/admin/invoice/scanUpload";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### 
+
+
+```java
+@PostMapping(value = "/scanUpload", params = {"delete"})
+    public String deleteInvoiceScan() {
+        invoiceService.deleteScan();
+        return "redirect:/admin/invoice/scanUpload";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+### 
+
+
+```java
+ @PostMapping(value = "/scanUpload", params = {"next"})
+    public String checkInvoice() {
+        invoiceService.save();
+
+        return "adminPanel/invoiceSaved";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+
+### 
+
+
+```java
+ @GetMapping("/checkProducts")
+    public String checkProductInInvoice(Model model) {
+        List<ProductDTO> existing = invoiceService.getListOfExistingProducts();
+        List<ProductDTO> nonExisting = invoiceService.getListOfNonExistingProducts(existing);
+        existing.removeIf(product -> product.getSellPrice() != null);
+
+
+        model.addAttribute("existing", existing);
+        model.addAttribute("nonExisting", nonExisting);
+
+        return "adminPanel/invoiceCheckProduct";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+
+
+### 
+
+
+```java
+    @PostMapping(value = "/checkProducts", params = {"upload"})
+    public String updateProducts(String name, String price) throws IOException {
+        //  invoiceService.createProductsBaseOnInvoice(nonExisting);
+        invoiceService.addPriceToProductDTO(name, price);
+        return "redirect:/admin/invoice/checkProducts";
+    }
+
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+
+
+### 
+
+
+```java
+
+    @PostMapping(value = "/checkProducts", params = {"save"})
+    public String saveInvoice() {
+        invoiceService.save();
+
+        return "adminPanel/invoiceSaved";
+    }
+```
+
+![Basic data invoice form](.png)
+
+[Return to top](#Incoice-creator)
+
+
+
+
+
+
+
+
 ## Service
 [Return to top](#Incoice-creator)
 
