@@ -60,7 +60,7 @@ public class InvoiceController {
 ```
 
 ### prepareInvoiceForm
-This page will allow user to fill basic information about date, company, invoice ID and pay sum for verification.
+This page will allow user to fill basic information about date, company, invoice ID and total due for verification.
 
 ```java
 @GetMapping
@@ -89,7 +89,7 @@ This is the save button on a screenshot above.
 
 [Return to top](#Incoice-creator)
 ### addProductToInvoice
-
+Product are added to previously created invoice by this form. On this view there is custom script that will allow user to serch for unique product name from shop cash register and quicli paste it to the proper field. I had some trouble to write this script, that is why page dose not look so pretty. This page have three buttons, first for adding products, second for delete item and third to save list that moves forward to invoiceScanUpload.
 
 ```java
 @GetMapping("/addProduct")
@@ -140,11 +140,12 @@ This is the save button on a screenshot above.
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-### 
+
+### saveProductToInvoice
 
 
 ```java
-    @PostMapping(value = "/addProduct", params = {"save"})
+ @PostMapping(value = "/addProduct", params = {"save"})
     public String saveProductsToInvoice() {
         double sum = invoiceService.getInvoiceComponent().getInvoiceDTO().getBoughtProducts().stream().map(p -> p.getPrice() * p.getQuantity()* p.getParts()).mapToDouble(p -> p).sum();
       invoiceService.getInvoiceComponent().getInvoiceDTO().setCost(sum);
@@ -155,7 +156,53 @@ This is the save button on a screenshot above.
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-### 
+
+### View script
+With JSTL forEach loop all registered product will be written by JSP at separate table rows data cells. When user serch for product myFunction() will activly hide on client site all not matching products and when right product will be filter out, user can clik on it and myFunction2 will copy content of table data cell to proper field at form.
+
+```javascript
+
+<table id="myUL">
+<c:forEach items="${products2}" var="product" varStatus="stat">
+
+        <tr><td id="ramka"><input id="krab" type="text" class="${stat.count}" onclick="myFunction3(this.value)" value="${product}" readonly> </td></tr>
+
+</c:forEach>
+</table>
+<script>
+    function myFunction() {
+
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("name");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName("tr");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("td")[0];
+            txtValue = a.getElementsByTagName("input").item(0).value;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+
+    function myFunction2(name) {
+       
+        var copyText = document.getElementsByClassName(name);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); 
+        document.execCommand("copy");
+        alert("Copied the text: " + copyText.value);
+    }
+    function myFunction3(name) {
+            document.getElementById("name").value = name;
+    }
+</script>
+```
+
+### ScanToInvoice
 
 
 ```java
@@ -169,8 +216,8 @@ This is the save button on a screenshot above.
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-### 
 
+### addScanToInvoice
 
 ```java
 @PostMapping(value = "/scanUpload", params = {"upload"})
@@ -183,8 +230,8 @@ This is the save button on a screenshot above.
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-### 
 
+### deleteInvoiceScan
 
 ```java
 @PostMapping(value = "/scanUpload", params = {"delete"})
@@ -197,85 +244,20 @@ This is the save button on a screenshot above.
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-### 
 
+### saveInvoice
 
 ```java
  @PostMapping(value = "/scanUpload", params = {"next"})
-    public String checkInvoice() {
-        invoiceService.save();
-
-        return "adminPanel/invoiceSaved";
-    }
-```
-
-![Basic data invoice form](.png)
-
-[Return to top](#Incoice-creator)
-
-### 
-
-
-```java
- @GetMapping("/checkProducts")
-    public String checkProductInInvoice(Model model) {
-        List<ProductDTO> existing = invoiceService.getListOfExistingProducts();
-        List<ProductDTO> nonExisting = invoiceService.getListOfNonExistingProducts(existing);
-        existing.removeIf(product -> product.getSellPrice() != null);
-
-
-        model.addAttribute("existing", existing);
-        model.addAttribute("nonExisting", nonExisting);
-
-        return "adminPanel/invoiceCheckProduct";
-    }
-```
-
-![Basic data invoice form](.png)
-
-[Return to top](#Incoice-creator)
-
-
-### 
-
-
-```java
-    @PostMapping(value = "/checkProducts", params = {"upload"})
-    public String updateProducts(String name, String price) throws IOException {
-        //  invoiceService.createProductsBaseOnInvoice(nonExisting);
-        invoiceService.addPriceToProductDTO(name, price);
-        return "redirect:/admin/invoice/checkProducts";
-    }
-
-```
-
-![Basic data invoice form](.png)
-
-[Return to top](#Incoice-creator)
-
-
-### 
-
-
-```java
-
-    @PostMapping(value = "/checkProducts", params = {"save"})
     public String saveInvoice() {
         invoiceService.save();
 
         return "adminPanel/invoiceSaved";
     }
 ```
-
 ![Basic data invoice form](.png)
 
 [Return to top](#Incoice-creator)
-
-
-
-
-
-
 
 
 ## Service
